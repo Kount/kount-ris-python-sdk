@@ -32,11 +32,11 @@ class TestAPIRIS(unittest.TestCase):
         self.headers_api = {'X-Kount-Api-Key': self.kountAPIkey}
         self.url_API = "https://api.test.kount.net/rpc/v1/orders/detail.json"
         self.r = requests.Request('POST', 
-                                                self.url,
-                                                headers=self.headers_api, 
-                                                data=example_data,
-                                                #~ verify=False,
-                                                    )
+                                    self.url,
+                                    headers=self.headers_api, 
+                                    data=example_data,
+                                    #~ verify=False,
+                                    )
         prepared = self.r.prepare()
         pretty_print_POST(prepared)
         s = requests.Session()
@@ -55,8 +55,6 @@ class TestAPIRIS(unittest.TestCase):
         b = [x for x in list(expected.keys()) if not x.startswith('TRAN')]
         b.sort()
         self.assertEqual(a, b)
-
-    def tearDown(self):
         self.assertNotIn('Error', self.currentR.json())
         self.assertEqual(200, self.currentR.status_code)
 
