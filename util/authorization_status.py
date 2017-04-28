@@ -41,10 +41,7 @@ def authorization_status(auth):
         KeyError
     """
     auth = str(auth).strip().upper()
-    if auth in authorization_status_dict.keys():
-        return authorization_status_dict[auth]
-    else:
-        raise KeyError
+    return authorization_status_dict[auth]
 
 
 if __name__ == "__main__":
