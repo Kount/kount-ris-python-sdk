@@ -1,5 +1,8 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
+# This file is part of the Kount python sdk project (https://bitbucket.org/panatonkount/sdkpython)
+# Copyright (C) 2017 Kount Inc. All Rights Reserved.
+
 
 __author__ = "Yordanka Spahieva"
 __version__ = "1.0.0"
@@ -12,7 +15,7 @@ from util.ris_validation_exception import RisException
 
 class InquiryMode(object):
     """Constructor for an inquiry mode object.
-            @param value - string
+            Args: value - string
             InquiryMode(value)
             "Q". Default inquiry mode, internet order type.
             "P". Phone order type.

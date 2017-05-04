@@ -1,5 +1,7 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
+# This file is part of the Kount python sdk project (https://bitbucket.org/panatonkount/sdkpython)
+# Copyright (C) 2017 Kount Inc. All Rights Reserved.
 
 __author__ = "Yordanka Spahieva"
 __version__ = "1.0.0"
@@ -31,10 +33,11 @@ class CartItem(object):
         self.product_type, self.item_name, self.description, self.quantity, self.price)
         return cart
 
+
 if __name__ == "__main__":
     c = CartItem()
     c.product_type = 666
-    c.name = 666
+    c.item_name = 666
     c.description = 666
     c.quantity = 666
     c.price = 666

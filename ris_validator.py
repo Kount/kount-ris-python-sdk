@@ -1,5 +1,7 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
+# This file is part of the Kount python sdk project (https://bitbucket.org/panatonkount/sdkpython)
+# Copyright (C) 2017 Kount Inc. All Rights Reserved.
 
 
 __author__ = "Yordanka Spahieva"
@@ -8,14 +10,13 @@ __maintainer__ = "Yordanka Spahieva"
 __email__ = "yordanka.spahieva@sirma.bg"
 __status__ = "Development"
 
-from util.cartitem import CartItem
 import re
+from util.cartitem import CartItem
 from util.ris_validation_exception import RisValidationException
 from util.validation_error import ValidationError
 from util.xmlparser import xml_to_dict
 from util.risexception import RisException
 from json_test import example_data_na as example_data
-
 
 
 class RisValidator(object):
@@ -32,25 +33,18 @@ class RisValidator(object):
         """
         self.errors = []
         xml_to_dict1 = xml_to_dict()
-        #print(22222222222222222222, xml_to_dict1)
-        #print("--"*30, xml_to_dict1.keys())
-        #print(111111111111111111111, params)
         errors = []
         for p in params:
-            
             try:
                 p_xml = xml_to_dict1[p.split("[")[0]]
             except KeyError as e:
-                print("===============================missing in xml - ", p)
-                #required_err = ValidationError(field=p, value=params[p])
-                required_err = ValidationError(value=params[p])
-                errors.append(required_err)
-                #raise ValidationError(p)
+                #print("===============================missing in xml - ", p)
+                pass
             regex = p_xml.get('reg_ex', None)
             mode_dict = p_xml.get('mode', None)
             mode = params['MODE']
             if not len(params[p]):
-                print("+++++++++++++++ empty =", params[p], p)
+                #print("empty =", params[p], p)
                 continue
             max_length = p_xml.get('max_length', None)
             if max_length:
@@ -79,19 +73,19 @@ class RisValidator(object):
         cart_items_number = max(len(product_type), len(product_name), len(product_description), len(product_quantity), len(product_price))
         for ci in range(cart_items_number):
             c = CartItem()
-            c.product_type = params.get(product_type[ci], "")
-            c.name = params.get(product_name[ci], "")
-            c.description = params.get(product_description[ci], "")
-            c.quantity = params.get(product_quantity[ci], "")
-            c.price = params.get(product_price[ci], "")
-            cart_items.append(c)
-            if not len(c.quantity) or not len(c.price) or not len(c.name) or not len(c.product_type):
-                required_err = "CartItem - mandatory field missed %s"%c.to_string()
+            try:
+                c.product_type = params[product_type[ci]]
+                c.item_name = params[product_name[ci]]
+                c.description = params[product_description[ci]]
+                c.quantity = params[product_quantity[ci]]
+                c.price = params[product_price[ci]]
+                cart_items.append(c)
+            except KeyError as e:
+                required_err = "CartItem - mandatory field missed %s. %s"%(c.to_string(), e)
                 errors.append(required_err)
-        print("cart_items", cart_items)
+        #print("cart_items", [c.to_string() for c in cart_items])
         if len(errors):
             raise RisValidationException("Validation process failed", errors)
         return errors
 
-
-print(RisValidator().ris_validator(params=example_data))
+#print(RisValidator().ris_validator(params=example_data))
