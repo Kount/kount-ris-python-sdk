@@ -26,22 +26,22 @@ def authorization_status(auth):
         >>> a = authorization_status({})
         Traceback (most recent call last):
             ...
-        KeyError
+        KeyError: '{}'
         >>> a = authorization_status()
         Traceback (most recent call last):
             ...
-        TypeError: authorization_status() takes exactly 1 argument (0 given)
+        TypeError: authorization_status() missing 1 required positional argument: 'auth'
         >>> a = authorization_status("a ")
         >>> a = authorization_status("A ")
         >>> a = authorization_status("A")
         >>> a = authorization_status("aA")
         Traceback (most recent call last):
             ...
-        KeyError
+        KeyError: 'AA'
         >>> a = authorization_status(42)
         Traceback (most recent call last):
             ...
-        KeyError
+        KeyError: '42'
     """
     auth = str(auth).strip().upper()
     return authorization_status_dict[auth]

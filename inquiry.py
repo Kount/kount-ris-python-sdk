@@ -14,13 +14,15 @@ __status__ = "Development"
 from datetime import datetime
 import ipaddress
 import time
-from urlparse import urlparse
+from request import Request
+#from urlparse import urlparse
+from urllib import parse as urlparse
 from validate_email import validate_email
-from util import Address
-from util import CartItem
-from util import CurrencyType
-from util import InquiryMode
-from util import ShippingType
+from util.address import Address
+from util.cartitem import CartItem
+from util.currency_type import CurrencyType
+from util.inquiry_mode import InquiryMode
+from util.shipping_type import ShippingType
 
 
 class Inquiry(Request):
@@ -77,7 +79,7 @@ class Inquiry(Request):
     def total_set(total=0):
         """Set the total amount in lowest possible denomination of currency.
             Arg: total - Transaction amount in lowest possible denomination of given currency
-            """
+        """
         self.params["TOTL"] = total
 
     def email_client(email_add):
@@ -87,7 +89,7 @@ class Inquiry(Request):
         if validate_email(email_add):
             self.params["EMAL"] = email_add
         else:
-             self.params["EMAL"] = ""
+            self.params["EMAL"] = ""
 
     def customer_name(c_name):
         """the name of the client or company.
@@ -160,7 +162,7 @@ class Inquiry(Request):
 
     def ip_address(ip_adr = ""):
         """Set the IP address.
-        Arg: ipAddress - IP Address of the client
+        Arg: ip_adr - IP Address of the client
         """
         self.params["IPAD"] = str(ipaddress.IPv4Address(ip_adr))
 
@@ -187,7 +189,7 @@ class Inquiry(Request):
         """Set the anid
             Automatic Number Identification (ANI) submitted with order. If the ANI cannot be determined, 
             merchant must pass 0123456789 as the ANID. This field is only valid for MODE=P RIS submissions.
-            Arg: anid - Anid of the client
+            Arg: anid_order - Anid of the client
         """
         self.params.put("ANID", anid_order);
 

@@ -1,4 +1,0 @@
-#!/usr/bin/env python
-
-resource_folder = "resource"
-xml_filename = 'validate.xml'
