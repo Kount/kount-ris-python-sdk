@@ -20,7 +20,7 @@ def update_mode(value):
 		"U": "NO_RESPONSE",
 		"X": "WITH_RESPONSE"
 		}
-	message = "required - U or X"
+	message = "required - U or X not {}"
 	try:
 		value = value.upper()
 	except AttributeError:
@@ -28,4 +28,4 @@ def update_mode(value):
 	try:
 		return update_dict[value]
 	except KeyError as e:
-		raise KeyError(message)
+		raise KeyError(message.format(value))
