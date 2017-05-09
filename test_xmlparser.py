@@ -21,9 +21,9 @@ from util.xmlparser import xml_to_dict
 
 class TestPaymentType(unittest.TestCase):
     def test_xml_to_dict(self):
-        a = xml_to_dict(xml_filename_path)
-        #pprint(a)
-        self.assertTrue(a)
+        valid_data_dict = xml_to_dict(xml_filename_path)
+        #pprint(valid_data_dict)
+        self.assertTrue(valid_data_dict)
 
 if __name__ == "__main__":
     unittest.main()

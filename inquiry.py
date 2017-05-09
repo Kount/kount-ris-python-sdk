@@ -15,14 +15,10 @@ from datetime import datetime
 import ipaddress
 import time
 from request import Request
-#from urlparse import urlparse
-from urllib import parse as urlparse
-from validate_email import validate_email
-from util.address import Address
 from util.cartitem import CartItem
-from util.currency_type import CurrencyType
-from util.inquiry_mode import InquiryMode
-from util.shipping_type import ShippingType
+from util.address import Address
+#~ from request import ASTAT, BCRSTAT, MERCHANTACKNOWLEDGMENT, REFUNDCBSTAT
+from request import CURRENCYTYPE, INQUIRYMODE, GENDER, ADDRESS, SHIPPINGTYPESTAT
 
 
 class Inquiry(Request):
@@ -30,82 +26,82 @@ class Inquiry(Request):
         Contains specific methods for setting various inquiry properties 
         Class constructor. Sets the RIS mode to "Inquiry" ("Q"), sets currency to
         "USD", and sets the Python SDK identifier. The mode and currency can be
-        adjusted by called IncuiryMode(mode) and CurrencyType(mode) methods respectively.
+        adjusted by called INQUIRYMODE and CURRENCYTYPE methods respectively.
         """
-    def __init__(self):
-        self.params["SDK_VERSION"] = "Sdk-Ris-Python-1.0.0"
+    #~ def __init__(self):
+        #~ self.params["SDK_VERSION"] = "Sdk-Ris-Python-1.0.0"
+    def version(self, value):
+        self.params["SDK_VERSION"] = "Sdk-Ris-Python-%s"%value
 
     def inquiry(self):
-        self.inquiry_mode = InquiryMode("Q")
-        self.currency_type = CurrencyType("USD")
+        self.inquiry_mode = INQUIRYMODE.DEFAULT
+        self.currency_type = CURRENCYTYPE.USD
 
-    def cash(cash=0):
+    def cash(self, cash=0):
         """Set cash amount of any feasible goods.
             Arg: cash - int, cash amount of any feasible goods"""
         self.cash = cash
 
-    def date_of_birth(dob=datetime.today().strftime('%Y-%m-%d')):
+    def date_of_birth(self, dob=datetime.today()):
         """Set the date of birth in the format YYYY-MM-DD.
          Arg: dob - Date of birth
          """
-        self.params["DOB"] = dob
+        self.params["DOB"] = dob.strftime('%Y-%m-%d')
 
-    def gender_user(gender="M"):
+    def gender_user(self, gender):
         """Set the gender. Either M(ale) of F(emale).
-            Acceptable values: 'M' or 'F'
+            Acceptable values: GENDER
             Arg: - gender"""
-        self.params["GENDER"] = gender
+        if gender in GENDER:
+            self.params["GENDER"] = gender.value
 
-    def user_defined_field(label, value):
+    def user_defined_field(self, label, value):
         """Set a user defined field.
             Arg: label - The name of the user defined field
             Arg: value - The value of the user defined field
         """
         self.params["UDF[%s]"%label] = value
 
-    def request_mode(mode):
+    def request_mode(self, mode):
         """Set the request mode.
-            Acceptable values are: "Q", "P", "W", "J"
+            Acceptable values are: INQUIRYMODE
             Arg: mode - Mode of the request
         """
-        self.params["MODE"] = mode
+        if mode in INQUIRYMODE:
+            self.params["MODE"] = mode.value
 
-    def currency_set(currency):
+    def currency_set(self, currency):
         """Set the three character ISO-4217 currency code.
-            Arg: currency - Type of currency, eg, USD, EUR...
+            Arg: currency - Type of currency, CURRENCYTYPE
         """
-        self.params["CURR"] = currency
+        if currency in CURRENCYTYPE:
+            self.params["CURR"] = currency.value
 
-    def total_set(total=0):
+    def total_set(self, total=0):
         """Set the total amount in lowest possible denomination of currency.
             Arg: total - Transaction amount in lowest possible denomination of given currency
         """
         self.params["TOTL"] = total
 
-    def email_client(email_add):
+    def email_client(self, email_add):
         """Set the email address of the client.
             Arg: email - Email address of the client
         """
-        if validate_email(email_add):
-            self.params["EMAL"] = email_add
-        else:
-            self.params["EMAL"] = ""
+        self.params["EMAL"] = email_add
 
-    def customer_name(c_name):
+    def customer_name(self, c_name):
         """the name of the client or company.
             Arg: c_name - Name of the client or company
          """
         self.params["NAME"] = c_name
 
-    def _address(adr_type, address):
+    def _address(self, adr_type, address):
         """Set the address.
-            Arg: address - The billing or shipping address
+            Arg: address - The billing or shipping address; type Address
             adr_type - billing or shipping, values in ['B', 'S']
         """
-        adr_type = adr_type.strip().upper()
-        if adr_type not in ['B', 'S']:
-            raise ValueError("address type must be B or S.")
-        self.params["%s2A1"%adr_type] = address.address1
+        assert isinstance(address, Address)
+        self.params[adr_type+"2A1"] = address.address1
         self.params["%s2A2"%adr_type] = address.address2
         self.params["%s2CI"%adr_type] = address.city
         self.params["%s2ST"%adr_type] = address.state
@@ -114,78 +110,75 @@ class Inquiry(Request):
         self.params["%sPREMISE"%adr_type] = address.premise
         self.params["%sSTREET"%adr_type] = address.street
 
-    def billing_address(address):
+    def billing_address(self, address):
         """Set the billing address.
-            Arg: address - The billing address
-            address1="", address2="", city="", state="", postal_code="", country="", premise="", street=""
+            Arg: address - The billing address, type Address
+            Address
         """
-        self._address('B', address)
+        self._address(ADDRESS.BILLING, address)
 
-    def shipping_address(address):
+    def shipping_address(self, address):
         """Set the shipping address.
-            Arg: address - The shipping address
+            Arg: address - The shipping address, type Address
         """
-        self._address('S', address)
+        self._address(ADDRESS.SHIPPING, address)
         
-    def billing_phone_number(billing_phone=""):
+    def billing_phone_number(self, billing_phone=""):
         """Set the billing phone number.
             Arg: billing_phone - Billing phone number
          """
         self.params["B2PN"] = billing_phone
 
-    def shipping_phone_number(shipping_phone=""):
+    def shipping_phone_number(self, shipping_phone):
         """Set the shipping phone number.
             Arg: shipping_phone - shipping phone number
          """
         self.params["S2PN"] = shipping_phone
 
-    def shipping_name(ship_name=""):
+    def shipping_name(self, ship_name=""):
         """Set the shipping name.
             Arg: ship_name - Shipping name
         """
         self.params["S2NM"] = ship_name
 
-    def email_shipping(shipping_email=""):
+    def email_shipping(self, shipping_email):
         """Set the shipping email address of the client.
             Arg: shipping_email - shipping email
         """
-        if validate_email(shipping_email):
-            self.params["S2EM"] = shipping_email
-        else:
-             self.params["S2EM"] = ""
+        self.params["S2EM"] = shipping_email
 
-    def unique_customer_id(unique_customer):
+    def unique_customer_id(self, unique_customer):
         """Set the unique ID or cookie set by merchant.
             Arg: unique_customer - Customer-unique ID or cookie set by merchant.
         """
         self.params["UNIQ"] = unique_customer
 
-    def ip_address(ip_adr = ""):
-        """Set the IP address.
+    def ip_address(self, ip_adr):
+        """Set the IP address. ipaddress
         Arg: ip_adr - IP Address of the client
         """
         self.params["IPAD"] = str(ipaddress.IPv4Address(ip_adr))
 
-    def user_agent(useragent = ""):
+    def user_agent(self, useragent):
         """Set the user agent string of the client.
         Arg: useragent - user agent string of the client
         """
         self.params["UAGT"] = useragent
 
-    def timestamp(time_stamp = int(time.time())):
+    def timestamp(self, time_stamp = int(time.time())):
         """Set the timestamp (in seconds) since the UNIX epoch for when the UNIQ value was set.
             Arg: time_stamp -  The timestamp
         """
         self.params["EPOC"] = time_stamp
 
-    def shipment_type(shipment = ""):
+    def shipment_type(self, shipment):
         """Set shipment type
-            Arg: shipment -  Ship type
-            Accepted values: "SD" - Same Day, "ND" - Next Day, "2D" - Second Day, "ST" - Standard
+            Arg: shipment -  type SHIPPINGTYPESTAT 
         """
-        self.params["SHTP"] = shipment
+        if shipment in SHIPPINGTYPESTAT:
+            self.params["SHTP"] = shipment.value
 
-    def anid(anid_order=""):
+    def anid(self, anid_order):
         """Set the anid
             Automatic Number Identification (ANI) submitted with order. If the ANI cannot be determined, 
             merchant must pass 0123456789 as the ANID. This field is only valid for MODE=P RIS submissions.
@@ -193,25 +186,26 @@ class Inquiry(Request):
         """
         self.params.put("ANID", anid_order);
 
-    def company_name(name):
+    def company_name(self, name):
         """Set the name of the company.
         Arg: name - Name of the company
         """
         self.params["NAME"] = name
 
-    def website(web_site):
+    def website(self, web_site):
         """Set the website.
             Arg: site - the website
         """
-        self.params.put["SITE"] = urlparse(web_site)
+        self.params["SITE"] = web_site
 
-    def chopping_cart(cart):
+    def shopping_cart(self, cart):
         """Set the shopping cart.
-            Arg: cart - Cart items in the shopping cart
+            Arg: cart - Cart items in the shopping cart, type Cart
         """
         for index, c in enumerate(cart):
+            assert isinstance(c, CartItem)
             self.params["PROD_TYPE[%i]"%index] = c.product_type
             self.params["PROD_ITEM[%i]"%index] = c.item_name
-            self.params["PROD_DESC[%i]"%index] = c.desription
+            self.params["PROD_DESC[%i]"%index] = c.description
             self.params["PROD_QUANT[%i]"%index] = c.quantity
             self.params["PROD_PRICE[%i]"%index] = c.price

@@ -28,7 +28,7 @@ class Payment(object):
 		else:
 			self.payment_type = "NONE"
 		if payment_token is not None:
-			print(111, payment_token)
+			print("payment_token=", payment_token)
 			self.payment_token = str(payment_token)
 			if len(str(payment_token)) >= 4:
 				self.last4 = self.payment_token[-4:]
@@ -54,7 +54,6 @@ class GooglePayment(Payment):
     """
     def __init__(self, google_payment_id):
         super(GooglePayment, self).__init__(payment_type="GOOG", payment_token=google_payment_id)
-
 
 
 class GreenDotMoneyPakPayment(Payment):
