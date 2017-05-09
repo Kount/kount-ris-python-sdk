@@ -15,9 +15,14 @@ from util.cartitem import CartItem
 from util.ris_validation_exception import RisValidationException
 from util.validation_error import ValidationError
 from util.xmlparser import xml_to_dict
-from util.risexception import RisException
+#~ from util.risexception import RisException
 from json_test import example_data_na as example_data
 
+from settings import resource_folder, xml_filename
+import os
+#~ from local_settings import url_api
+xml_filename_path = os.path.join(os.path.dirname(__file__),
+                            resource_folder, xml_filename)
 
 class RisValidator(object):
     """
@@ -25,7 +30,7 @@ class RisValidator(object):
     """
 
     def __init__(self):
-        self.xml_to_dict1 = xml_to_dict()
+        self.xml_to_dict1 = xml_to_dict(xml_filename_path)
 
     def ris_validator(self, params={}):
         """Client side validate the data to be passed to RIS.
@@ -53,7 +58,7 @@ class RisValidator(object):
                 if int(p_xml['max_length']) < len(params[p]) :
                     required_err = "max_length " + len(params[p]) + " invalid for " + p
                     errors.append(required_err)
-                    raise ValidationError(name, regex)
+                    raise ValidationError(params[p], regex)
             if (regex is not None) and not re.match(regex, params[p]):
                 required_err = "Regex " + p_xml['reg_ex'] + " invalid for" + p
                 errors.append(required_err)

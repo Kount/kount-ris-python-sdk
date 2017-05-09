@@ -10,8 +10,6 @@ __email__ = "yordanka.spahieva@sirma.bg"
 __status__ = "Development"
 
 import unittest
-from util.ris_validation_exception import RisException
-from util.ris_validation_exception import RisValidationException
 from util.ris_validation_exception import RisResponseException
 from settings import error_messages
 
@@ -26,7 +24,6 @@ class TestRisResponseException(unittest.TestCase):
         self.assertEqual(str(c), error_messages[301])
         with self.assertRaises(RisResponseException):
             raise c
-
 
 
 if __name__ == "__main__":

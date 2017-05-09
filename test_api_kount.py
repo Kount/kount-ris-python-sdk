@@ -12,19 +12,44 @@ __status__ = "Development"
 
 import requests
 import unittest
+import os
 from pretty_print import pretty_print_POST
 from json_test import example_data, example_data_na
 from local_settings import kountAPIkey, url_api
-from pprint import pprint 
+from settings import resource_folder, xml_filename
+from ris_validator import RisValidator
+from pprint import pprint
+#~ from local_settings import url_api
+xml_filename_path = os.path.join(os.path.dirname(__file__),
+                            resource_folder, xml_filename)
 
 class Client:
-    def __init__(self, url,  key):
-        self.url =
-        self.validator = ()
+    def __init__(self, url, key):
+        self.url = url
+        self.kountAPIkey = key
+        self.headers_api = {'X-Kount-Api-Key': self.kountAPIkey}
+        #~ self.validator = ris_validator()
         
     def process(self, r):
-        self.validator.ris_validate()
-        post(r.params)
+        print(777, r.params)
+        self.validator = RisValidator.ris_validator(r.params)
+        self.r = requests.Request('POST', 
+                            self.url,
+                            headers=self.headers_api, 
+                            data=r.params,
+                            )
+        prepared = self.r.prepare()
+        pretty_print_POST(prepared)
+        s = requests.Session()
+        self.current = s.send(prepared)
+        s.close()
+        if self.data == {}:
+            self.assertEqual(self.current.text, "MODE=E\nERRO=201")
+            return
+        assert 200 == self.current.status_code
+        assert 'Error' not in self.current.json()
+        return
+
 
 def dict_compare(d1, d2):
     #compare 2 dictionaries
@@ -159,7 +184,6 @@ class TestAPIRIS(unittest.TestCase):
         self.assertEqual(200, self.current.status_code)
         self.assertNotIn('Error', self.current.json())
         self.assertEqual(200, self.current.status_code)
-        added, removed, modified, same = dict_compare(self.current.json(), self.expected)
         added, removed, modified, same = dict_compare(self.current.json(), self.expected)
         if self.data["EMAL"]: 
             self.assertEqual(added, set())
