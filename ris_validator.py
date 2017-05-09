@@ -24,6 +24,9 @@ class RisValidator(object):
     RIS input data validator class.
     """
 
+    def __init__(self):
+        self.xml_to_dict1 = xml_to_dict()
+
     def ris_validator(self, params={}):
         """Client side validate the data to be passed to RIS.
         kwargs
@@ -32,11 +35,10 @@ class RisValidator(object):
             return List of errors encountered as util.ValidationError objects
         """
         self.errors = []
-        xml_to_dict1 = xml_to_dict()
         errors = []
         for p in params:
             try:
-                p_xml = xml_to_dict1[p.split("[")[0]]
+                p_xml = self.xml_to_dict1[p.split("[")[0]]
             except KeyError as e:
                 #print("===============================missing in xml - ", p)
                 pass
@@ -69,7 +71,7 @@ class RisValidator(object):
         product_description = sorted([cpt for cpt in params if cpt.startswith("PROD_DESC[")])
         product_quantity = sorted([cpt for cpt in params if cpt.startswith("PROD_QUANT[")])
         product_price = sorted([cpt for cpt in params if cpt.startswith("PROD_PRICE[")])
-        cart_items = []
+        # cart_items = []
         cart_items_number = max(len(product_type), len(product_name), len(product_description), len(product_quantity), len(product_price))
         for ci in range(cart_items_number):
             c = CartItem()
@@ -79,7 +81,7 @@ class RisValidator(object):
                 c.description = params[product_description[ci]]
                 c.quantity = params[product_quantity[ci]]
                 c.price = params[product_price[ci]]
-                cart_items.append(c)
+                # cart_items.append(c)
             except KeyError as e:
                 required_err = "CartItem - mandatory field missed %s. %s"%(c.to_string(), e)
                 errors.append(required_err)
@@ -88,4 +90,4 @@ class RisValidator(object):
             raise RisValidationException("Validation process failed", errors)
         return errors
 
-#print(RisValidator().ris_validator(params=example_data))
+print(RisValidator().ris_validator(params=example_data))

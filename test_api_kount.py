@@ -13,13 +13,18 @@ __status__ = "Development"
 import requests
 import unittest
 from pretty_print import pretty_print_POST
-from json_test import example_data
-from json_test import example_data_na
-from local_settings import kountAPIkey
-from local_settings import url_test
-from local_settings import url_api
+from json_test import example_data, example_data_na
+from local_settings import kountAPIkey, url_api
 from pprint import pprint 
 
+class Client:
+    def __init__(self, url,  key):
+        self.url =
+        self.validator = ()
+        
+    def process(self, r):
+        self.validator.ris_validate()
+        post(r.params)
 
 def dict_compare(d1, d2):
     #compare 2 dictionaries
@@ -37,9 +42,8 @@ class TestAPIRIS(unittest.TestCase):
     #implemented curl from https://kopana.atlassian.net/wiki/display/KS/Testing
     def setUp(self):
         self.kountAPIkey = kountAPIkey
-        self.url = url_test
+        self.url = url_api
         self.headers_api = {'X-Kount-Api-Key': self.kountAPIkey}
-        self.url_API = url_api
 
     def test_api_kount(self):
         #~ expected modified 'TRAN'
