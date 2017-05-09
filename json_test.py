@@ -3,7 +3,11 @@
 # This file is part of the Kount python sdk project (https://bitbucket.org/panatonkount/sdkpython)
 # Copyright (C) 2017 Kount Inc. All Rights Reserved.
 
-from pprint import pprint
+__author__ = "Yordanka Spahieva"
+__version__ = "1.0.0"
+__maintainer__ = "Yordanka Spahieva"
+__email__ = "yordanka.spahieva@sirma.bg"
+__status__ = "Development"
 
 #~ https://kopana.atlassian.net/wiki/display/KS/Testing
 example_data = {

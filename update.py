@@ -11,7 +11,6 @@ __email__ = "yordanka.spahieva@sirma.bg"
 __status__ = "Development"
 
 from request import Request
-#~ from util.refund_chargeback_status import refund_chargeback_status
 from util.ris_validation_exception import RisException
 
 
