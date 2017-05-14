@@ -14,19 +14,24 @@ import xml.etree.ElementTree as ET
 
 
 def xml_to_dict(xml_filename_path):
-    with open(xml_filename_path, 'r') as valid_xml:
+    with open(xml_filename_path, 'r'):
         tree = ET.parse(xml_filename_path)
         root = tree.getroot()
     valid_data_dict = {}
+    required_field_names = []
+    notrequired_field_names = []
     for child in root:
         param_name = child.attrib['name']
         current = valid_data_dict[param_name] = {}
         required = child.find('required')
         if required is not None:
+            required_field_names.append(param_name)
             current['required'] = True
             mode_tags = required.findall('mode')
-            if mode_tags:
+            if mode_tags != []:
                 current["mode"] = [m.text for m in mode_tags]
+        else:
+            notrequired_field_names.append(param_name)
         reg_ex = child.find('reg_ex')
         if reg_ex is not None:
             current["reg_ex"] = reg_ex.text
@@ -34,4 +39,4 @@ def xml_to_dict(xml_filename_path):
         if max_length is not None:
             current["max_length"] = max_length.text
     assert(len(valid_data_dict.keys()) == len(root))
-    return valid_data_dict
+    return valid_data_dict, required_field_names, notrequired_field_names

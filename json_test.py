@@ -56,7 +56,7 @@ example_data = {
     'VERS': '0695'
 }
 
-example_data_na = {
+example_data_products = {
     'ANID': '',
     'AUTH': 'A',
     'AVST': 'M',
@@ -72,7 +72,7 @@ example_data_na = {
     'CVVR': 'M',
     #~ 'EMAL': 'curly.riscaller12%40kountqa.com ', - bad/invalid email
     'EMAL': 'ccurly.riscaller15@kountqa.com ',
-    'FRMT': 'JSON',
+    'FRMT': 'JSON', # set if not via sdk
     'IPAD': '129.173.116.98',
     'MACK': 'Y',
     'MERC': '999666',
@@ -107,8 +107,6 @@ example_data_na = {
     'UAGT': 'Mozilla%2F5.0+%28Macintosh%3B+Intel+Mac+OS+X+10%5F9%5F5%29+AppleWebKit%2F537.36+%28KHTML%2C+like+Gecko%29+Chrome%2F37.0.2062.124+Safari%2F537.36',
     'UNIQ': 'F8E874A38B7B4B6DBB71',
     #~ 'VERS': '0630'
+    'SDK': 'CUST',
     'VERS': '0695'
  }
-#~ https://support.kount.com/Developer_Resources/Getting_Started/Technical_Specification_Guide_r._January_2016_-_v_6.4.5
-#~ pprint(example_data)
-#~ print(len([(p, k) for p, k in example_data.items()]))

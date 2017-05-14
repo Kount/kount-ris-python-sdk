@@ -247,4 +247,8 @@
     </required>
     <max_length>64</max_length>
   </param>
+  <param name="FRMT">
+    <reg_ex>^[JSON]+$</reg_ex>
+    <max_length>4</max_length>
+  </param>
 </ris_validation>

@@ -19,6 +19,7 @@ from util.cartitem import CartItem
 from util.address import Address
 #~ from request import ASTAT, BCRSTAT, MERCHANTACKNOWLEDGMENT, REFUNDCBSTAT
 from request import CURRENCYTYPE, INQUIRYMODE, GENDER, ADDRESS, SHIPPINGTYPESTAT
+from settings import sdk_version
 
 
 class Inquiry(Request):
@@ -28,14 +29,22 @@ class Inquiry(Request):
         "USD", and sets the Python SDK identifier. The mode and currency can be
         adjusted by called INQUIRYMODE and CURRENCYTYPE methods respectively.
         """
-    #~ def __init__(self):
-        #~ self.params["SDK_VERSION"] = "Sdk-Ris-Python-1.0.0"
-    def version(self, value):
-        self.params["SDK_VERSION"] = "Sdk-Ris-Python-%s"%value
-
-    def inquiry(self):
+    def __init__(self):
+        self.params = {}
+        self.version()
+        self.params["SDK"] = "CUST"
+        self.params["ANID"] = "" # not needed?! http 500
+        self.params["FRMT"] = "JSON"
         self.inquiry_mode = INQUIRYMODE.DEFAULT
         self.currency_type = CURRENCYTYPE.USD
+
+    #~ def version(self, value):
+    def version(self):
+        #~ SDK_Type-RIS_VERSION-SDK_BUILD_DATETIMESTAMP
+        a = datetime.now().strftime('%Y%m%d%H%M')
+        vers = "Sdk-Ris-Python-%s-%s"%(sdk_version, a)
+        assert len(vers) == 32
+        self.params["SDK_VERSION"] = vers
 
     def cash(self, cash=0):
         """Set cash amount of any feasible goods.
@@ -157,6 +166,10 @@ class Inquiry(Request):
         """Set the IP address. ipaddress
         Arg: ip_adr - IP Address of the client
         """
+        if ip_adr == '':
+            import socket
+            ip_adr = socket.gethostbyname(socket.gethostname())
+            
         self.params["IPAD"] = str(ipaddress.IPv4Address(ip_adr))
 
     def user_agent(self, useragent):
@@ -204,6 +217,7 @@ class Inquiry(Request):
         """
         for index, c in enumerate(cart):
             assert isinstance(c, CartItem)
+            print('c.product_type', c.product_type)
             self.params["PROD_TYPE[%i]"%index] = c.product_type
             self.params["PROD_ITEM[%i]"%index] = c.item_name
             self.params["PROD_DESC[%i]"%index] = c.description

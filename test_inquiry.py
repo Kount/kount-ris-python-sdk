@@ -12,79 +12,132 @@ __status__ = "Development"
 
 
 import unittest
-from request import ASTAT, BCRSTAT, CURRENCYTYPE #, MERCHANTACKNOWLEDGMENT, REFUNDCBSTAT, SHIPPINGTYPESTAT, INQUIRYMODE
+import logging
+import os
+import uuid
+
+from request import ASTAT, BCRSTAT, INQUIRYMODE, CURRENCYTYPE, MERCHANTACKNOWLEDGMENT #, REFUNDCBSTAT, SHIPPINGTYPESTAT
 from inquiry import Inquiry
 from pprint import pprint
-import uuid
 from util.payment import CardPayment
 from util.cartitem import CartItem
 from util.address import Address
 from test_api_kount import Client
 from local_settings import url_api, kountAPIkey
+from settings import resource_folder, xml_filename, sdk_version
+from util.xmlparser import xml_to_dict
+from response import Response
+from local_settings import url_api
+xml_filename_path = os.path.join(os.path.dirname(__file__),
+                            resource_folder, xml_filename)
+
+initial = {'MODE':'Q',
+    'Merchant (MERC)':'999666',
+    'NAME':'SdkTestFirstName SdkTestLastName',
+    'PTOK':'0007380568572514',
+    'LAST4':'2514',
+    'VERS':'0695',
+    'EMAL':'sdkTest@kountsdktestdomain.com',
+    'SITE':'DEFAULT',
+    'FRMT':'JSON',
+    'CURR':'USD',
+    'TOTL':'123456',
+    'CASH':'4444',
+    'B2A1':'1234 North B2A1 Tree Lane South',
+    'B2CI':'Albuquerque',
+    'B2ST':'NM',
+    'B2CC':'US',
+    'B2PC':'87101',
+    'B2PN':'555-867-5309',
+    'S2NM':'SdkShipToFN SdkShipToLN',
+    'S2EM':'sdkTestShipToEmail@kountsdktestdomain.com',
+    'S2A1':'567 West S2A1 Court North',
+    'S2CI':'Gnome',
+    'S2ST':'AK',
+    'S2CC':'US',
+    'S2PC':'99762',
+    'S2PN':'555-777-1212',
+    'PTYP':'CARD',
+    'SESS':'generate random session id - 32 character',
+    'UNIQ':'truncate SESS to 20 characters',
+    'ORDR':'truncate the UNIQ to 10 characters',
+    'IPAD':'131.206.45.21',
+    'MACK':'Y',
+    'AUTH':'A',
+    'AVSZ':'M',
+    'AVST':'M',
+    'CVVR':'M',
+    'PROD_TYPE[0]':'SPORTING_GOODS',
+    'PROD_ITEM[0]':'SG999999',
+    'PROD_DESC[0]':'3000 CANDLEPOWER PLASMA FLASHLIGHT',
+    'PROD_QUANT[0]':'2',
+    'PROD_PRICE[0]':'68990',
+}
 
 
-class Utilities(unittest.TestCase):
-    RIS_ENDPOINT = "https://risk.test.kount.net"
-    MERCHANT_ID = 999666
-    BILLING_ADDRESS = Address("1234 North B2A1 Tree Lane South", None, "Albuquerque", "NM", "87101", "US")
-    SHIPPING_ADDRESS = Address("567 West S2A1 Court North", None, "Gnome", "AK", "99762", "US")
+RIS_ENDPOINT = url_api
+MERCHANT_ID = '999666'
+BILLING_ADDRESS = Address("1234 North B2A1 Tree Lane South", "", "Albuquerque", "NM", "87101", "US")
+SHIPPING_ADDRESS = Address("567 West S2A1 Court North", "", "Gnome", "AK", "99762", "US") #S2A1 S2CI S2ST S2PC S2CC
 
-    @staticmethod
-    def generate_unique_id():
-        return str(uuid.uuid4())
+def generate_unique_id():
+    return str(uuid.uuid4()).replace('-', '').upper()
 
-    @staticmethod
-    def default_inquiry(session_id):
-        result = Inquiry()
-        #~ inquiry_mode = INQUIRYMODE.DEFAULT
-        result.shipping_address(Utilities.SHIPPING_ADDRESS)
-        result.shipping_name("SdkShipToFN SdkShipToLN")
-        result.billing_address(Utilities.BILLING_ADDRESS)
-        unique_id = session_id[:21]  
-        result.currency_set(CURRENCYTYPE.USD)
-        result.total_set(123456)
-        result.cash(4444)
-        result.billing_phone_number("555-867-5309")
-        result.shipping_phone_number("555-777-1212")
-        result.email_client("sdkTest@kountsdktestdomain.com")
-        result.customer_name("SdkTestFirstName SdkTestLastName")
-        result.unique_customer_id(unique_id)
-        result.website("DEFAULT")
-        result.email_shipping("sdkTestShipToEmail@kountsdktestdomain.com")
-        result.ip_address("131.206.45.21")
-        cart_item = []
-        cart_item.append(CartItem("SPORTING_GOODS", "SG999999", "3000 CANDLEPOWER PLASMA FLASHLIGHT", 2, 68990))
-        result.shopping_cart(cart_item)
-        result.version("1.0.0")
-        result.merchant_set(Utilities.MERCHANT_ID)
-        payment = CardPayment("0007380568572514")
-        result.payment_set(payment)
-        result.session_set(session_id)
-        order_id = session_id[:11]
-        result.order_number(order_id)
-        result.merchant_acknowledgment_set("YES")
-        result.authorization_status(ASTAT.Approve)
-        result.avs_zip_reply(BCRSTAT.MATCH)
-        result.avs_address_reply(BCRSTAT.MATCH)
-        result.avs_cvv_reply(BCRSTAT.MATCH)
-        return result
+def default_inquiry(session_id):
+    "PENC is not set"
+    result = Inquiry()
+    result.request_mode(INQUIRYMODE.DEFAULT)
+    result.shipping_address(SHIPPING_ADDRESS)
+    result.shipping_name("SdkShipToFN SdkShipToLN") #S2NM
+    result.billing_address(BILLING_ADDRESS)
+
+    result.currency_set(CURRENCYTYPE.USD)   #CURR
+    result.total_set('123456') #TOTL
+    result.billing_phone_number("555-867-5309") #B2PN
+    result.shipping_phone_number("555-777-1212") #S2PN
+    result.email_client("sdkTest@kountsdktestdomain.com")
+    result.customer_name("SdkTestFirstName SdkTestLastName")
+    result.unique_customer_id(session_id[:20]) #UNIQ
+    result.website("DEFAULT") #SITE
+    result.email_shipping("sdkTestShipToEmail@kountsdktestdomain.com")
+    result.ip_address("") #IPAD
+    cart_item = []
+    cart_item.append(CartItem("SPORTING_GOODS", "SG999999", "3000 CANDLEPOWER PLASMA FLASHLIGHT", '2', '68990')) # PROD_TYPE[0, PROD_ITEM[0], PROD_DESC[0] PROD_QUANT[0],PROD_PRICE[0]
+    result.shopping_cart(cart_item)
+    result.version()
+    result.version_set(sdk_version)  #0695
+    result.merchant_set(MERCHANT_ID) # 999666
+    payment = CardPayment("0007380568572514")
+    print("payment.last4============", payment.payment_token, payment, payment.last4)
+    result.payment_set(payment) #PTOK
+    result.session_set(session_id) #SESS
+    result.order_number(session_id[:10])  #ORDR 
+    result.authorization_status(ASTAT.Approve) #AUTH
+    result.avs_zip_reply(BCRSTAT.MATCH)
+    result.avs_address_reply(BCRSTAT.MATCH)
+    result.avs_cvv_reply(BCRSTAT.MATCH)
+    result.merchant_acknowledgment_set(MERCHANTACKNOWLEDGMENT.TRUE) #"MACK"
+    result.cash('4444')
+    return result
 
 
 class TestInquiry(unittest.TestCase):
     def setUp(self):
-        session_id = Utilities.generate_unique_id()
-        self.result = Utilities.default_inquiry(session_id = session_id)
+        session_id = generate_unique_id()
+        self.result = default_inquiry(session_id = str(session_id))
+        self.maxDiff = None
 
     def test_utilities(self):
         #~ session_id = str(uuid.uuid4())
         result = self.result
-        #~ print(112221, result.params)
         #~ self.maxDiff = None
-        expected = {'AUTH': 'A',
+        expected = {
+            'ANID': '',
+            'AUTH': 'A',
             'AVST': 'M',
             'AVSZ': 'M',
             'B2A1': '1234 North B2A1 Tree Lane South',
-            'B2A2': None,
+            'B2A2': '',
             'B2CC': 'US',
             'B2CI': 'Albuquerque',
             'B2PC': '87101',
@@ -92,24 +145,27 @@ class TestInquiry(unittest.TestCase):
             'B2ST': 'NM',
             'BPREMISE': '',
             'BSTREET': '',
+            'CASH': '4444',
             'CURR': 'USD',
             'CVVR': 'M',
             'EMAL': 'sdkTest@kountsdktestdomain.com',
-            'IPAD': '131.206.45.21',
+            'FRMT': 'JSON',
+            #~ 'IPAD': '131.206.45.21',
             'LAST4': '2514',
             'MACK': 'Y',
-            'MERC': 999666,
+            'MERC': '999666',
+            'MODE': 'Q',
             'NAME': 'SdkTestFirstName SdkTestLastName',
-            'PENC': '',
+            #~ 'PENC': '',
             'PROD_DESC[0]': '3000 CANDLEPOWER PLASMA FLASHLIGHT',
             'PROD_ITEM[0]': 'SG999999',
-            'PROD_PRICE[0]': 68990,
-            'PROD_QUANT[0]': 2,
+            'PROD_PRICE[0]': '68990',
+            'PROD_QUANT[0]': '2',
             'PROD_TYPE[0]': 'SPORTING_GOODS',
             'PTOK': '0007380568572514',
             'PTYP': 'CARD',
             'S2A1': '567 West S2A1 Court North',
-            'S2A2': None,
+            'S2A2': '',
             'S2CC': 'US',
             'S2CI': 'Gnome',
             'S2EM': 'sdkTestShipToEmail@kountsdktestdomain.com',
@@ -117,207 +173,189 @@ class TestInquiry(unittest.TestCase):
             'S2PC': '99762',
             'S2PN': '555-777-1212',
             'S2ST': 'AK',
-            'SDK': 'Python 3.6',
-            'SDK_VERSION': 'Sdk-Ris-Python-1.0.0',
+            'SDK': 'CUST',
+            'SDK_VERSION': 'Sdk-Ris-Python-%s'%sdk_version,
             'SITE': 'DEFAULT',
             'SPREMISE': '',
             'SSTREET': '',
-            'TOTL': 123456,
-            'VERS': '1.0.0'}
+            'TOTL': '123456',
+            'VERS': sdk_version,
+            }
         actual = result.params
+        self.assertIn(expected['SDK_VERSION'], actual['SDK_VERSION'] )
         del(actual['UNIQ'])
+        del(actual['IPAD'])
+        del(actual['SDK_VERSION'])
+        del(expected['SDK_VERSION'])
         del(actual['SESS'])
         del(actual['ORDR'])
-        self.assertEqual(result.params, expected)
+        self.assertEqual(actual, expected)
 
 class TestRisTestSuite(unittest.TestCase):
     
-    #~ private static final Logger logger = Logger.getLogger(TestRisTestSuite.class);
-    
-    client = Client(url_api, kountAPIkey)
-    
-    session_id = None
-    inq = Inquiry()
+    def setUp(self):
+        self.maxDiff = None
+        #~ self.reset_id_and_inquiry
+        self.session_id = generate_unique_id()[:32]
+        result = default_inquiry(self.session_id)
+        self.inq = result
+        self.server_url = RIS_ENDPOINT
+        self.client = Client(url_api, kountAPIkey)
+        self.result = default_inquiry(session_id = self.session_id)
+        self.xml_to_dict1, self.required_field_names, self.notrequired_field_names = xml_to_dict(xml_filename_path)
+        self.log()
+
+    def log(self):
+        self.logger = logging.getLogger()
+        handler = logging.StreamHandler()
+        formatter = logging.Formatter(
+                '%(asctime)s %(name)-12s %(levelname)-8s %(message)s')
+        handler.setFormatter(formatter)
+        self.logger.addHandler(handler)
+        self.logger.setLevel(logging.DEBUG)
+        self.logger.debug("running %s"%self._testMethodName)
     
     def reset_id_and_inquiry(self):
-        self.session_id = Utilities.generate_unique_id()
-        self.inq = Utilities.default_inquiry(self.session_id)
+        self.session_id = generate_unique_id()
+        result = default_inquiry(self.session_id)
+        self.inq = result
 
-    def setUp(self):
-        self.reset_id_and_inquiry()
-        self.server_url = Utilities.RIS_ENDPOINT
-        self.session_id = Utilities.generate_unique_id()
+    def test_1_ris_q_1_item_required_field_1_rule_review(self):
+        res = self.client.process(params=self.inq.params)
+        res_json = res.json()
+        self.assertIsNotNone(res_json)
+        rr = Response(res)
+        self.assertEqual("R", res_json["AUTO"])
+        self.assertEqual(0, res.json()["WARNING_COUNT"])
+        self.assertEqual( {'1024842': 'Review if order total > $1000 USD'}, rr.get_rules_triggered())
+        self.assertEqual(res.json()["SESS"], res_json["SESS"])
+        self.assertEqual(res.json()["SESS"][:10], res_json["ORDR"])
 
-    def test_ris_q_1_item_required_field_1_rule_review_1(self):
-        #~ logger.debug("running test_ris_q_1_item_required_field_1_rule_review_1");
-        
-        response = self.client.process(self.inq)
-        print(11111, response)
-        #~ logger.trace(response.toString());
-        
-        self.assertEquals("R", response.params["AUTO"]);
-        self.assertEquals(0, int(response.params["WARNING_COUNT"]))
-        self.assertEquals(1, response.get_rules_triggered())
-        self.assertEquals(self.session_id, response.params["SESS"])
-        self.assertEquals(self.session_id.substring(0, 10), response.params["ORDR"])
+    def test_2_ris_q_multi_cart_items2optional_fields2rules_decline(self):
+        self.maxDiff = None
+        self.inq.user_agent("Mozilla/5.0 (Macintosh; Intel Mac OS X 10_9_5) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/37.0.2062.124 Safari/537.36")
+        self.inq.total_set(123456789)
+        cart_item = []
+        cart_item.append(CartItem("cart item type 0", "cart item 0", "cart item 0 description", 10, 1000)) # PROD_TYPE[0, PROD_ITEM[0], PROD_DESC[0] PROD_QUANT[0],PROD_PRICE[0]
+        cart_item.append(CartItem("cart item type 1", "cart item 1", "cart item 1 description", 11, 1001)) # PROD_TYPE[0, PROD_ITEM[0], PROD_DESC[0] PROD_QUANT[0],PROD_PRICE[0]
+        cart_item.append(CartItem("cart item type 2", "cart item 2", "cart item 1 description", 12, 1002)) # PROD_TYPE[0, PROD_ITEM[0], PROD_DESC[0] PROD_QUANT[0],PROD_PRICE[0]
+        self.inq.shopping_cart(cart_item)
+        res = self.client.process(params=self.inq.params)
+        res_json = res.json()
+        self.assertIsNotNone(res_json)
+        self.logger.debug(res_json)
+        rr = Response(res)
+        self.assertEqual("D", res_json["AUTO"])
+        self.assertEqual(0, res.json()["WARNING_COUNT"])
+        #~ print(rr.get_rules_triggered())
+        self.assertEqual({'1024842': 'Review if order total > $1000 USD',
+                          '1024844': 'Decline if order total > $1000000 USD'},
+                          rr.get_rules_triggered())
+
+    def test_3_ris_q_with_user_defined_fields(self):
+        self.maxDiff = None
+        self.inq.params["UDF[ARBITRARY_ALPHANUM_UDF]"] = "alphanumeric trigger value"
+        self.inq.params["UDF[ARBITRARY_NUMERIC_UDF]"] = "777"
+        res = self.client.process(params=self.inq.params)
+        res_json = res.json()
+        self.assertIsNotNone(res_json)
+        self.logger.debug(res_json)
+        rr = Response(res)
+        self.assertEqual("R", res_json["AUTO"])
+        self.assertEqual(3, res_json["RULES_TRIGGERED"])
+        self.assertEqual(0, res.json()["WARNING_COUNT"])
+        #~ print(rr.get_rules_triggered())
+        self.assertEqual({'1025086': 'review if ARBITRARY_ALPHANUM_UDF contains "trigger"',
+                        '1024842': 'Review if order total > $1000 USD',
+                        '1025088': 'review if ARBITRARY_NUMERIC_UDF == 777'},
+                        rr.get_rules_triggered())
+        self.logger.debug("[alpha-numeric rule] triggered")
+        self.logger.debug("[numeric rule] triggered")
+
+    def test_4_ris_q_hard_error_expected(self):
+        self.maxDiff = None
+        #~ overwrite the PTOK value to induce an error in the RIS
+        self.inq.params["PTOK"] = "BADPTOK"
+        res = self.client.process(params=self.inq.params)
+        res_json = res.json()
+        self.assertIsNotNone(res_json)
+        self.logger.debug(res_json)
+        rr = Response(res)
+        #~ print('res_json44444444444444444444444444444444444')
+        #~ pprint(res_json)
+        #~ 'WARNING_0': '399 BAD_OPTN Cause: [LAST4 does not match last 4 characters in '
+                     #~ 'payment token], Field: [LAST4], Value: [2514]',
+        self.assertEqual("E", rr.params['MODE'])
+        self.assertNotEqual(['332 BAD_CARD Cause: [Too short], Field: [PTOK], Value: [hidden]'], rr.get_errors())
+        self.assertEqual('332 BAD_CARD Cause: [PTOK invalid format], Field: [PTOK], Value: [hidden]', rr.get_errors())
+        self.assertEqual(332, rr.params['ERRO'])
+        self.assertEqual(0, rr.params['WARNING_COUNT'])
+
+    def test_5_ris_q_warning_approved(self):
+        self.maxDiff = None
+        self.inq.params["TOTL"] = "1000"
+        self.inq.params["UDF[UDF_DOESNOTEXIST]"] = "throw a warning please!"
+        res = self.client.process(params=self.inq.params)
+        res_json = res.json()
+        self.assertIsNotNone(res_json)
+        self.logger.debug(res_json)
+        rr = Response(res)
+        self.assertEqual("A", rr.params['AUTO'])
+        self.assertEqual(2,res.json()["WARNING_COUNT"])
+        self.assertEqual(rr.params['WARNING_0'], '399 BAD_OPTN Field: [UDF], Value: [UDF_DOESNOTEXIST=>throw a warning please!]')
+        self.assertEqual(rr.params['WARNING_1'], '399 BAD_OPTN Field: [UDF], Value: [The label [UDF_DOESNOTEXIST] is not defined for merchant ID [999666].]')
+        self.logger.debug("[throw a warning please] found")
+        self.logger.debug("[not defined for merchant] found")
+
+    def test_6_ris_q_hard_oft_errors_expected(self):
+        self.maxDiff = None
+        #~ self.logger.debug("running testRisQHardSoftErrorsExpected_6");
+        self.inq.params["PTOK"] = "BADPTOK"
+        self.inq.params["UDF[UDF_DOESNOTEXIST]"] = "throw a warning please!"
+        res = self.client.process(params=self.inq.params)
+        res_json = res.json()
+        self.assertIsNotNone(res_json)
+        rr = Response(res)
+        print('res_json44444444444444444444444444444444444')
+        pprint(res_json)
+        self.logger.debug(res_json)
+        self.assertEqual("E", rr.params['MODE'])
+        self.assertEqual(332, rr.params['ERRO'])
+        self.assertEqual(1, rr.params['ERROR_COUNT'])
+        self.assertEqual("332 BAD_CARD Cause: [PTOK invalid format], Field: [PTOK], Value: [hidden]", rr.get_errors())
+        self.assertEquals("399 BAD_OPTN Field: [UDF], Value: [UDF_DOESNOTEXIST=>throw a 'warning please!]", rr.params["WARNING_0"])
+        self.assertEquals("399 BAD_OPTN Field: [UDF], Value: [The label [UDF_DOESNOTEXIST] is not defined for merchant ID [999666].]", rr.params["WARNING_2"])
+        self.assertEqual(2, res.json()["WARNING_COUNT"])
+        self.logger.debug("[throw a warning please] found")
+        self.logger.debug("[not defined for merchant] found")
+
+    def test_7_ris_w2_kc_rules_review(self):
+        self.maxDiff = None
+        print(INQUIRYMODE.WITHTHRESHOLDS)
+        self.inq.request_mode(INQUIRYMODE.WITHTHRESHOLDS)
+        self.inq.total_set(10001)
+        self.inq.kount_central_customer_id("KCentralCustomerOne")
+        res = self.client.process(params=self.inq.params)
+        res_json = res.json()
+        self.assertIsNotNone(res_json)
+        rr = Response(res)
+        self.logger.debug(res_json)
+        self.assertEqual(rr.params["KC_DECISION"], 'R')
+        self.assertEqual(rr.params["KC_WARNING_COUNT"], 0)
+        self.assertEqual(rr.params["KC_TRIGGERED_COUNT"], 2)
+        events = rr.get_kc_events()
+        self.assertEqual(events, {
+            'KC_EVENT_2_CODE': 'orderTotalReview',
+            'KC_EVENT_1_CODE': 'billingToShippingAddressReview',
+            'KC_EVENT_2_EXPRESSION': '10001 > 10000',
+            'KC_EVENT_2_DECISION': 'R',
+            'KC_EVENT_1_EXPRESSION': '5053 > 1',
+            'KC_EVENT_1_DECISION': 'R'}
+                         )
+        self.logger.debug("[%s] found"%events['KC_EVENT_1_CODE'])
+        self.logger.debug("[%s] found"%events['KC_EVENT_2_CODE'])
+        #~ 'KC_EVENT_0_DECISION'
 """
-	@Test
-	public void testRisQMultiCartItemsTwoOptionalFieldsTwoRulesDecline_2() throws RisException {
-		logger.debug("running testRisQMultiCartItemsTwoOptionalFieldsTwoRulesDecline_2");
-		
-		inq.setUserAgent("Mozilla/5.0 (Macintosh; Intel Mac OS X 10_9_5) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/37.0.2062.124 Safari/537.36");
-		inq.setTotal(123456789);
-		inq.setCart(Arrays.asList(
-				new CartItem("cart item type 0", "cart item 0", "cart item 0 description", 10, 1000),
-				new CartItem("cart item type 1", "cart item 1", "cart item 1 description", 11, 1001),
-				new CartItem("cart item type 2", "cart item 2", "cart item 2 description", 12, 1002)
-			));
-		
-		Response response = client.process(inq);
-		logger.trace(response.toString());
-		
-		assertEquals("D", response.getAuto());
-		assertEquals(0, response.getWarningCount());
-		assertEquals(2, response.getRulesTriggered().size());
-	}
-	
-	@Test
-	public void testRisQWithUserDefinedFields_3() throws RisException {
-		logger.debug("running testRisQWitUserDefinedFields_3");
-		
-		inq.setParm("UDF[ARBITRARY_ALPHANUM_UDF]", "alphanumeric trigger value");
-		inq.setParm("UDF[ARBITRARY_NUMERIC_UDF]", "777");
-		
-		Response response = client.process(inq);
-		logger.trace(response.toString());
-		
-		boolean alphaNumericTriggered = false;
-		boolean numericTriggered = false;
-		
-		for (int i = 0; i < response.getRulesTriggered().size(); i++) {
-			String rdx = response.getParm("RULE_DESCRIPTION_" + i);
-			if (rdx.contains("ARBITRARY_ALPHANUM_UDF")) {
-				alphaNumericTriggered = true;
-				logger.debug("[alpha-numeric rule] triggered");
-			} else if (rdx.contains("ARBITRARY_NUMERIC_UDF")) {
-				numericTriggered = true;
-				logger.debug("[numeric rule] triggered");
-			}
-		}
-		
-		assertTrue("One or both rules were not found in the response", (alphaNumericTriggered && numericTriggered));
-	}
-	
-	@Test
-	public void testRisQHardErrorExpected_4() throws RisException {
-		logger.debug("running testRisQHardErrorExpected_4");
-		
-		// overwrite the PTOK value to induce an error in the RIS
-		inq.setParm("PTOK", "BADPTOK");
-		
-		Response response = client.process(inq);
-		logger.trace(response.toString());
-		
-		assertEquals("E", response.getMode());
-		assertEquals("332", response.getErrorCode());
-		assertEquals(1, response.getErrorCount());
-		assertEquals("332 BAD_CARD Cause: [PTOK invalid format], Field: [PTOK], Value: [hidden]", response.getErrors().get(0));
-	}
-	
-	@Test
-	public void testRisQWarningApproved_5() throws RisException {
-		logger.debug("running testRisQWarningApproved_5");
-		
-		inq.setParm("TOTL", "1000");
-		inq.setParm("UDF[UDF_DOESNOTEXIST]", "throw a warning please!");
-		
-		Response response = client.process(inq);
-		logger.trace(response.toString());
-		
-		assertEquals("A", response.getAuto());
-		assertEquals(2, response.getWarningCount());
-		
-		boolean throwAWarningPlease = false;
-		boolean notDefinedForMerchant = false;
-		
-		for (String warning : response.getWarnings()) {
-			if (warning.equals("399 BAD_OPTN Field: [UDF], Value: [UDF_DOESNOTEXIST=>throw a warning please!]")) {
-				throwAWarningPlease = true;
-				logger.debug("[throw a warning please] found");
-			} else if (warning.equals("399 BAD_OPTN Field: [UDF], Value: [The label [UDF_DOESNOTEXIST] is not defined for merchant ID [999666].]")) {
-				notDefinedForMerchant = true;
-				logger.debug("[not defined for merchant] found");
-			}
-		}
-		
-		assertTrue("One or both warnings were not found in response", (throwAWarningPlease && notDefinedForMerchant));
-	}
-	
-	@Test
-	public void testRisQHardSoftErrorsExpected_6() throws RisException {
-		logger.debug("running testRisQHardSoftErrorsExpected_6");
-		
-		inq.setParm("PTOK", "BADPTOK");
-		inq.setParm("UDF[UDF_DOESNOTEXIST]", "throw a warning please!");
-		
-		Response response = client.process(inq);
-		logger.trace(response.toString());
-		
-		assertEquals("E", response.getMode());
-		assertEquals("332", response.getErrorCode());
-		assertEquals(1, response.getErrorCount());
-		assertEquals("332 BAD_CARD Cause: [PTOK invalid format], Field: [PTOK], Value: [hidden]", response.getErrors().get(0));
-		
-		assertEquals(2, response.getWarningCount());
-		
-		boolean throwAWarningPlease = false;
-		boolean notDefinedForMerchant = false;
-		
-		for (String warning : response.getWarnings()) {
-			if (warning.equals("399 BAD_OPTN Field: [UDF], Value: [UDF_DOESNOTEXIST=>throw a warning please!]")) {
-				throwAWarningPlease = true;
-				logger.debug("[throw a warning please] found");
-			} else if (warning.equals("399 BAD_OPTN Field: [UDF], Value: [The label [UDF_DOESNOTEXIST] is not defined for merchant ID [999666].]")) {
-				notDefinedForMerchant = true;
-				logger.debug("[not defined for merchant] found");
-			}
-		}
-		
-		assertTrue("One or both warnings were not found in response", (throwAWarningPlease && notDefinedForMerchant));
-	}
-	
-	@Test
-	public void testRisWTwoKCRulesReview_7() throws RisException {
-		logger.debug("running testRisWTwoKCRulesReview_7");
-		
-		inq.setMode(InquiryMode.KC_FULL_INQUIRY_W);
-		inq.setTotal(10001);
-		inq.setKcCustomerId("KCentralCustomerOne");
-		
-		Response response = client.process(inq);
-		logger.trace(response.toString());
-		
-		assertEquals("R", response.getKcDecision());
-		assertEquals(0, response.getWarningCount());
-		assertEquals(0, response.getKcWarningCount());
-		assertEquals(2, response.getKcEventCount());
-		
-		boolean billingToShipping = false;
-		boolean orderTotal = false;
-		
-		for (KcEvent event : response.getKcEvents()) {
-			if (event.getCode().equals("billingToShippingAddressReview") && event.getDecision().equals("R")) {
-				billingToShipping = true;
-				logger.debug("[billing to shipping event] found");
-			} else if (event.getCode().equals("orderTotalReview") && event.getDecision().equals("R")) {
-				orderTotal = true;
-				logger.debug("[order total event] found");
-			}
-		}
-		
-		assertTrue("One or both events were not found in the response", (billingToShipping && orderTotal));
-	}
-	
 	@Test
 	public void testRisJOneKountCentralRuleDecline_8() throws RisException {
 		logger.debug("running testRisJOneKountCentralRuelDecline_8");
@@ -428,9 +466,11 @@ class TestRisTestSuite(unittest.TestCase):
 		
 		assertEquals("P", response.getMode());
 		assertEquals("A", response.getAuto());
-	}
-}
-"""
 
+"""
 if __name__ == "__main__":
-    unittest.main(defaultTest = "TestRisTestSuite")
+    unittest.main(
+        #~ defaultTest = "TestRisTestSuite.test_ris_q_1_item_required_field_1_rule_review_1"
+        defaultTest = "TestRisTestSuite.test_7_ris_w2_kc_rules_review"
+        #~ defaultTest = "TestInquiry"
+        )

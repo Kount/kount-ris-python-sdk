@@ -14,7 +14,6 @@ __status__ = "Development"
 from util.ris_validation_exception import RisResponseException
 
 
-
 class KcEvent(object):
 	"""A class that represents a Kount Central event.:
 	The event object contains three fields: decision, expression, and code.
@@ -30,7 +29,6 @@ class KcEvent(object):
 		self.event_decision = decision
 		self.event_expression = expression
 		self.event_code = code
-
 
 
 class Response(object):
@@ -107,13 +105,15 @@ class Response(object):
 		"WARNING_COUNT" - Get the number of warnings associated with the response.
 		"ERROR_COUNT" - Get the number of errors associated with the response.
 		"""
+		self.params = params.json()
 
 	def get_kc_warnings(self):
-		"Get an ArrayList of the KC warnings returned by this Response."
+		"Get an List of the KC warnings returned by this Response."
 		warnings = []
-		warning_count = int(self.params["KC_WARNING_COUNT"])
+		#~ print(555, self.params.json())
+		warning_count = int(self.params["WARNING_COUNT"])
 		for i in range(warning_count):
-			warnings.append(self.params["KC_WARNING_%s"%i])
+			warnings.append(self.params["WARNING_%s"%i])
 		return warnings
 
 	def get_kc_errors(self):
@@ -127,12 +127,22 @@ class Response(object):
 		"""Get an ArrayList of the KC events returned by this Response."""
 		events = []
 		event_count = int(self.params["KC_TRIGGERED_COUNT"])
+		print('event_count************************', event_count)
+		events = {}
 		for i in range(event_count):
-			event = KcEvent(
-				self.params["KC_EVENT_%s_DECISION"%i],
-				self.params["KC_EVENT_%s_EXPRESSION"%i],
-				self.params["KC_EVENT_%s_CODE"%i])
-			events.append(event)
+			
+			#~ event = {}
+			events["KC_EVENT_%s_DECISION"%(i+1)] = self.params["KC_EVENT_%s_DECISION"%(i+1)]
+			events["KC_EVENT_%s_EXPRESSION"%(i+1)] = self.params["KC_EVENT_%s_EXPRESSION"%(i+1)]
+			events["KC_EVENT_%s_CODE"%(i+1)] = self.params["KC_EVENT_%s_CODE"%(i+1)]
+			print(6666666666666666666666, events)
+			#~ event = KcEvent(
+				#~ self.params["KC_EVENT_%s_DECISION"%(i+1)],
+				#~ self.params["KC_EVENT_%s_EXPRESSION"%(i+1)],
+				#~ self.params["KC_EVENT_%s_CODE"%(i+1)])
+			#~ print('event----', event, self.params["KC_EVENT_%s_DECISION"%(i+1)])
+			#~ events.append(event)
+			
 		return events
 
 	def get_rules_triggered(self):
@@ -159,11 +169,11 @@ class Response(object):
 			errors.append(self.params["ERROR_%s"%i])
 		return errors
 
-	def parse_response(self, r):
+	'''def parse_response(self, r):
 		"""Parse the RIS repsonse and return a Response object.
 		throws RisResponseException - When error encountered parsing response
 		Arg: r - Reader for character stream returned by RIS
-		return Response"""
+		return Response IF NOT JSON"""
 		with open("test.txt", 'rb', buffering=30) as reader:
 			print(type(reader))
 			response_fields = {}
@@ -179,6 +189,7 @@ class Response(object):
 				raise RisResponseException("Error parsing RIS response")
 			response = Response(response_fields)
 			return response
+	'''
 
 	def get_lexis_nexis_cbd_attributes(self):
 		"""Get LexisNexis Chargeback Defender attribute data associated with the RIS
