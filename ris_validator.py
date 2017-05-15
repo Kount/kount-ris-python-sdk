@@ -83,7 +83,7 @@ class RisValidator(object):
                 continue
             regex = p_xml.get('reg_ex', None)
             mode_dict = p_xml.get('mode', None)
-            mode = params['MODE']
+            mode = params.get('MODE', "Q")
             if params[p] is not None and len(str(params[p])):
                 empty.append(p)
                 continue

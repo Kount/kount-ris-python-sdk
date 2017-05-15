@@ -25,7 +25,7 @@ from util.payment import CardPayment
 from util.cartitem import CartItem
 from util.address import Address
 from test_api_kount import Client
-from local_settings import url_api, kountAPIkey
+from local_settings import url_api, kountAPIkey, kountAPIkey999667
 from settings import resource_folder, xml_filename, sdk_version
 from util.xmlparser import xml_to_dict
 from response import Response
@@ -34,7 +34,7 @@ xml_filename_path = os.path.join(os.path.dirname(__file__),
                             resource_folder, xml_filename)
 
 initial = {'MODE':'Q',
-    'Merchant (MERC)':'999666',
+    'MERC':'999666',
     'NAME':'SdkTestFirstName SdkTestLastName',
     'PTOK':'0007380568572514',
     'LAST4':'2514',
@@ -85,7 +85,7 @@ SHIPPING_ADDRESS = Address("567 West S2A1 Court North", "", "Gnome", "AK", "9976
 def generate_unique_id():
     return str(uuid.uuid4()).replace('-', '').upper()
 
-def default_inquiry(session_id):
+def default_inquiry(session_id, m_id):
     "PENC is not set"
     result = Inquiry()
     result.request_mode(INQUIRYMODE.DEFAULT)
@@ -108,7 +108,7 @@ def default_inquiry(session_id):
     result.shopping_cart(cart_item)
     result.version()
     result.version_set(sdk_version)  #0695
-    result.merchant_set(MERCHANT_ID) # 999666
+    result.merchant_set(m_id) # 999666
     payment = CardPayment("0007380568572514")
     print("payment.last4============", payment.payment_token, payment, payment.last4)
     result.payment_set(payment) #PTOK
@@ -199,11 +199,11 @@ class TestRisTestSuite(unittest.TestCase):
         self.maxDiff = None
         #~ self.reset_id_and_inquiry
         self.session_id = generate_unique_id()[:32]
-        result = default_inquiry(self.session_id)
+        result = default_inquiry(self.session_id, MERCHANT_ID)
         self.inq = result
         self.server_url = RIS_ENDPOINT
         self.client = Client(url_api, kountAPIkey)
-        self.result = default_inquiry(session_id = self.session_id)
+        self.result = default_inquiry(session_id = self.session_id, m_id=MERCHANT_ID)
         self.xml_to_dict1, self.required_field_names, self.notrequired_field_names = xml_to_dict(xml_filename_path)
         self.log()
 
@@ -413,7 +413,6 @@ class TestRisTestSuite(unittest.TestCase):
         res_json = res.json()
         self.assertIsNotNone(res_json)
         rr = Response(res)
-        transaction_id = rr.params['TRAN']
         self.logger.debug(res_json)
         transaction_id = rr.params['TRAN']
         session_id = rr.params['SESS']
@@ -444,25 +443,65 @@ class TestRisTestSuite(unittest.TestCase):
         self.assertIn("GEOX", rr.params)
         self.assertIn("SCOR", rr.params)
         self.assertIn("AUTO", rr.params)
-"""	
-	@Test
-	public void testModeP_11() throws RisException {
-		logger.debug("running testModeP_11");;
-		
-		inq.setMode(InquiryMode.PHONE_ORDER);
-		inq.setAnid("2085551212");
-		inq.setTotal(1000);
-		
-		Response response = client.process(inq);
-		logger.trace(response.toString());
-		
-		assertEquals("P", response.getMode());
-		assertEquals("A", response.getAuto());
 
-"""
+    def test_11_mode_p(self):
+        res = self.client.process(params=self.inq.params)
+        res_json = res.json()
+        self.assertIsNotNone(res_json)
+        rr = Response(res)
+        self.inq.request_mode(INQUIRYMODE.PHONE)
+        self.inq.anid("2085551212")
+        self.inq.total_set(1000)
+        res = self.client.process(params=self.inq.params)
+        res_json = res.json()
+        self.assertIsNotNone(res_json)
+        rr = Response(res)
+        self.logger.debug(res_json)
+        self.assertEqual("P", rr.params['MODE'])
+        self.assertEqual("A", rr.params['AUTO'])
+
+    def test_12_expected_score(self):
+        #~ self.inq = Inquiry()
+        self.maxDiff = None
+        #~ self.reset_id_and_inquiry
+        #~ self.session_id = generate_unique_id()[:32]
+        #~ result = default_inquiry(self.session_id)
+        #~ self.inq = result
+        #~ self.server_url = RIS_ENDPOINT
+        #~ self.inq.merchant_set("999667")
+        
+        self.session_id = generate_unique_id()[:32]
+        result = default_inquiry(self.session_id, 999667)
+        inq = result
+        server_url = RIS_ENDPOINT
+        client = Client(url_api, kountAPIkey999667)
+
+        
+        self.xml_to_dict1, self.required_field_names, self.notrequired_field_names = xml_to_dict(xml_filename_path)
+        self.log()
+        #~ self.result = default_inquiry(session_id = self.session_id, m_id ="999667" )
+        
+        
+         # 999666
+        
+        inq.email_client('predictive@kount.com')
+        #~ self.inq.anid("2085551212")
+        inq.params["UDF[~K!_SCOR]"] = '42'
+        inq.params["FRMT"] = 'JSON'
+        print(inq.params)
+        res = self.client.process(params=inq.params)
+        print(55555, res)
+        res_json = res.json()
+        self.assertIsNotNone(res_json)
+        rr = Response(res)
+        self.logger.debug(res_json)
+        self.assertEqual("42", rr.params['UDF[~K!_SCOR]'])
+        #~ self.assertEqual("A", rr.params['AUTO'])
+
+
 if __name__ == "__main__":
     unittest.main(
-        #~ defaultTest = "TestRisTestSuite.test_ris_q_1_item_required_field_1_rule_review_1"
-        defaultTest = "TestRisTestSuite.test_10_mode_x_after_mode_q"
+        #~ defaultTest = "TestRisTestSuite.test_1_ris_q_1_item_required_field_1_rule_review"
+        defaultTest = "TestRisTestSuite.test_12_expected_score"
         #~ defaultTest = "TestInquiry"
         )

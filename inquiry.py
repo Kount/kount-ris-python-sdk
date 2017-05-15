@@ -197,7 +197,7 @@ class Inquiry(Request):
             merchant must pass 0123456789 as the ANID. This field is only valid for MODE=P RIS submissions.
             Arg: anid_order - Anid of the client
         """
-        self.params.put("ANID", anid_order);
+        self.params["ANID"] = anid_order
 
     def company_name(self, name):
         """Set the name of the company.
