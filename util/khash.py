@@ -22,7 +22,8 @@ def validator(*args):
 	"""
 	for current in args:
 		is_string = isinstance(current, str)
-		is_digit = isinstance(current, (int, long))
+		#~ is_digit = isinstance(current, (int, long))
+		is_digit = isinstance(current, (int))
 		if ((is_digit and current <= 0) or (not is_digit and not is_string) or
 				current is None or len(str(current))<6):
 			raise ValueError("incorrect arg: [%s]"%current)
@@ -69,7 +70,8 @@ class Khash(object):
 		Args: plain_text - String to be hashed
 		returns: String hashed
 		"""
-		if isinstance(plain_text, (int, long)):
+		#~ if isinstance(plain_text, (int, long)):
+		if isinstance(plain_text, (int)):
 			plain_text = str(plain_text)
 		if validator(plain_text):
 			legal_chars = digits + ascii_uppercase

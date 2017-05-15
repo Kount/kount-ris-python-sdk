@@ -123,6 +123,10 @@ class Response(object):
 			errors.append(self.params["KC_ERROR_%s"%i])
 		return errors
 
+	def get_kc_events_count(self):
+		event_count = int(self.params["KC_TRIGGERED_COUNT"])
+		return event_count
+
 	def get_kc_events(self):
 		"""Get an ArrayList of the KC events returned by this Response."""
 		events = []

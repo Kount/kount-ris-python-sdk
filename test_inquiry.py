@@ -18,6 +18,8 @@ import uuid
 
 from request import ASTAT, BCRSTAT, INQUIRYMODE, CURRENCYTYPE, MERCHANTACKNOWLEDGMENT #, REFUNDCBSTAT, SHIPPINGTYPESTAT
 from inquiry import Inquiry
+from update import Update, UPDATEMODE
+from util.khash import Khash
 from pprint import pprint
 from util.payment import CardPayment
 from util.cartitem import CartItem
@@ -355,104 +357,94 @@ class TestRisTestSuite(unittest.TestCase):
         self.logger.debug("[%s] found"%events['KC_EVENT_1_CODE'])
         self.logger.debug("[%s] found"%events['KC_EVENT_2_CODE'])
         #~ 'KC_EVENT_0_DECISION'
-"""
-	@Test
-	public void testRisJOneKountCentralRuleDecline_8() throws RisException {
-		logger.debug("running testRisJOneKountCentralRuelDecline_8");
-		inq.setMode(InquiryMode.KC_QUICK_INQUIRY_J);
-		inq.setTotal(1000);
-		inq.setKcCustomerId("KCentralCustomerDeclineMe");
-		
-		Response response = client.process(inq);
-		logger.trace(response.toString());
-		
-		assertEquals("D", response.getKcDecision());
-		assertEquals(0, response.getKcWarningCount());
-		assertEquals(1, response.getKcEventCount());
-		
-		assertEquals("D", response.getKcEvents().get(0).getDecision());
-		assertEquals("orderTotalDecline", response.getKcEvents().get(0).getCode());
-	}
-	
-	@Test
-	public void testModeUAfterModeQ_9() throws RisException, NoSuchAlgorithmException {
-		logger.debug("running testModeUAfterModeQ_9");
-		
-		Response response = client.process(inq);
-		logger.trace(response.toString());
-		
-		String transactionId = response.getTransactionId();
-		String sessionId = response.getSessionId();
-		String orderId = response.getOrderNumber();
-		
-		Update update = new Update();
-		update.setMode(UpdateMode.NO_RESPONSE);
-		update.setVersion("0695");
-		update.setTransactionId(transactionId);
-		update.setMerchantId(Utilities.MERCHANT_ID);
-		update.setSessionId(sessionId);
-		update.setOrderNumber(orderId);
-		// PTOK has to be khashed manually because of its explicit setting
-		update.setParm("PTOK", Khash.hashPaymentToken("5386460135176807"));
-		update.setParm("LAST4", "6807");
-		update.setMerchantAcknowledgment(MerchantAcknowledgment.YES);
-		update.setAuthorizationStatus(AuthorizationStatus.APPROVED);
-		update.setAvsZipReply(BankcardReply.MATCH);
-		update.setAvsAddressReply(BankcardReply.MATCH);
-		update.setCvvReply(BankcardReply.MATCH);
-		
-		Response updateResponse = client.process(update);
-		logger.trace(updateResponse.toString());
 
-		assertEquals("U", updateResponse.getMode());
-		assertEquals(transactionId, updateResponse.getTransactionId());
-		assertEquals(sessionId, updateResponse.getSessionId());
-		
-		assertNull(updateResponse.getAuto());
-		assertNull(updateResponse.getScore());
-		assertNull(updateResponse.getGeox());
-	}
-	
-	@Test
-	public void testModeXAfterModeQ_10() throws RisException, NoSuchAlgorithmException {
-		logger.debug("running testModeXAfterModeQ_10");
-		
-		Response response = client.process(inq);
-		logger.trace(response.toString());
-		
-		String transactionId = response.getTransactionId();
-		String sessionId = response.getSessionId();
-		String orderId = response.getOrderNumber();
-		
-		Update update = new Update();
-		update.setMode(UpdateMode.WITH_RESPONSE);
-		update.setVersion("0695");
-		update.setMerchantId(Utilities.MERCHANT_ID);
-		update.setTransactionId(transactionId);
-		update.setSessionId(sessionId);
-		update.setOrderNumber(orderId);
-		// PTOK has to be khashed manually because of its explicit setting
-		update.setParm("PTOK", Khash.hashPaymentToken("5386460135176807"));
-		update.setParm("LAST4", "6807");
-		update.setMerchantAcknowledgment(MerchantAcknowledgment.YES);
-		update.setAuthorizationStatus(AuthorizationStatus.APPROVED);
-		update.setAvsZipReply(BankcardReply.MATCH);
-		update.setAvsAddressReply(BankcardReply.MATCH);
-		update.setCvvReply(BankcardReply.MATCH);
-		
-		Response updateResponse = client.process(update);
-		logger.trace(updateResponse.toString());
-		
-		assertEquals("X", updateResponse.getMode());
-		assertEquals(transactionId, updateResponse.getTransactionId());
-		assertEquals(sessionId, updateResponse.getSessionId());
-		assertEquals(orderId, updateResponse.getOrderNumber());
-		
-		assertNotNull(updateResponse.getAuto());
-		assertNotNull(updateResponse.getScore());
-		assertNotNull(updateResponse.getGeox());
-	}
-	
+    def test_8_ris_j_1_kount_central_rule_decline(self):
+        self.maxDiff = None
+        self.inq.request_mode(INQUIRYMODE.JUSTTHRESHOLDS)
+        self.inq.total_set(1000)
+        self.inq.kount_central_customer_id("KCentralCustomerDeclineMe")
+        res = self.client.process(params=self.inq.params)
+        res_json = res.json()
+        self.assertIsNotNone(res_json)
+        self.logger.debug(res_json)
+        rr = Response(res)
+        self.assertEqual("D", rr.params['KC_DECISION'])
+        self.assertEqual(0, rr.params['KC_WARNING_COUNT'])
+        self.assertEqual(1, rr.get_kc_events_count())
+        self.assertEqual("orderTotalDecline", rr.get_kc_events()['KC_EVENT_1_CODE'])
+
+    def test_9_mode_u_after_mode_q(self):
+        res = self.client.process(params=self.inq.params)
+        res_json = res.json()
+        self.assertIsNotNone(res_json)
+        rr = Response(res)
+        transaction_id = rr.params['TRAN']
+        session_id = rr.params['SESS']
+        order_id = rr.params['ORDR']
+        update1 = Update()
+        update1.set_mode(UPDATEMODE.NO_RESPONSE)
+        update1.version_set(sdk_version)
+        update1.set_transaction_id(transaction_id)
+        update1.merchant_set(MERCHANT_ID)
+        update1.session_set(session_id)
+        update1.order_number(order_id)
+        #~ // PTOK has to be khashed manually because of its explicit setting
+        token_new = "5386460135176807"
+        update1.params["PTOK"] = Khash.hash_payment_token(token_new)
+        update1.params["LAST4"] = token_new[-4:]
+        update1.params["FRMT"] = 'JSON'
+        update1.merchant_acknowledgment_set(MERCHANTACKNOWLEDGMENT.TRUE)
+        update1.authorization_status(ASTAT.Approve)
+        update1.avs_zip_reply(BCRSTAT.MATCH)
+        update1.avs_address_reply(BCRSTAT.MATCH)
+        update1.avs_cvv_reply(BCRSTAT.MATCH)
+        res = self.client.process(params=update1.params)
+        res_json = res.json()
+        self.assertIsNotNone(res_json)
+        rr = Response(res)
+        self.logger.debug(res_json)
+        self.assertEqual("U", rr.params['MODE'])
+        self.assertNotIn("GEOX", rr.params)
+        self.assertNotIn("SCOR", rr.params)
+        self.assertNotIn("AUTO", rr.params)
+
+    def test_10_mode_x_after_mode_q(self):
+        res = self.client.process(params=self.inq.params)
+        res_json = res.json()
+        self.assertIsNotNone(res_json)
+        rr = Response(res)
+        transaction_id = rr.params['TRAN']
+        self.logger.debug(res_json)
+        transaction_id = rr.params['TRAN']
+        session_id = rr.params['SESS']
+        order_id = rr.params['ORDR']
+        update1 = Update()
+        update1.set_mode(UPDATEMODE.WITH_RESPONSE)
+        update1.version_set(sdk_version)
+        update1.set_transaction_id(transaction_id)
+        update1.merchant_set(MERCHANT_ID)
+        update1.session_set(session_id)
+        update1.order_number(order_id)
+        #~ // PTOK has to be khashed manually because of its explicit setting
+        token_new = "5386460135176807"
+        update1.params["PTOK"] = Khash.hash_payment_token(token_new)
+        update1.params["LAST4"] = token_new[-4:]
+        update1.params["FRMT"] = 'JSON'
+        update1.merchant_acknowledgment_set(MERCHANTACKNOWLEDGMENT.TRUE)
+        update1.authorization_status(ASTAT.Approve)
+        update1.avs_zip_reply(BCRSTAT.MATCH)
+        update1.avs_address_reply(BCRSTAT.MATCH)
+        update1.avs_cvv_reply(BCRSTAT.MATCH)
+        res = self.client.process(params=update1.params)
+        res_json = res.json()
+        self.assertIsNotNone(res_json)
+        rr = Response(res)
+        self.logger.debug(res_json)
+        self.assertEqual("X", rr.params['MODE'])
+        self.assertIn("GEOX", rr.params)
+        self.assertIn("SCOR", rr.params)
+        self.assertIn("AUTO", rr.params)
+"""	
 	@Test
 	public void testModeP_11() throws RisException {
 		logger.debug("running testModeP_11");;
@@ -471,6 +463,6 @@ class TestRisTestSuite(unittest.TestCase):
 if __name__ == "__main__":
     unittest.main(
         #~ defaultTest = "TestRisTestSuite.test_ris_q_1_item_required_field_1_rule_review_1"
-        defaultTest = "TestRisTestSuite.test_7_ris_w2_kc_rules_review"
+        defaultTest = "TestRisTestSuite.test_10_mode_x_after_mode_q"
         #~ defaultTest = "TestInquiry"
         )
