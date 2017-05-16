@@ -22,7 +22,7 @@ from ris_validator import RisValidator
 from util.xmlparser import xml_to_dict
 from response import Response
 
-#~ from pprint import pprint
+from pprint import pprint
 #~ from local_settings import url_api
 xml_filename_path = os.path.join(os.path.dirname(__file__),
                             resource_folder, xml_filename)
@@ -30,7 +30,9 @@ xml_filename_path = os.path.join(os.path.dirname(__file__),
 
 class Client:
     def __init__(self, url, key):
-        self.url = url_api
+        print(key)
+        print(url)
+        self.url = url
         self.kountAPIkey = key
         self.headers_api = {'X-Kount-Api-Key': self.kountAPIkey
                             #~ , 'Accept': 'application/json'
@@ -41,6 +43,8 @@ class Client:
         assert params['FRMT'] == 'JSON'
 
         self.validator = RisValidator.ris_validator(self, params, self.xml_to_dict1)
+        print(' self.validator===',  self.validator)
+        pprint( params)
         self.r = requests.post(self.url,
                             headers=self.headers_api, 
                             data=params,
@@ -49,18 +53,19 @@ class Client:
         pretty_print_POST(prepared)
         s = requests.Session()
         self.current = s.send(prepared)
-        s.close()"""
-        #~ print ("/////////////", self.r.status_code)
-        #~ print ("//////////text", self.r.text, "7"*10)
-        #~ print ("json//", self.r.json())
+        s.close()
+        print ("/////////////", self.r.status_code)
+        print ("//////////text", self.r.text, "7"*10)
+        print ("json//", self.r.json())"""
 
         if self.r.json == {}:
             self.assertEqual(self.r.text, "MODE=E\nERRO=201")
             return
         assert 200 == self.r.status_code
-        #~ print('***********', self.current.json())
+        print(__file__, self.r.text)
+        pprint(self.r.json())
         assert 'Error' not in self.r.text
-        rs = Response(self.r)
+        rs = Response(self.r)  #1111111111111
         #~ print("Response(self.current----------", rs.get_kc_warnings(), rs.get_warnings())
         return self.r
 

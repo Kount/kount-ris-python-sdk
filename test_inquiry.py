@@ -25,11 +25,10 @@ from util.payment import CardPayment
 from util.cartitem import CartItem
 from util.address import Address
 from test_api_kount import Client
-from local_settings import url_api, kountAPIkey, kountAPIkey999667
+from local_settings import url_api, url_api_beta, kountAPIkey, kountAPIkey999667
 from settings import resource_folder, xml_filename, sdk_version
 from util.xmlparser import xml_to_dict
 from response import Response
-from local_settings import url_api
 xml_filename_path = os.path.join(os.path.dirname(__file__),
                             resource_folder, xml_filename)
 
@@ -42,6 +41,7 @@ initial = {'MODE':'Q',
     'EMAL':'sdkTest@kountsdktestdomain.com',
     'SITE':'DEFAULT',
     'FRMT':'JSON',
+    'CASH':'4444',
     'CURR':'USD',
     'TOTL':'123456',
     'CASH':'4444',
@@ -78,26 +78,30 @@ initial = {'MODE':'Q',
 
 
 RIS_ENDPOINT = url_api
+RIS_ENDPOINT_BETA = url_api_beta
 MERCHANT_ID = '999666'
+MERCHANT_ID_999667 = '999667'
+EMAIL_CLIENT = "sdkTest@kountsdktestdomain.com"
 BILLING_ADDRESS = Address("1234 North B2A1 Tree Lane South", "", "Albuquerque", "NM", "87101", "US")
 SHIPPING_ADDRESS = Address("567 West S2A1 Court North", "", "Gnome", "AK", "99762", "US") #S2A1 S2CI S2ST S2PC S2CC
+PTOK = "0007380568572514"
 
 def generate_unique_id():
     return str(uuid.uuid4()).replace('-', '').upper()
 
-def default_inquiry(session_id, m_id):
+def default_inquiry(session_id, merchant_id, email_client, ptok):
     "PENC is not set"
     result = Inquiry()
     result.request_mode(INQUIRYMODE.DEFAULT)
     result.shipping_address(SHIPPING_ADDRESS)
     result.shipping_name("SdkShipToFN SdkShipToLN") #S2NM
     result.billing_address(BILLING_ADDRESS)
-
     result.currency_set(CURRENCYTYPE.USD)   #CURR
     result.total_set('123456') #TOTL
     result.billing_phone_number("555-867-5309") #B2PN
     result.shipping_phone_number("555-777-1212") #S2PN
-    result.email_client("sdkTest@kountsdktestdomain.com")
+    #~ result.email_client("sdkTest@kountsdktestdomain.com")
+    result.email_client(email_client)
     result.customer_name("SdkTestFirstName SdkTestLastName")
     result.unique_customer_id(session_id[:20]) #UNIQ
     result.website("DEFAULT") #SITE
@@ -108,10 +112,11 @@ def default_inquiry(session_id, m_id):
     result.shopping_cart(cart_item)
     result.version()
     result.version_set(sdk_version)  #0695
-    result.merchant_set(m_id) # 999666
-    payment = CardPayment("0007380568572514")
-    print("payment.last4============", payment.payment_token, payment, payment.last4)
+    result.merchant_set(merchant_id) # 999666
+    #~ payment = CardPayment(PTOK)
+    payment = CardPayment(ptok)
     result.payment_set(payment) #PTOK
+    #~ result.params["PTOK"] = Khash.hash_payment_token(PTOK)
     result.session_set(session_id) #SESS
     result.order_number(session_id[:10])  #ORDR 
     result.authorization_status(ASTAT.Approve) #AUTH
@@ -126,7 +131,7 @@ def default_inquiry(session_id, m_id):
 class TestInquiry(unittest.TestCase):
     def setUp(self):
         session_id = generate_unique_id()
-        self.result = default_inquiry(session_id = str(session_id))
+        self.result = default_inquiry(session_id = str(session_id), merchant_id=MERCHANT_ID, email_client=EMAIL_CLIENT)
         self.maxDiff = None
 
     def test_utilities(self):
@@ -150,7 +155,7 @@ class TestInquiry(unittest.TestCase):
             'CASH': '4444',
             'CURR': 'USD',
             'CVVR': 'M',
-            'EMAL': 'sdkTest@kountsdktestdomain.com',
+            'EMAL': EMAIL_CLIENT,
             'FRMT': 'JSON',
             #~ 'IPAD': '131.206.45.21',
             'LAST4': '2514',
@@ -193,17 +198,16 @@ class TestInquiry(unittest.TestCase):
         del(actual['ORDR'])
         self.assertEqual(actual, expected)
 
+
 class TestRisTestSuite(unittest.TestCase):
     
     def setUp(self):
         self.maxDiff = None
-        #~ self.reset_id_and_inquiry
         self.session_id = generate_unique_id()[:32]
-        result = default_inquiry(self.session_id, MERCHANT_ID)
-        self.inq = result
-        self.server_url = RIS_ENDPOINT
-        self.client = Client(url_api, kountAPIkey)
-        self.result = default_inquiry(session_id = self.session_id, m_id=MERCHANT_ID)
+        self.client = Client(RIS_ENDPOINT_BETA, kountAPIkey)
+        #~ self.client = Client(RIS_ENDPOINT, kountAPIkey)
+        #~ self.client = Client(url_api_beta, kountAPIkey)
+        self.inq = default_inquiry(session_id = self.session_id, merchant_id=MERCHANT_ID, email_client=EMAIL_CLIENT, ptok=PTOK)
         self.xml_to_dict1, self.required_field_names, self.notrequired_field_names = xml_to_dict(xml_filename_path)
         self.log()
 
@@ -216,11 +220,6 @@ class TestRisTestSuite(unittest.TestCase):
         self.logger.addHandler(handler)
         self.logger.setLevel(logging.DEBUG)
         self.logger.debug("running %s"%self._testMethodName)
-    
-    def reset_id_and_inquiry(self):
-        self.session_id = generate_unique_id()
-        result = default_inquiry(self.session_id)
-        self.inq = result
 
     def test_1_ris_q_1_item_required_field_1_rule_review(self):
         res = self.client.process(params=self.inq.params)
@@ -229,7 +228,9 @@ class TestRisTestSuite(unittest.TestCase):
         rr = Response(res)
         self.assertEqual("R", res_json["AUTO"])
         self.assertEqual(0, res.json()["WARNING_COUNT"])
-        self.assertEqual( {'1024842': 'Review if order total > $1000 USD'}, rr.get_rules_triggered())
+        expected = sorted({'1024842': 'Review if order total > $1000 USD'}.values())
+        actual = sorted(rr.get_rules_triggered().values())
+        self.assertEqual(expected, actual)
         self.assertEqual(res.json()["SESS"], res_json["SESS"])
         self.assertEqual(res.json()["SESS"][:10], res_json["ORDR"])
 
@@ -250,9 +251,10 @@ class TestRisTestSuite(unittest.TestCase):
         self.assertEqual("D", res_json["AUTO"])
         self.assertEqual(0, res.json()["WARNING_COUNT"])
         #~ print(rr.get_rules_triggered())
-        self.assertEqual({'1024842': 'Review if order total > $1000 USD',
-                          '1024844': 'Decline if order total > $1000000 USD'},
-                          rr.get_rules_triggered())
+        expected = sorted({'1024842': 'Review if order total > $1000 USD',
+                           '1024844': 'Decline if order total > $1000000 USD'}.values())
+        actual = sorted(rr.get_rules_triggered().values())
+        self.assertEqual(expected, actual)
 
     def test_3_ris_q_with_user_defined_fields(self):
         self.maxDiff = None
@@ -266,30 +268,48 @@ class TestRisTestSuite(unittest.TestCase):
         self.assertEqual("R", res_json["AUTO"])
         self.assertEqual(3, res_json["RULES_TRIGGERED"])
         self.assertEqual(0, res.json()["WARNING_COUNT"])
-        #~ print(rr.get_rules_triggered())
-        self.assertEqual({'1025086': 'review if ARBITRARY_ALPHANUM_UDF contains "trigger"',
-                        '1024842': 'Review if order total > $1000 USD',
-                        '1025088': 'review if ARBITRARY_NUMERIC_UDF == 777'},
-                        rr.get_rules_triggered())
+        expected = sorted({'1025086': 'review if ARBITRARY_ALPHANUM_UDF contains "trigger"',
+                           '1024842': 'Review if order total > $1000 USD',
+                           '1025088': 'review if ARBITRARY_NUMERIC_UDF == 777'}.values())
+        actual = sorted(rr.get_rules_triggered().values())
+        self.assertEqual(expected, actual)
         self.logger.debug("[alpha-numeric rule] triggered")
         self.logger.debug("[numeric rule] triggered")
 
     def test_4_ris_q_hard_error_expected(self):
         self.maxDiff = None
         #~ overwrite the PTOK value to induce an error in the RIS
-        self.inq.params["PTOK"] = "BADPTOK"
+        k = Khash()
+        print(6666666666666, self.inq.params["PTOK"] )
+
+        t = k.hash_payment_token(token="BADPTOK")
+        self.assertEqual(t, "BADPTOIJJFD7PFNDN5ZY")
+        self.inq.params["PTOK"] = t
+        #~ self.inq.params["LAST4"] = t[-4:]
+        print('************'*3, self.inq.params["PTOK"], t[-4:])
+        #~ payment_token=None, payment_type=None, khashed=False
+        #~ cart_item = []
+        #~ cart_item.append(CartItem("SPORTING_GOODS", "SG999999", "3000 CANDLEPOWER PLASMA FLASHLIGHT", '2', '68990')) # PROD_TYPE[0, PROD_ITEM[0], PROD_DESC[0] PROD_QUANT[0],PROD_PRICE[0]
+        #~ self.inq.shopping_cart(cart_item)
+        #~ cart.Add(new CartItem("cart item 0 type", "cart item 0", "cart item 0 description", 10, 1000));
+            #~ inquiry.SetCart(cart);
+        
+        #~ card_solted = self.k.hash_payment_token(token=plain_text)
+        #~ e = "%s%s"%(str(self.list_for_hash[i])[:6], self.expected[i])
+        #~ self.assertEqual(card_solted, e)
+        #~ self.assertTrue(self.k.khashed(card_solted))
         res = self.client.process(params=self.inq.params)
         res_json = res.json()
         self.assertIsNotNone(res_json)
         self.logger.debug(res_json)
         rr = Response(res)
-        #~ print('res_json44444444444444444444444444444444444')
-        #~ pprint(res_json)
+        print('res_json44444444444444444444444444444444444')
+        pprint(res_json)
         #~ 'WARNING_0': '399 BAD_OPTN Cause: [LAST4 does not match last 4 characters in '
                      #~ 'payment token], Field: [LAST4], Value: [2514]',
+        self.assertEqual('332 BAD_CARD Cause: [PTOK invalid format], Field: [PTOK], Value: [hidden]', rr.get_errors())
         self.assertEqual("E", rr.params['MODE'])
         self.assertNotEqual(['332 BAD_CARD Cause: [Too short], Field: [PTOK], Value: [hidden]'], rr.get_errors())
-        self.assertEqual('332 BAD_CARD Cause: [PTOK invalid format], Field: [PTOK], Value: [hidden]', rr.get_errors())
         self.assertEqual(332, rr.params['ERRO'])
         self.assertEqual(0, rr.params['WARNING_COUNT'])
 
@@ -309,10 +329,11 @@ class TestRisTestSuite(unittest.TestCase):
         self.logger.debug("[throw a warning please] found")
         self.logger.debug("[not defined for merchant] found")
 
-    def test_6_ris_q_hard_oft_errors_expected(self):
+    def test_6_ris_q_hard_soft_errors_expected(self):
         self.maxDiff = None
         #~ self.logger.debug("running testRisQHardSoftErrorsExpected_6");
-        self.inq.params["PTOK"] = "BADPTOK"
+        self.inq.params["PTOK"] = Khash.hash_payment_token("BADPTOK")
+        #~ self.inq.params["PTOK"] = Khash.hash_payment_token(PTOK)
         self.inq.params["UDF[UDF_DOESNOTEXIST]"] = "throw a warning please!"
         res = self.client.process(params=self.inq.params)
         res_json = res.json()
@@ -333,7 +354,6 @@ class TestRisTestSuite(unittest.TestCase):
 
     def test_7_ris_w2_kc_rules_review(self):
         self.maxDiff = None
-        print(INQUIRYMODE.WITHTHRESHOLDS)
         self.inq.request_mode(INQUIRYMODE.WITHTHRESHOLDS)
         self.inq.total_set(10001)
         self.inq.kount_central_customer_id("KCentralCustomerOne")
@@ -356,7 +376,6 @@ class TestRisTestSuite(unittest.TestCase):
                          )
         self.logger.debug("[%s] found"%events['KC_EVENT_1_CODE'])
         self.logger.debug("[%s] found"%events['KC_EVENT_2_CODE'])
-        #~ 'KC_EVENT_0_DECISION'
 
     def test_8_ris_j_1_kount_central_rule_decline(self):
         self.maxDiff = None
@@ -460,48 +479,115 @@ class TestRisTestSuite(unittest.TestCase):
         self.assertEqual("P", rr.params['MODE'])
         self.assertEqual("A", rr.params['AUTO'])
 
-    def test_12_expected_score(self):
-        #~ self.inq = Inquiry()
-        self.maxDiff = None
-        #~ self.reset_id_and_inquiry
-        #~ self.session_id = generate_unique_id()[:32]
-        #~ result = default_inquiry(self.session_id)
-        #~ self.inq = result
-        #~ self.server_url = RIS_ENDPOINT
-        #~ self.inq.merchant_set("999667")
-        
-        self.session_id = generate_unique_id()[:32]
-        result = default_inquiry(self.session_id, 999667)
-        inq = result
-        server_url = RIS_ENDPOINT
-        client = Client(url_api, kountAPIkey999667)
-
-        
-        self.xml_to_dict1, self.required_field_names, self.notrequired_field_names = xml_to_dict(xml_filename_path)
-        self.log()
-        #~ self.result = default_inquiry(session_id = self.session_id, m_id ="999667" )
-        
-        
-         # 999666
-        
-        inq.email_client('predictive@kount.com')
-        #~ self.inq.anid("2085551212")
-        inq.params["UDF[~K!_SCOR]"] = '42'
-        inq.params["FRMT"] = 'JSON'
-        print(inq.params)
-        res = self.client.process(params=inq.params)
-        print(55555, res)
+    def test_14_ris_q_using_payment_encoding_mask_valid(self):
+        PTOK_2 = "370070XXXXX9797"
+        LAST4 = PTOK_2[-4:]
+        PENC='MASK'
+        res = self.client.process(params=self.inq.params)
+        res_json = res.json()
+        self.assertIsNotNone(res_json)
+        rr = Response(res)
+        self.inq.params['LAST4'] = LAST4
+        self.inq.params['PTOK'] = PTOK_2
+        self.inq.params['PENC'] = PENC
+        res = self.client.process(params=self.inq.params)
         res_json = res.json()
         self.assertIsNotNone(res_json)
         rr = Response(res)
         self.logger.debug(res_json)
-        self.assertEqual("42", rr.params['UDF[~K!_SCOR]'])
-        #~ self.assertEqual("A", rr.params['AUTO'])
+        self.assertEqual("AMEX", rr.params['BRND'])
+
+    def test_15_ris_q_using_payment_encoding_mask_error(self):
+        PTOK_2 = "370070538959797"
+        LAST4 = PTOK_2[-4:]
+        PENC='MASK'
+        res = self.client.process(params=self.inq.params)
+        res_json = res.json()
+        self.assertIsNotNone(res_json)
+        rr = Response(res)
+        self.inq.params['LAST4'] = LAST4
+        self.inq.params['PTOK'] = PTOK_2
+        self.inq.params['PENC'] = PENC
+        res = self.client.process(params=self.inq.params)
+        res_json = res.json()
+        self.assertIsNotNone(res_json)
+        rr = Response(res)
+        self.logger.debug(res_json)
+        self.assertEqual({'ERRO': 340,
+            'ERROR_0': '340 BAD_MASK Cause: [value [370070538959797] did not match regex '
+                       '/^\\d{6}X{5,9}\\d{1,4}$/], Field: [PTOK], Value: '
+                       '[370070538959797]',
+            'ERROR_COUNT': 1,
+            'MODE': 'E',
+            'WARNING_COUNT': 0}, rr.params)
+
+
+class TestBasicConnectivity(unittest.TestCase):
+    def setUp(self):
+        self.maxDiff = None
+        self.session_id = generate_unique_id()[:32]
+        email_client = 'predictive@kount.com'
+        result = default_inquiry(self.session_id, MERCHANT_ID_999667, email_client)
+        #~ result = default_inquiry(self.session_id, MERCHANT_ID, email_client)
+        self.inq = result
+
+        self.inq.params["MERC"] = MERCHANT_ID_999667
+        #~ pprint(self.inq.params)
+        self.server_url = RIS_ENDPOINT_BETA
+        #~ self.server_url = "https://risk.beta.kount.net"
+        self.client = Client(RIS_ENDPOINT_BETA, kountAPIkey999667)
+        #~ self.client = Client(url_api, kountAPIkey)
+        self.xml_to_dict1, self.required_field_names, self.notrequired_field_names = xml_to_dict(xml_filename_path)
+        self.log()
+
+    def log(self):
+        self.logger = logging.getLogger()
+        handler = logging.StreamHandler()
+        formatter = logging.Formatter(
+                '%(asctime)s %(name)-12s %(levelname)-8s %(message)s')
+        handler.setFormatter(formatter)
+        self.logger.addHandler(handler)
+        self.logger.setLevel(logging.DEBUG)
+        self.logger.debug("running %s"%self._testMethodName)
+        
+    def test_12_expected_score(self):
+        self.inq.params["UDF[~K!_SCOR]"] = '42'
+        #~ self.inq = Inquiry()
+
+        res = self.client.process(params=self.inq.params)
+        res_json = res.json()
+        self.assertIsNotNone(res_json)
+        rr = Response(res)
+        self.logger.debug(res_json)
+        self.assertEqual("42", rr.params['SCOR'])
+
+    def test_13_expected_decision(self):
+        self.inq.params["UDF[~K!_AUTO]"] = 'R'
+        res = self.client.process(params=self.inq.params)
+        res_json = res.json()
+        self.assertIsNotNone(res_json)
+        rr = Response(res)
+        self.assertEqual("R", res_json["AUTO"])
+
+    def test_16_expected_geox(self):
+        self.inq.params["UDF[~K!_SCOR]"] = '42'
+        self.inq.params["UDF[~K!_AUTO]"] = 'D'
+        self.inq.params["UDF[~K!_GEOX]"] = 'NG'
+        res = self.client.process(params=self.inq.params)
+        res_json = res.json()
+        self.assertIsNotNone(res_json)
+        rr = Response(res)
+        self.assertEqual("D", res_json["AUTO"])
+        self.assertEqual("NG", res_json["GEOX"])
+        self.assertEqual("42", rr.params['SCOR'])
 
 
 if __name__ == "__main__":
     unittest.main(
         #~ defaultTest = "TestRisTestSuite.test_1_ris_q_1_item_required_field_1_rule_review"
-        defaultTest = "TestRisTestSuite.test_12_expected_score"
+        #~ defaultTest = "TestRisTestSuite.test_6_ris_q_hard_soft_errors_expected"
+        defaultTest = "TestRisTestSuite.test_4_ris_q_hard_error_expected"
+        #~ defaultTest = "TestRisTestSuite.test_15_ris_q_using_payment_encoding_mask_error"
+        #~ defaultTest = "TestBasicConnectivity"
         #~ defaultTest = "TestInquiry"
         )

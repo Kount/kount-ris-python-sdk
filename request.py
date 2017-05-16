@@ -218,6 +218,8 @@ class Request(object):
                 else:
                     payment.payment_token = Khash.hash_payment_token(payment.payment_token)
                 payment.khashed = True
+                self.params["PENC"] = "MASK"
+                print("payment.khashed = TRUEEEEEEEEEEEE", payment.payment_token, payment.khashed )
             except ValueError as nfe:
                 """logger.error("Error converting Merchant ID to integer" + " value. Set a valid Merchant ID.", nfe);"""
                 raise nfe

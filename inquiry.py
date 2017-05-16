@@ -46,10 +46,10 @@ class Inquiry(Request):
         assert len(vers) == 32
         self.params["SDK_VERSION"] = vers
 
-    def cash(self, cash=0):
+    def cash(self, cash):
         """Set cash amount of any feasible goods.
             Arg: cash - int, cash amount of any feasible goods"""
-        self.cash = cash
+        self.params["CASH"] = cash
 
     def date_of_birth(self, dob=datetime.today()):
         """Set the date of birth in the format YYYY-MM-DD.
