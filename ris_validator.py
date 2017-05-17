@@ -36,12 +36,12 @@ class RisValidator(object):
         #~ print("self.notrequired_field_names = ", self.notrequired_field_names)
 
     #~ def ris_validator(self, params, required_field_names, notrequired_field_names):
-        #~ req - list with required fields, notreq - list with notrequired fields, 
+        #~ req - list with required fields, notreq - list with notrequired fields,
     def ris_validator(self, params, xml_to_dict1):
         """Client side validate the data to be passed to RIS.
         kwargs
-            params - Map of data parameters from request, 
-            raise RisValidationException - Ris validation exception 
+            params - Map of data parameters from request,
+            raise RisValidationException - Ris validation exception
             return List of errors encountered as util.ValidationError objects
         """
         #~ print("xml_to_dict1", xml_to_dict1)
@@ -73,12 +73,11 @@ class RisValidator(object):
                 print('required_err', r)
                 raise ValidationError(r)"""
         for p in params:
-            #~ if p=='ANID':
-                #~ print('ANID--------------------------', p)
-                #~ continue
+            if params[p] is None:
+                continue
             try:
                 p_xml = xml_to_dict1[p.split("[")[0]]
-            except KeyError as e:
+            except KeyError:
                 missing_in_xml.append(p)
                 continue
             regex = p_xml.get('reg_ex', None)
@@ -89,47 +88,57 @@ class RisValidator(object):
                 continue
             max_length = p_xml.get('max_length', None)
             if max_length:
-                if params[p] is not None and int(p_xml['max_length']) < len(params[p]):
-                    required_err = "max_length %s invalid for %s"%(len(params[p]), p)
+                if int(p_xml['max_length']) < len(params[p]):
+                    required_err = "max_length %s invalid for %s" % (
+                        len(params[p]), p)
                     errors.append(required_err)
                     raise ValidationError(params[p], regex)
             if (regex is not None) and not re.match(regex, params[p]):
+                print(333, p, regex)
                 required_err = "Regex " + p_xml['reg_ex'] + " invalid for " + p
                 errors.append(required_err)
                 raise ValidationError(field=p, value=params[p], pattern=regex)
-            if mode is not None and mode_dict is not None and params[p] is not None:
+            if mode is not None and mode_dict is not None:
                 #~ 'ANID': {'max_length': '64', 'mode': ['P'], 'required': True},
-                if params[p]=="" and mode in mode_dict:
-                    required_err = "Invalid parameter [%s] for mode [%s]"%(p, mode)
+                if params[p] == "" and mode in mode_dict:
+                    required_err = "Invalid parameter [%s] "\
+                                   "for mode [%s]"%(p, mode)
                     errors.append(required_err)
                     raise ValidationError(p, mode)
                 if params[p] != "" and mode not in mode_dict:
                     required_err = "Mode " + mode + " invalid for " + p
                     errors.append(required_err)
                     raise ValidationError(p, mode)
-        product_type = sorted([cpt for cpt in params if cpt.startswith("PROD_TYPE[")])
-        product_name = sorted([cpt for cpt in params if cpt.startswith("PROD_ITEM[")])
-        product_description = sorted([cpt for cpt in params if cpt.startswith("PROD_DESC[")])
-        product_quantity = sorted([cpt for cpt in params if cpt.startswith("PROD_QUANT[")])
-        product_price = sorted([cpt for cpt in params if cpt.startswith("PROD_PRICE[")])
+        product_type = sorted(
+            [cpt for cpt in params if cpt.startswith("PROD_TYPE[")])
+        product_name = sorted(
+            [cpt for cpt in params if cpt.startswith("PROD_ITEM[")])
+        product_description = sorted(
+            [cpt for cpt in params if cpt.startswith("PROD_DESC[")])
+        product_quantity = sorted(
+            [cpt for cpt in params if cpt.startswith("PROD_QUANT[")])
+        product_price = sorted(
+            [cpt for cpt in params if cpt.startswith("PROD_PRICE[")])
         # cart_items = []
-        cart_items_number = max(len(product_type), len(product_name), len(product_description), len(product_quantity), len(product_price))
-        for ci in range(cart_items_number):
-            c = CartItem()
+        cart_items_number = max(len(product_type), len(product_name),
+                                len(product_description), len(product_quantity),
+                                len(product_price))
+        for cin in range(cart_items_number):
+            cart = CartItem()
             try:
-                c.product_type = params[product_type[ci]]
-                c.item_name = params[product_name[ci]]
-                c.description = params[product_description[ci]]
-                c.quantity = params[product_quantity[ci]]
-                c.price = params[product_price[ci]]
+                cart.product_type = params[product_type[cin]]
+                cart.item_name = params[product_name[cin]]
+                cart.description = params[product_description[cin]]
+                cart.quantity = params[product_quantity[cin]]
+                cart.price = params[product_price[cin]]
                 # cart_items.append(c)
-            except KeyError as e:
-                required_err = "CartItem - mandatory field missed %s. %s"%(c.to_string(), e)
+            except KeyError as kye:
+                required_err = "CartItem - mandatory field missed "\
+                               "%s. %s" % (cart.to_string(), kye)
                 errors.append(required_err)
-            except IndexError as e:
-                required_err = "CartItem -  %s. %s"%(c.to_string(), e)
-                #~ errors.append(required_err)
-        #print("cart_items", [c.to_string() for c in cart_items])
+            except IndexError as ine:
+                required_err = "CartItem -  %s. %s" % (cart.to_string(), ine)
+                errors.append(required_err)
         if len(errors):
             raise RisValidationException("Validation process failed", errors)
         return errors, missing_in_xml, empty

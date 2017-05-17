@@ -105,7 +105,7 @@ class Response(object):
 		"WARNING_COUNT" - Get the number of warnings associated with the response.
 		"ERROR_COUNT" - Get the number of errors associated with the response.
 		"""
-		self.params = params.json()
+		self.params = params
 
 	def get_kc_warnings(self):
 		"Get an List of the KC warnings returned by this Response."
@@ -131,22 +131,11 @@ class Response(object):
 		"""Get an ArrayList of the KC events returned by this Response."""
 		events = []
 		event_count = int(self.params["KC_TRIGGERED_COUNT"])
-		print('event_count************************', event_count)
 		events = {}
 		for i in range(event_count):
-			
-			#~ event = {}
 			events["KC_EVENT_%s_DECISION"%(i+1)] = self.params["KC_EVENT_%s_DECISION"%(i+1)]
 			events["KC_EVENT_%s_EXPRESSION"%(i+1)] = self.params["KC_EVENT_%s_EXPRESSION"%(i+1)]
 			events["KC_EVENT_%s_CODE"%(i+1)] = self.params["KC_EVENT_%s_CODE"%(i+1)]
-			print(6666666666666666666666, events)
-			#~ event = KcEvent(
-				#~ self.params["KC_EVENT_%s_DECISION"%(i+1)],
-				#~ self.params["KC_EVENT_%s_EXPRESSION"%(i+1)],
-				#~ self.params["KC_EVENT_%s_CODE"%(i+1)])
-			#~ print('event----', event, self.params["KC_EVENT_%s_DECISION"%(i+1)])
-			#~ events.append(event)
-			
 		return events
 
 	def get_rules_triggered(self):

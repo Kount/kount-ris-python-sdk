@@ -28,7 +28,6 @@ class Payment(object):
 		else:
 			self.payment_type = "NONE"
 		if payment_token is not None:
-			print("payment_token=", payment_token)
 			self.payment_token = str(payment_token)
 			if len(str(payment_token)) >= 4:
 				self.last4 = self.payment_token[-4:]
@@ -81,9 +80,8 @@ class CheckPayment(Payment):
     Sets the PTYP parameter to "CHEK".
     param micr - The MICR (Magnetic Ink Character Recognition) line on the check.
     """
-     
     def __init__(self, micr):
-            super(CheckPayment, self).__init__(payment_type="CHEK", payment_token=str(micr))
+        super(CheckPayment, self).__init__(payment_type="CHEK", payment_token=str(micr))
 
 
 class PaypalPayment(Payment):
@@ -91,7 +89,6 @@ class PaypalPayment(Payment):
     Sets the PTYP parameter to "PYPL".
     param paypal_payment_id - Paypal payment ID
     """
-     
     def __init__(self, paypal_payment_id):
         super(PaypalPayment, self).__init__(payment_type="PYPL", payment_token=paypal_payment_id)
 
@@ -101,7 +98,6 @@ class CardPayment(Payment):
     Sets the PTYP parameter to "CARD".
     param card_number - The card number
     """
-     
     def __init__(self, card_number):
         super(CardPayment, self).__init__(payment_type="CARD", payment_token=card_number)
 

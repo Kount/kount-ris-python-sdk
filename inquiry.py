@@ -14,6 +14,8 @@ __status__ = "Development"
 from datetime import datetime
 import ipaddress
 import time
+import logging
+
 from request import Request
 from util.cartitem import CartItem
 from util.address import Address
@@ -22,9 +24,11 @@ from request import CURRENCYTYPE, INQUIRYMODE, GENDER, ADDRESS, SHIPPINGTYPESTAT
 from settings import sdk_version
 
 
+logger = logging.getLogger('kount.request')
+
 class Inquiry(Request):
     """RIS initial inquiry class.
-        Contains specific methods for setting various inquiry properties 
+        Contains specific methods for setting various inquiry properties
         Class constructor. Sets the RIS mode to "Inquiry" ("Q"), sets currency to
         "USD", and sets the Python SDK identifier. The mode and currency can be
         adjusted by called INQUIRYMODE and CURRENCYTYPE methods respectively.
@@ -131,7 +135,7 @@ class Inquiry(Request):
             Arg: address - The shipping address, type Address
         """
         self._address(ADDRESS.SHIPPING, address)
-        
+
     def billing_phone_number(self, billing_phone=""):
         """Set the billing phone number.
             Arg: billing_phone - Billing phone number
@@ -166,11 +170,8 @@ class Inquiry(Request):
         """Set the IP address. ipaddress
         Arg: ip_adr - IP Address of the client
         """
-        if ip_adr == '':
-            import socket
-            ip_adr = socket.gethostbyname(socket.gethostname())
-            
-        self.params["IPAD"] = str(ipaddress.IPv4Address(ip_adr))
+        logging.debug("IPAD=%s"%str(ip_adr))
+        self.params["IPAD"] = str(ip_adr)
 
     def user_agent(self, useragent):
         """Set the user agent string of the client.
@@ -186,14 +187,14 @@ class Inquiry(Request):
 
     def shipment_type(self, shipment):
         """Set shipment type
-            Arg: shipment -  type SHIPPINGTYPESTAT 
+            Arg: shipment -  type SHIPPINGTYPESTAT
         """
         if shipment in SHIPPINGTYPESTAT:
             self.params["SHTP"] = shipment.value
 
     def anid(self, anid_order):
         """Set the anid
-            Automatic Number Identification (ANI) submitted with order. If the ANI cannot be determined, 
+            Automatic Number Identification (ANI) submitted with order. If the ANI cannot be determined,
             merchant must pass 0123456789 as the ANID. This field is only valid for MODE=P RIS submissions.
             Arg: anid_order - Anid of the client
         """
@@ -217,7 +218,6 @@ class Inquiry(Request):
         """
         for index, c in enumerate(cart):
             assert isinstance(c, CartItem)
-            print('c.product_type', c.product_type)
             self.params["PROD_TYPE[%i]"%index] = c.product_type
             self.params["PROD_ITEM[%i]"%index] = c.item_name
             self.params["PROD_DESC[%i]"%index] = c.description
