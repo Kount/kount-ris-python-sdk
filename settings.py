@@ -9,12 +9,13 @@ __version__ = "1.0.0"
 __maintainer__ = "Yordanka Spahieva"
 __email__ = "yordanka.spahieva@sirma.bg"
 __status__ = "Development"
+
 python_version = "3.6"
 resource_folder = "resources"
 xml_filename = 'validate.xml'
 xml_dict = 'xml_dict.py'
 sdk_version = "0695"
-#https://support.kount.com/Developer_Resources/Getting_Started/Technical_Specification_Guide_r._January_2016_-_v_6.4.5
+
 error_messages = {
     201: 'Missing version',
     202: 'Missing mode',
@@ -51,7 +52,8 @@ error_messages = {
     351: 'Bad merchant acknowledgement',
     399: 'Bad option',
     401: 'Extra data',
-    402: 'Mismatched payment - type: you provided payment information in a field that did not match the payment type',
+    402: "Mismatched payment - type: you provided payment "
+         "information in a field that did not match the payment type",
     403: 'Unnecessary anid',
     404: 'Unnecessary payment token',
     501: 'Unauthorized request',
