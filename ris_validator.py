@@ -2,14 +2,6 @@
 # -*- coding: utf-8 -*-
 # This file is part of the Kount python sdk project (https://bitbucket.org/panatonkount/sdkpython)
 # Copyright (C) 2017 Kount Inc. All Rights Reserved.
-
-
-__author__ = "Yordanka Spahieva"
-__version__ = "1.0.0"
-__maintainer__ = "Yordanka Spahieva"
-__email__ = "yordanka.spahieva@sirma.bg"
-__status__ = "Development"
-
 import re
 from util.cartitem import CartItem
 from util.ris_validation_exception import RisValidationException
@@ -25,18 +17,28 @@ xml_filename_path = os.path.join(os.path.dirname(__file__),
 #~ from pprint import pprint
 
 
+__author__ = "Yordanka Spahieva"
+__version__ = "1.0.0"
+__maintainer__ = "Yordanka Spahieva"
+__email__ = "yordanka.spahieva@sirma.bg"
+__status__ = "Development"
+
+
+
 class RisValidator(object):
     """
     RIS input data validator class.
     """
 
-    def __init__(self):
-        self.xml_to_dict1, self.required_field_names, self.notrequired_field_names = xml_to_dict(xml_filename_path)
-        #~ print("self.required_field_names = ", self.required_field_names)
-        #~ print("self.notrequired_field_names = ", self.notrequired_field_names)
+    def __init__(self, raise_errors=False):
+        """parse against xml file provided is sdk
+        """
+        self.errors = []
+        self.xml_to_dict1, self.required_field_names,\
+            self.notrequired_field_names =\
+            xml_to_dict(xml_filename_path)
+        self.raise_errors = raise_errors
 
-    #~ def ris_validator(self, params, required_field_names, notrequired_field_names):
-        #~ req - list with required fields, notreq - list with notrequired fields,
     def ris_validator(self, params, xml_to_dict1):
         """Client side validate the data to be passed to RIS.
         kwargs
@@ -44,71 +46,49 @@ class RisValidator(object):
             raise RisValidationException - Ris validation exception
             return List of errors encountered as util.ValidationError objects
         """
-        #~ print("xml_to_dict1", xml_to_dict1)
-        self.errors = []
         errors = []
         empty = []
         missing_in_xml = []
         required_err = []
-        REQUIRED_FIELDS = [
-            'anid', # Automatic Number Identification
-            'auth', # A or D, for accept or decline
-            'curr', # Country of currency submitted on order (USD)
-            'emal', # Customer's email
-            'ipad', # IP Address of Customer
-            'mack', # Merchant's acknowledgement to ship/process the order (Y)
-            'merc', # Merchant ID assigned to merchant by Kount
-            'mode', # Q, P, D, U
-            'ptok', # Payment token
-            'ptyp', # Payment type (CARD = Credit Card)
-            'sess', # Unique Session ID
-            'site', # Website Identifier of where order originated
-            'totl', # Total amount in currency (in pennies)
-            'tran', # Kount transaction ID (required for update modes U and X)
-            'vers'  # Version of Kount
-            ]
-        """for r in REQUIRED_FIELDS:
-            if r.upper() not in params:
-                required_err.append(r)
-                print('required_err', r)
-                raise ValidationError(r)"""
-        for p in params:
-            if params[p] is None:
+        for param in params:
+            if params[param] is None:
                 continue
             try:
-                p_xml = xml_to_dict1[p.split("[")[0]]
+                p_xml = xml_to_dict1[param.split("[")[0]]
             except KeyError:
-                missing_in_xml.append(p)
+                missing_in_xml.append(param)
                 continue
             regex = p_xml.get('reg_ex', None)
             mode_dict = p_xml.get('mode', None)
             mode = params.get('MODE', "Q")
-            if params[p] is not None and len(str(params[p])):
-                empty.append(p)
+            if params[param] is not None and len(str(params[param])) == 0:
+                empty.append(param)
                 continue
             max_length = p_xml.get('max_length', None)
             if max_length:
-                if int(p_xml['max_length']) < len(params[p]):
+                if int(p_xml['max_length']) < len(params[param]):
                     required_err = "max_length %s invalid for %s" % (
-                        len(params[p]), p)
+                        len(params[param]), param)
                     errors.append(required_err)
-                    raise ValidationError(params[p], regex)
-            if (regex is not None) and not re.match(regex, params[p]):
-                print(333, p, regex)
-                required_err = "Regex " + p_xml['reg_ex'] + " invalid for " + p
+                    #~ raise ValidationError(params[param], regex)
+            if (regex is not None) and not re.match(regex, str(params[param])):
+                required_err = "Regex %s invalid for %s" % (
+                    p_xml['reg_ex'], param)
                 errors.append(required_err)
-                raise ValidationError(field=p, value=params[p], pattern=regex)
+                #~ raise ValidationError(field=param,
+                                      #~ value=params[param], pattern=regex)
             if mode is not None and mode_dict is not None:
                 #~ 'ANID': {'max_length': '64', 'mode': ['P'], 'required': True},
-                if params[p] == "" and mode in mode_dict:
+                if params[param] == "" and mode in mode_dict:
                     required_err = "Invalid parameter [%s] "\
-                                   "for mode [%s]"%(p, mode)
+                                   "for mode [%s]"%(param, mode)
                     errors.append(required_err)
-                    raise ValidationError(p, mode)
-                if params[p] != "" and mode not in mode_dict:
-                    required_err = "Mode " + mode + " invalid for " + p
+                    raise ValidationError(param, mode)
+                if params[param] != "" and mode not in mode_dict:
+                     #~ 'PROD_QUANT': {'mode': ['Q', 'P', 'W'], 'reg_ex': '^[0-9]+$'},
+                    required_err = "Mode %s invalid for %s" % (mode, param)
                     errors.append(required_err)
-                    raise ValidationError(p, mode)
+                    #~ raise ValidationError(param, mode)
         product_type = sorted(
             [cpt for cpt in params if cpt.startswith("PROD_TYPE[")])
         product_name = sorted(
@@ -139,6 +119,7 @@ class RisValidator(object):
             except IndexError as ine:
                 required_err = "CartItem -  %s. %s" % (cart.to_string(), ine)
                 errors.append(required_err)
-        if len(errors):
+        self.errors = errors
+        if len(errors) and self.raise_errors:
             raise RisValidationException("Validation process failed", errors)
         return errors, missing_in_xml, empty

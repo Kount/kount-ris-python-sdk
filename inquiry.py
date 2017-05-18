@@ -2,7 +2,15 @@
 # -*- coding: utf-8 -*-
 # This file is part of the Kount python sdk project (https://bitbucket.org/panatonkount/sdkpython)
 # Copyright (C) 2017 Kount Inc. All Rights Reserved.
+from datetime import datetime
+import time
+import logging
 
+from request import Request
+from util.cartitem import CartItem
+from util.address import Address
+from request import CURRENCYTYPE, INQUIRYMODE, GENDER, ADDRESS, SHIPPINGTYPESTAT
+from settings import sdk_version
 
 __author__ = "Yordanka Spahieva"
 __version__ = "1.0.0"
@@ -11,42 +19,29 @@ __email__ = "yordanka.spahieva@sirma.bg"
 __status__ = "Development"
 
 
-from datetime import datetime
-import ipaddress
-import time
-import logging
-
-from request import Request
-from util.cartitem import CartItem
-from util.address import Address
-#~ from request import ASTAT, BCRSTAT, MERCHANTACKNOWLEDGMENT, REFUNDCBSTAT
-from request import CURRENCYTYPE, INQUIRYMODE, GENDER, ADDRESS, SHIPPINGTYPESTAT
-from settings import sdk_version
-
-
 logger = logging.getLogger('kount.request')
 
 class Inquiry(Request):
     """RIS initial inquiry class.
         Contains specific methods for setting various inquiry properties
-        Class constructor. Sets the RIS mode to "Inquiry" ("Q"), sets currency to
-        "USD", and sets the Python SDK identifier. The mode and currency can be
-        adjusted by called INQUIRYMODE and CURRENCYTYPE methods respectively.
+        Class constructor. Sets the RIS mode to "Inquiry" ("Q"),
+        sets currency to "USD", and sets the Python SDK identifier.
+        The mode and currency can be adjusted by called
+        INQUIRYMODE and CURRENCYTYPE methods respectively.
         """
     def __init__(self):
         self.params = {}
         self.version()
         self.params["SDK"] = "CUST"
-        self.params["ANID"] = "" # not needed?! http 500
+        self.params["ANID"] = ""
         self.params["FRMT"] = "JSON"
         self.inquiry_mode = INQUIRYMODE.DEFAULT
         self.currency_type = CURRENCYTYPE.USD
 
-    #~ def version(self, value):
     def version(self):
-        #~ SDK_Type-RIS_VERSION-SDK_BUILD_DATETIMESTAMP
-        a = datetime.now().strftime('%Y%m%d%H%M')
-        vers = "Sdk-Ris-Python-%s-%s"%(sdk_version, a)
+        "SDK_Type-RIS_VERSION-SDK_BUILD_DATETIMESTAMP"
+        datestr = datetime.now().strftime('%Y%m%d%H%M')
+        vers = "Sdk-Ris-Python-%s-%s" % (sdk_version, datestr)
         assert len(vers) == 32
         self.params["SDK_VERSION"] = vers
 
@@ -73,7 +68,7 @@ class Inquiry(Request):
             Arg: label - The name of the user defined field
             Arg: value - The value of the user defined field
         """
-        self.params["UDF[%s]"%label] = value
+        self.params["UDF[%s]" % label] = value
 
     def request_mode(self, mode):
         """Set the request mode.
@@ -92,7 +87,8 @@ class Inquiry(Request):
 
     def total_set(self, total=0):
         """Set the total amount in lowest possible denomination of currency.
-            Arg: total - Transaction amount in lowest possible denomination of given currency
+            Arg: total - Transaction amount in lowest possible
+            denomination of given currency
         """
         self.params["TOTL"] = total
 
@@ -115,13 +111,13 @@ class Inquiry(Request):
         """
         assert isinstance(address, Address)
         self.params[adr_type+"2A1"] = address.address1
-        self.params["%s2A2"%adr_type] = address.address2
-        self.params["%s2CI"%adr_type] = address.city
-        self.params["%s2ST"%adr_type] = address.state
-        self.params["%s2PC"%adr_type] = address.postal_code
-        self.params["%s2CC"%adr_type] = address.country
-        self.params["%sPREMISE"%adr_type] = address.premise
-        self.params["%sSTREET"%adr_type] = address.street
+        self.params["%s2A2" % adr_type] = address.address2
+        self.params["%s2CI" % adr_type] = address.city
+        self.params["%s2ST" % adr_type] = address.state
+        self.params["%s2PC" % adr_type] = address.postal_code
+        self.params["%s2CC" % adr_type] = address.country
+        self.params["%sPREMISE" % adr_type] = address.premise
+        self.params["%sSTREET" % adr_type] = address.street
 
     def billing_address(self, address):
         """Set the billing address.
@@ -170,7 +166,8 @@ class Inquiry(Request):
         """Set the IP address. ipaddress
         Arg: ip_adr - IP Address of the client
         """
-        logging.debug("IPAD=%s"%str(ip_adr))
+        log_str = "IPAD=%s" % str(ip_adr)
+        logging.debug(log_str)
         self.params["IPAD"] = str(ip_adr)
 
     def user_agent(self, useragent):
@@ -179,8 +176,9 @@ class Inquiry(Request):
         """
         self.params["UAGT"] = useragent
 
-    def timestamp(self, time_stamp = int(time.time())):
-        """Set the timestamp (in seconds) since the UNIX epoch for when the UNIQ value was set.
+    def timestamp(self, time_stamp=int(time.time())):
+        """Set the timestamp (in seconds) since the UNIX epoch
+            for when the UNIQ value was set.
             Arg: time_stamp -  The timestamp
         """
         self.params["EPOC"] = time_stamp
@@ -194,8 +192,10 @@ class Inquiry(Request):
 
     def anid(self, anid_order):
         """Set the anid
-            Automatic Number Identification (ANI) submitted with order. If the ANI cannot be determined,
-            merchant must pass 0123456789 as the ANID. This field is only valid for MODE=P RIS submissions.
+            Automatic Number Identification (ANI) submitted with order.
+            If the ANI cannot be determined,
+            merchant must pass 0123456789 as the ANID.
+            This field is only valid for MODE=P RIS submissions.
             Arg: anid_order - Anid of the client
         """
         self.params["ANID"] = anid_order
@@ -216,10 +216,10 @@ class Inquiry(Request):
         """Set the shopping cart.
             Arg: cart - Cart items in the shopping cart, type Cart
         """
-        for index, c in enumerate(cart):
-            assert isinstance(c, CartItem)
-            self.params["PROD_TYPE[%i]"%index] = c.product_type
-            self.params["PROD_ITEM[%i]"%index] = c.item_name
-            self.params["PROD_DESC[%i]"%index] = c.description
-            self.params["PROD_QUANT[%i]"%index] = c.quantity
-            self.params["PROD_PRICE[%i]"%index] = c.price
+        for index, cart in enumerate(cart):
+            assert isinstance(cart, CartItem)
+            self.params["PROD_TYPE[%i]"%index] = cart.product_type
+            self.params["PROD_ITEM[%i]"%index] = cart.item_name
+            self.params["PROD_DESC[%i]"%index] = cart.description
+            self.params["PROD_QUANT[%i]"%index] = cart.quantity
+            self.params["PROD_PRICE[%i]"%index] = cart.price

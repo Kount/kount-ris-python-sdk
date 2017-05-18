@@ -29,14 +29,18 @@ LOGGER = logging.getLogger('kount')
 
 
 class Client:
-    "Transport class"
-    def __init__(self, url, key):
+    """Transport class
+    raise_errors - False - log them only
+                   True - raise them before request.post
+    """
+    def __init__(self, url, key, raise_errors=False):
         self.url = url
         self.kount_api_key = key
         self.headers_api = {'X-Kount-Api-Key': self.kount_api_key}
         self.xml_to_dict1, self.required, self.notrequired = xml_to_dict(
             XML_FILE)
         self.validator = None
+        self.raise_errors = raise_errors
         prepared = "url - %s, len_key - %s" % (url, len(key))
         LOGGER.debug(prepared)
 
@@ -48,6 +52,9 @@ class Client:
             params['FRMT'] = 'JSON'
         self.validator = RisValidator.ris_validator(
             self, params, self.xml_to_dict1)
+        LOGGER.debug("validation errors= %s" % self.validator[0])
+        LOGGER.debug("validation missing_in_xml = %s, empty= %s" % (
+            self.validator[1], self.validator[2]))
         request = requests.post(self.url,
                                 headers=self.headers_api,
                                 data=params,

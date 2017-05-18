@@ -2,7 +2,9 @@
 # -*- coding: utf-8 -*-
 # This file is part of the Kount python sdk project (https://bitbucket.org/panatonkount/sdkpython)
 # Copyright (C) 2017 Kount Inc. All Rights Reserved.
-
+"RIS update"
+from request import Request
+from util.ris_validation_exception import RisException
 
 __author__ = "Yordanka Spahieva"
 __version__ = "1.0.0"
@@ -10,11 +12,9 @@ __maintainer__ = "Yordanka Spahieva"
 __email__ = "yordanka.spahieva@sirma.bg"
 __status__ = "Development"
 
-from request import Request
-from util.ris_validation_exception import RisException
-
 
 class UPDATEMODE:
+    "UPDATEMODE - U, X"
     NO_RESPONSE = 'U'
     WITH_RESPONSE = 'X'
 
@@ -42,7 +42,7 @@ class Update(Request):
         """
         self.params["TRAN"] = transaction_id
 
-    def refund_chargeback_status(self,rc_status):
+    def refund_chargeback_status(self, rc_status):
         """Set the Refund/Chargeback status: R = Refund C = Chargeback.
         Arg - rc_status, String Refund or chargeback status
         raise RisException when refund_chargeback_status is None

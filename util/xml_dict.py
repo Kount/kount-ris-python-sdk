@@ -37,6 +37,7 @@ xml_dict = {
     'DOB': {'reg_ex': '^(19|20)\\d\\d-(0[1-9]|1[012])-(0[1-9]|[12][0-9]|3[01])$'},
     'EMAL': {'max_length': '64', 'reg_ex': '^.+@.+\\..+$'},
     'EPOC': {'reg_ex': '^\\d{9,10}$'},
+    'FRMT': {'max_length': '4', 'reg_ex': '^[JSON]+$'},
     'GENDER': {'reg_ex': '^[MFmf]?$'},
     'IPAD': {'max_length': '16',
              'mode': ['Q', 'P', 'W', 'J'],

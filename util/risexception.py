@@ -18,6 +18,6 @@ class RisException(Exception):
 
 
 if __name__ == "__main__":
-    c = RisException("REQUIRED", "jjjsssssssj")
-    raise c
+    exc = RisException("REQUIRED", "jjjsssssssj")
+    raise exc
     raise RisException(message="REQUIRED", cause="jjjj", kwargs={})

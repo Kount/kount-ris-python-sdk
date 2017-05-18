@@ -1,4 +1,5 @@
 #!/usr/bin/env python
+"""Test class Payment"""
 # -*- coding: utf-8 -*-
 # This file is part of the Kount python sdk project
 # https://bitbucket.org/panatonkount/sdkpython
@@ -6,15 +7,11 @@
 import logging
 import unittest
 import os
-import requests
 
 from json_test import example_data_products
-from local_settings import kount_api_key, url_api, timeout
+from local_settings import kount_api_key, url_api
 from settings import resource_folder, xml_filename
-from ris_validator import RisValidator
 from client import Client
-from util.xmlparser import xml_to_dict
-from simplejson.scanner import JSONDecodeError
 
 
 __author__ = "Yordanka Spahieva"
@@ -28,6 +25,7 @@ XML_FILE = os.path.join(os.path.dirname(__file__),
                         resource_folder, xml_filename)
 
 LOGGER = logging.getLogger('kount')
+
 
 def dict_compare(dict1, dict2):
     "compare 2 dictionaries"
@@ -100,7 +98,7 @@ class TestAPIRIS(unittest.TestCase):
     def test_api_kount(self):
         "expected modified 'TRAN'"
         self.data = CURLED
-        actual = Client(url=url_api, key=kount_api_key).process(
+        actual = Client(url=url_api, key=kount_api_key, raise_errors=True).process(
             params=self.data)
         expected = {
             "VERS": "0695", "MODE": "Q", "TRAN": "PTPN0Z04P8Y6",
@@ -166,7 +164,7 @@ class TestAPIRIS(unittest.TestCase):
             'IP_IPAD': None,
             'RULE_DESCRIPTION_0': 'Review if order total > $1000 USD',
             'PIP_IPAD': None}
-        actual = Client(url=url_api, key=kount_api_key).process(
+        actual = Client(url=url_api, key=kount_api_key, raise_errors=False).process(
             params=self.data)
         del actual['TRAN']
         del actual['RULE_ID_0']
@@ -185,7 +183,7 @@ class TestAPIRIS(unittest.TestCase):
             " Field: [EMAL], Value: [%s]" % (bad, bad),
             'ERRO': 321, 'ERROR_COUNT': 1,
             'WARNING_COUNT': 0, 'MODE': 'E'}
-        actual = Client(url=url_api, key=kount_api_key).process(
+        actual = Client(url=url_api, key=kount_api_key, raise_errors=False).process(
             params=self.data)
         self.assertEqual(actual, expected)
 
@@ -252,7 +250,7 @@ class TestAPIRIS(unittest.TestCase):
             'VERS': '0695',
             'VOICE_DEVICE': None,
             'WARNING_COUNT': 0}
-        actual = Client(url=url_api, key=kount_api_key).process(
+        actual = Client(url=url_api, key=kount_api_key, raise_errors=False).process(
             params=self.data)
         del actual['TRAN']
         del actual['RULE_ID_0']
@@ -269,8 +267,8 @@ class TestAPIRIS(unittest.TestCase):
             'MODE': 'E', 'WARNING_COUNT': 0,
             'ERROR_0': "221 MISSING_EMAL Cause: "
                        "[Non-empty value was required in this case], "
-                       "Field: [EMAL], Value: []",}
-        actual = Client(url=url_api, key=kount_api_key).process(
+                       "Field: [EMAL], Value: []"}
+        actual = Client(url=url_api, key=kount_api_key, raise_errors=False).process(
             params=self.data)
         self.assertEqual(actual, expected)
 
@@ -284,7 +282,7 @@ class TestAPIRIS(unittest.TestCase):
             'ERROR_0': "221 MISSING_EMAL Cause: "
                        "[Non-empty value was required in this case], "
                        "Field: [EMAL], Value: []",}
-        actual = Client(url=url_api, key=kount_api_key).process(
+        actual = Client(url=url_api, key=kount_api_key, raise_errors=False).process(
             params=self.data)
         self.assertEqual(actual, expected)
 
@@ -293,13 +291,12 @@ class TestAPIRIS(unittest.TestCase):
         self.data = {}
         self.data = {'FRMT': 'JSON'}
         expected = {"MODE": "E", "ERRO": "201"}
-        actual = Client(url=url_api, key=kount_api_key).process(
+        actual = Client(url=url_api, key=kount_api_key, raise_errors=False).process(
             params=self.data)
         self.assertEqual(actual, expected)
 
 
 if __name__ == "__main__":
     unittest.main(
-        #~ defaultTest = "TestAPIRIS.test_api_kount_empty_data"
-        #~ defaultTest = "TestAPIRIS.test_two_items_missing_email"
+        #~ defaultTest = "TestAPIRIS.test_2_items_bad_s2em"
         )
