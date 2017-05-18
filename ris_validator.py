@@ -3,6 +3,7 @@
 # This file is part of the Kount python sdk project (https://bitbucket.org/panatonkount/sdkpython)
 # Copyright (C) 2017 Kount Inc. All Rights Reserved.
 import re
+import os
 from util.cartitem import CartItem
 from util.ris_validation_exception import RisValidationException
 from util.validation_error import ValidationError
@@ -10,8 +11,8 @@ from util.xmlparser import xml_to_dict
 #~ from util.risexception import RisException
 
 from settings import resource_folder, xml_filename
-import os
-#~ from local_settings import url_api
+
+from local_settings import raise_errors
 xml_filename_path = os.path.join(os.path.dirname(__file__),
                             resource_folder, xml_filename)
 #~ from pprint import pprint
@@ -30,7 +31,7 @@ class RisValidator(object):
     RIS input data validator class.
     """
 
-    def __init__(self, raise_errors=False):
+    def __init__(self, raise_errors=raise_errors):
         """parse against xml file provided is sdk
         """
         self.errors = []

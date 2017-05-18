@@ -20,9 +20,11 @@ from util.xmlparser import xml_to_dict
 
 from client import Client
 from local_settings import (url_api, url_api_beta, kount_api_key,
-                            kount_api_key999667)
+                            kount_api_key999667, raise_errors)
 from settings import resource_folder, xml_filename, sdk_version
 from response import Response
+from util.ris_validation_exception import RisValidationException
+
 
 __author__ = "Yordanka Spahieva"
 __version__ = "1.0.0"
@@ -343,14 +345,18 @@ class TestRisTestSuite(unittest.TestCase):
         self.inq.request_mode(INQUIRYMODE.JUSTTHRESHOLDS)
         self.inq.total_set(1000)
         self.inq.kount_central_customer_id("KCentralCustomerDeclineMe")
-        res = self.client.process(params=self.inq.params)
-        self.assertIsNotNone(res)
-        rr = Response(res)
-        self.assertEqual("D", rr.params['KC_DECISION'])
-        self.assertEqual(0, rr.params['KC_WARNING_COUNT'])
-        self.assertEqual(1, rr.get_kc_events_count())
-        self.assertEqual("orderTotalDecline",
-                         rr.get_kc_events()['KC_EVENT_1_CODE'])
+        if not raise_errors:
+            res = self.client.process(params=self.inq.params)
+            self.assertIsNotNone(res)
+            rr = Response(res)
+            self.assertEqual("D", rr.params['KC_DECISION'])
+            self.assertEqual(0, rr.params['KC_WARNING_COUNT'])
+            self.assertEqual(1, rr.get_kc_events_count())
+            self.assertEqual("orderTotalDecline",
+                             rr.get_kc_events()['KC_EVENT_1_CODE'])
+        else:
+            self.assertRaises(RisValidationException, 
+                                         self.client.process, self.inq.params)
 
     def test_9_mode_u_after_mode_q(self):
         "test_9_mode_u_after_mode_q"
@@ -445,6 +451,7 @@ class TestRisTestSuite(unittest.TestCase):
         self.inq.params['PENC'] = penc
         res = self.client.process(params=self.inq.params)
         self.assertIsNotNone(res)
+
         rr = Response(res)
         self.assertEqual("AMEX", rr.params['BRND'])
 
@@ -516,5 +523,5 @@ class TestBasicConnectivity(unittest.TestCase):
 
 if __name__ == "__main__":
     unittest.main(
-        #~ defaultTest = "TestRisTestSuite.test_15_ris_q_using_payment_encoding_mask_error"
+        #~ defaultTest = "TestRisTestSuite.test_8_ris_j_1_kount_central_rule_decline"
         )

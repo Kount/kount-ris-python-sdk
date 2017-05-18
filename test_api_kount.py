@@ -12,6 +12,9 @@ from json_test import example_data_products
 from local_settings import kount_api_key, url_api
 from settings import resource_folder, xml_filename
 from client import Client
+from local_settings import raise_errors
+from util.ris_validation_exception import RisValidationException
+
 
 
 __author__ = "Yordanka Spahieva"
@@ -98,7 +101,7 @@ class TestAPIRIS(unittest.TestCase):
     def test_api_kount(self):
         "expected modified 'TRAN'"
         self.data = CURLED
-        actual = Client(url=url_api, key=kount_api_key, raise_errors=True).process(
+        actual = Client(url=url_api, key=kount_api_key).process(
             params=self.data)
         expected = {
             "VERS": "0695", "MODE": "Q", "TRAN": "PTPN0Z04P8Y6",
@@ -141,7 +144,7 @@ class TestAPIRIS(unittest.TestCase):
 
     def test_api_kount_2_items(self):
         "expected modified 'TRAN'"
-        self.data = example_data_products
+        self.data = example_data_products.copy()
         expected = {
             'BROWSER': None, 'IP_LON': None, 'DEVICES': '1', 'SITE': 'DEFAULT',
             'VERS': '0695', 'SESS': 'F8E874A38B7B4B6DBB71492A584A969D',
@@ -164,7 +167,7 @@ class TestAPIRIS(unittest.TestCase):
             'IP_IPAD': None,
             'RULE_DESCRIPTION_0': 'Review if order total > $1000 USD',
             'PIP_IPAD': None}
-        actual = Client(url=url_api, key=kount_api_key, raise_errors=False).process(
+        actual = Client(url=url_api, key=kount_api_key).process(
             params=self.data)
         del actual['TRAN']
         del actual['RULE_ID_0']
@@ -177,21 +180,27 @@ class TestAPIRIS(unittest.TestCase):
         self.data = example_data_products.copy()
         bad = CURLED['EMAL'].replace('@', "%40")
         self.data["EMAL"] = bad
-        expected = {
-            'ERROR_0':
-            "321 BAD_EMAL Cause: [[%s is an invalid email address],"
-            " Field: [EMAL], Value: [%s]" % (bad, bad),
-            'ERRO': 321, 'ERROR_COUNT': 1,
-            'WARNING_COUNT': 0, 'MODE': 'E'}
-        actual = Client(url=url_api, key=kount_api_key, raise_errors=False).process(
-            params=self.data)
-        self.assertEqual(actual, expected)
+        if raise_errors:
+            self.assertRaises(
+                RisValidationException,
+                Client(url=url_api, key=kount_api_key).process,
+                self.data)
+        else:
+            expected = {
+                'ERROR_0':
+                "321 BAD_EMAL Cause: [[%s is an invalid email address],"
+                " Field: [EMAL], Value: [%s]" % (bad, bad),
+                'ERRO': 321, 'ERROR_COUNT': 1,
+                'WARNING_COUNT': 0, 'MODE': 'E'}
+            actual = Client(url=url_api, key=kount_api_key).process(
+                params=self.data)
+            self.assertEqual(actual, expected)
 
     def test_2_items_bad_s2em(self):
         "bad S2EM"
         bad = example_data_products["S2EM"].replace('@', "%40")
-        example_data_products["S2EM"] = bad
-        self.data = example_data_products
+        self.data = example_data_products.copy()
+        self.data["S2EM"] = bad
         expected = {
             'AUTO': 'R',
             'BRND': None,
@@ -250,53 +259,56 @@ class TestAPIRIS(unittest.TestCase):
             'VERS': '0695',
             'VOICE_DEVICE': None,
             'WARNING_COUNT': 0}
-        actual = Client(url=url_api, key=kount_api_key, raise_errors=False).process(
-            params=self.data)
-        del actual['TRAN']
-        del actual['RULE_ID_0']
-        del actual['VELO']
-        del actual['VMAX']
-        self.assertEqual(actual, expected)
+        if raise_errors:
+            self.assertRaises(
+                RisValidationException,
+                Client(url=url_api, key=kount_api_key).process,
+                self.data)
+        else:
+            actual = Client(url=url_api, key=kount_api_key).process(
+                params=self.data)
+            del actual['TRAN']
+            del actual['RULE_ID_0']
+            del actual['VELO']
+            del actual['VMAX']
+            self.assertEqual(actual, expected)
 
     def test_two_items_none_email(self):
         "email = None"
-        example_data_products["EMAL"] = None
-        self.data = example_data_products
+        self.data = example_data_products.copy()
+        self.data["EMAL"] = None
         expected = {
             'ERRO': 221, 'ERROR_COUNT': 1,
             'MODE': 'E', 'WARNING_COUNT': 0,
             'ERROR_0': "221 MISSING_EMAL Cause: "
                        "[Non-empty value was required in this case], "
                        "Field: [EMAL], Value: []"}
-        actual = Client(url=url_api, key=kount_api_key, raise_errors=False).process(
+        actual = Client(url=url_api, key=kount_api_key).process(
             params=self.data)
         self.assertEqual(actual, expected)
 
     def test_two_items_missing_email(self):
         "missing email"
-        del example_data_products["EMAL"]
-        self.data = example_data_products
+        self.data = example_data_products.copy()
+        del self.data["EMAL"]
         expected = {
             'ERRO': 221, 'ERROR_COUNT': 1,
             'MODE': 'E', 'WARNING_COUNT': 0,
             'ERROR_0': "221 MISSING_EMAL Cause: "
                        "[Non-empty value was required in this case], "
                        "Field: [EMAL], Value: []",}
-        actual = Client(url=url_api, key=kount_api_key, raise_errors=False).process(
+        actual = Client(url=url_api, key=kount_api_key).process(
             params=self.data)
         self.assertEqual(actual, expected)
 
     def test_api_kount_empty_data(self):
         "empty data"
-        self.data = {}
         self.data = {'FRMT': 'JSON'}
         expected = {"MODE": "E", "ERRO": "201"}
-        actual = Client(url=url_api, key=kount_api_key, raise_errors=False).process(
+        actual = Client(url=url_api, key=kount_api_key).process(
             params=self.data)
         self.assertEqual(actual, expected)
 
 
 if __name__ == "__main__":
-    unittest.main(
-        #~ defaultTest = "TestAPIRIS.test_2_items_bad_s2em"
-        )
+    unittest.main()

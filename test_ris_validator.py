@@ -7,7 +7,7 @@
 import unittest
 from json_test import example_data, example_data_products
 from ris_validator import RisValidator
-from util.validation_error import ValidationError
+#~ from util.validation_error import ValidationError
 from util.ris_validation_exception import RisValidationException
 
 

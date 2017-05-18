@@ -8,7 +8,7 @@ import unittest
 import os
 import requests
 
-from local_settings import timeout
+from local_settings import timeout, raise_errors
 from settings import resource_folder, xml_filename
 from ris_validator import RisValidator
 from util.xmlparser import xml_to_dict
@@ -33,13 +33,13 @@ class Client:
     raise_errors - False - log them only
                    True - raise them before request.post
     """
-    def __init__(self, url, key, raise_errors=False):
+    def __init__(self, url, key):
         self.url = url
         self.kount_api_key = key
         self.headers_api = {'X-Kount-Api-Key': self.kount_api_key}
         self.xml_to_dict1, self.required, self.notrequired = xml_to_dict(
             XML_FILE)
-        self.validator = None
+        self.validator = RisValidator(raise_errors=raise_errors)
         self.raise_errors = raise_errors
         prepared = "url - %s, len_key - %s" % (url, len(key))
         LOGGER.debug(prepared)
@@ -50,11 +50,13 @@ class Client:
             assert params['FRMT'] == 'JSON'
         except KeyError:
             params['FRMT'] = 'JSON'
-        self.validator = RisValidator.ris_validator(
-            self, params, self.xml_to_dict1)
-        LOGGER.debug("validation errors= %s" % self.validator[0])
+        invalid, missing_in_xml, empty = self.validator.ris_validator(
+            params=params,
+            xml_to_dict1=self.validator.xml_to_dict1,
+            )
+        LOGGER.debug("validation errors= %s" % invalid)
         LOGGER.debug("validation missing_in_xml = %s, empty= %s" % (
-            self.validator[1], self.validator[2]))
+            missing_in_xml, empty))
         request = requests.post(self.url,
                                 headers=self.headers_api,
                                 data=params,
