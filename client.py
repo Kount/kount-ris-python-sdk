@@ -25,7 +25,7 @@ __status__ = "Development"
 XML_FILE = os.path.join(os.path.dirname(__file__),
                         resource_folder, xml_filename)
 
-LOGGER = logging.getLogger('kount')
+logger = logging.getLogger('kount.client')
 
 
 class Client:
@@ -33,6 +33,8 @@ class Client:
     raise_errors - False - log them only
                    True - raise them before request.post
     """
+    #~ logger = logging.getLogger('kount.client')
+
     def __init__(self, url, key):
         self.url = url
         self.kount_api_key = key
@@ -41,8 +43,7 @@ class Client:
             XML_FILE)
         self.validator = RisValidator(raise_errors=raise_errors)
         self.raise_errors = raise_errors
-        prepared = "url - %s, len_key - %s" % (url, len(key))
-        LOGGER.debug(prepared)
+        logger.debug("url - %s, len_key - %s", url, len(key))
 
     def process(self, params):
         "validate data and request post"
@@ -54,30 +55,29 @@ class Client:
             params=params,
             xml_to_dict1=self.validator.xml_to_dict1,
             )
-        LOGGER.debug("validation errors= %s" % invalid)
-        LOGGER.debug("validation missing_in_xml = %s, empty= %s" % (
-            missing_in_xml, empty))
+        logger.debug("validation errors= %s, missing_in_xml = %s, "
+                       "empty = %s", invalid, missing_in_xml, empty)
         request = requests.post(self.url,
                                 headers=self.headers_api,
                                 data=params,
                                 timeout=timeout)
-        prepared = "%s, %s, %s" % (
-            self.url, self.headers_api, params.items)
-        LOGGER.debug(prepared)
+        logger.debug("url %s, headers %s, params %s", self.url,
+                       self.headers_api, params)
         try:
-            LOGGER.debug(request.json())
-            return request.json()
+            req_json = request.json()
+            logger.debug("process json: %s", req_json)
+            return req_json
         except JSONDecodeError as jde:
-            LOGGER.debug(jde)
+            logger.debug("JSONDecodeError - %s", jde)
             try:
                 text_to_json = {
                     c.split('=')[0]:
                     c.split('=')[1] for c in request.text.split('\n')}
-                LOGGER.debug(text_to_json)
+                logger.debug("process text: %s", text_to_json)
                 return text_to_json
             except IndexError:
                 error = "Neither JSON nor String %s" % request.text
-                LOGGER.debug(error)
+                logger.debug(error)
                 raise ValueError(error)
 
 

@@ -19,7 +19,9 @@ __email__ = "yordanka.spahieva@sirma.bg"
 __status__ = "Development"
 
 
+# common logger for inquiry and request
 logger = logging.getLogger('kount.request')
+
 
 class Inquiry(Request):
     """RIS initial inquiry class.
@@ -37,6 +39,7 @@ class Inquiry(Request):
         self.params["FRMT"] = "JSON"
         self.inquiry_mode = INQUIRYMODE.DEFAULT
         self.currency_type = CURRENCYTYPE.USD
+        logger.debug('Inquiry: %s', self.params)
 
     def version(self):
         "SDK_Type-RIS_VERSION-SDK_BUILD_DATETIMESTAMP"
@@ -44,17 +47,20 @@ class Inquiry(Request):
         vers = "Sdk-Ris-Python-%s-%s" % (sdk_version, datestr)
         assert len(vers) == 32
         self.params["SDK_VERSION"] = vers
+        logger.debug('SDK_VERSION = %s', vers)
 
     def cash(self, cash):
         """Set cash amount of any feasible goods.
             Arg: cash - int, cash amount of any feasible goods"""
         self.params["CASH"] = cash
+        logger.debug('CASH = %s', cash)
 
     def date_of_birth(self, dob=datetime.today()):
         """Set the date of birth in the format YYYY-MM-DD.
          Arg: dob - Date of birth
          """
         self.params["DOB"] = dob.strftime('%Y-%m-%d')
+        logger.debug('DOB = %s', dob)
 
     def gender_user(self, gender):
         """Set the gender. Either M(ale) of F(emale).
@@ -62,6 +68,7 @@ class Inquiry(Request):
             Arg: - gender"""
         if gender in GENDER:
             self.params["GENDER"] = gender.value
+        logger.debug('GENDER = %s', gender.value)
 
     def user_defined_field(self, label, value):
         """Set a user defined field.
@@ -69,6 +76,7 @@ class Inquiry(Request):
             Arg: value - The value of the user defined field
         """
         self.params["UDF[%s]" % label] = value
+        logger.debug('UDF[%s] = %s', label, value)
 
     def request_mode(self, mode):
         """Set the request mode.
@@ -77,6 +85,7 @@ class Inquiry(Request):
         """
         if mode in INQUIRYMODE:
             self.params["MODE"] = mode.value
+        logger.debug('MODE = %s', mode.value)
 
     def currency_set(self, currency):
         """Set the three character ISO-4217 currency code.
@@ -84,6 +93,7 @@ class Inquiry(Request):
         """
         if currency in CURRENCYTYPE:
             self.params["CURR"] = currency.value
+        logger.debug('CURR = %s', currency.value)
 
     def total_set(self, total=0):
         """Set the total amount in lowest possible denomination of currency.
@@ -91,18 +101,21 @@ class Inquiry(Request):
             denomination of given currency
         """
         self.params["TOTL"] = total
+        logger.debug('TOTL = %s', total)
 
     def email_client(self, email_add):
         """Set the email address of the client.
             Arg: email - Email address of the client
         """
         self.params["EMAL"] = email_add
+        logger.debug('EMAL = %s', email_add)
 
     def customer_name(self, c_name):
         """the name of the client or company.
             Arg: c_name - Name of the client or company
          """
         self.params["NAME"] = c_name
+        logger.debug('NAME = %s', c_name)
 
     def _address(self, adr_type, address):
         """Set the address.
@@ -125,56 +138,71 @@ class Inquiry(Request):
             Address
         """
         self._address(ADDRESS.BILLING, address)
+        logger.debug("B2A1 = %s, B2A2 = %s, B2CI = %s, B2ST = %s, "
+                       "B2PC = %s, B2CC = %s, BPREMISE = %s, BSTREET = %s",
+                       address.address1, address.address2, address.city,
+                       address.state, address.postal_code, address.country,
+                       address.premise, address.street)
 
     def shipping_address(self, address):
         """Set the shipping address.
             Arg: address - The shipping address, type Address
         """
         self._address(ADDRESS.SHIPPING, address)
+        logger.debug("S2A1 = %s, S2A2 = %s, S2CI = %s, S2ST = %s, "
+                       "S2PC = %s, S2CC = %s, SPREMISE = %s, SSTREET = %s",
+                       address.address1, address.address2, address.city,
+                       address.state, address.postal_code, address.country,
+                       address.premise, address.street)
 
     def billing_phone_number(self, billing_phone=""):
         """Set the billing phone number.
             Arg: billing_phone - Billing phone number
          """
         self.params["B2PN"] = billing_phone
+        logger.debug('billing phone = %s', billing_phone)
 
     def shipping_phone_number(self, shipping_phone):
         """Set the shipping phone number.
             Arg: shipping_phone - shipping phone number
          """
         self.params["S2PN"] = shipping_phone
+        logger.debug('S2PN = %s', shipping_phone)
 
     def shipping_name(self, ship_name=""):
         """Set the shipping name.
             Arg: ship_name - Shipping name
         """
         self.params["S2NM"] = ship_name
+        logger.debug('S2NM = %s', ship_name)
 
     def email_shipping(self, shipping_email):
         """Set the shipping email address of the client.
             Arg: shipping_email - shipping email
         """
         self.params["S2EM"] = shipping_email
+        logger.debug('S2EM = %s', shipping_email)
 
     def unique_customer_id(self, unique_customer):
         """Set the unique ID or cookie set by merchant.
             Arg: unique_customer - Customer-unique ID or cookie set by merchant.
         """
         self.params["UNIQ"] = unique_customer
+        logger.debug('UNIQ = %s', unique_customer)
 
     def ip_address(self, ip_adr):
         """Set the IP address. ipaddress
         Arg: ip_adr - IP Address of the client
         """
-        log_str = "IPAD=%s" % str(ip_adr)
-        logging.debug(log_str)
         self.params["IPAD"] = str(ip_adr)
+        logger.debug('IPAD = %s', ip_adr)
 
     def user_agent(self, useragent):
         """Set the user agent string of the client.
         Arg: useragent - user agent string of the client
         """
         self.params["UAGT"] = useragent
+        logger.debug('UAGT = %s', useragent)
 
     def timestamp(self, time_stamp=int(time.time())):
         """Set the timestamp (in seconds) since the UNIX epoch
@@ -182,6 +210,7 @@ class Inquiry(Request):
             Arg: time_stamp -  The timestamp
         """
         self.params["EPOC"] = time_stamp
+        logger.debug('EPOC = %s', time_stamp)
 
     def shipment_type(self, shipment):
         """Set shipment type
@@ -189,6 +218,7 @@ class Inquiry(Request):
         """
         if shipment in SHIPPINGTYPESTAT:
             self.params["SHTP"] = shipment.value
+        logger.debug('SHTP = %s', shipment.value)
 
     def anid(self, anid_order):
         """Set the anid
@@ -199,18 +229,21 @@ class Inquiry(Request):
             Arg: anid_order - Anid of the client
         """
         self.params["ANID"] = anid_order
+        logger.debug('ANID = %s', anid_order)
 
     def company_name(self, name):
         """Set the name of the company.
         Arg: name - Name of the company
         """
         self.params["NAME"] = name
+        logger.debug('NAME = %s', name)
 
     def website(self, web_site):
         """Set the website.
             Arg: site - the website
         """
         self.params["SITE"] = web_site
+        logger.debug('SITE = %s', web_site)
 
     def shopping_cart(self, cart):
         """Set the shopping cart.
@@ -218,8 +251,16 @@ class Inquiry(Request):
         """
         for index, cart in enumerate(cart):
             assert isinstance(cart, CartItem)
-            self.params["PROD_TYPE[%i]"%index] = cart.product_type
-            self.params["PROD_ITEM[%i]"%index] = cart.item_name
-            self.params["PROD_DESC[%i]"%index] = cart.description
-            self.params["PROD_QUANT[%i]"%index] = cart.quantity
-            self.params["PROD_PRICE[%i]"%index] = cart.price
+            self.params["PROD_TYPE[%i]" % index] = cart.product_type
+            self.params["PROD_ITEM[%i]" % index] = cart.item_name
+            self.params["PROD_DESC[%i]" % index] = cart.description
+            self.params["PROD_QUANT[%i]" % index] = cart.quantity
+            self.params["PROD_PRICE[%i]" % index] = cart.price
+            logger.debug("PROD_TYPE[%i] = %s, PROD_ITEM[%i] = %s, "
+                           "PROD_DESC[%i] = %s, PROD_QUANT[%i] = %s, "
+                           "PROD_PRICE[%i] = %s",
+                           index, cart.product_type,
+                           index, cart.item_name,
+                           index, cart.description,
+                           index, cart.quantity,
+                           index, cart.price)

@@ -34,6 +34,13 @@ class TestAddress(unittest.TestCase):
             adr = Address(bad_type)
             self.assertEqual("", str(adr.country))
 
+    def test_address_cyrillic(self):
+        "incorrect address - cyrillic"
+        for bad_type in ["Сирма", "'%=:*-+<", None, "", "ъ"]:
+            adr = Address(bad_type)
+            self.assertEqual("", str(adr.country))
+            self.assertEqual(bad_type, adr.address1)
+
 
 if __name__ == "__main__":
     unittest.main()

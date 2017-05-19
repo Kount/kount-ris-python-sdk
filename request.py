@@ -68,7 +68,7 @@ class REFUNDCBSTAT:
 
 
 class MERCHANTACKNOWLEDGMENT:
-    """
+    """MERCHANTACKNOWLEDGMENT
     """
     FALSE = 'N'
     TRUE = 'Y'
@@ -105,7 +105,7 @@ class INQUIRYMODE(Enum):
     WITHTHRESHOLDS = 'W'
     JUSTTHRESHOLDS = 'J'
 
-LOGGER = logging.getLogger('kount')
+logger = logging.getLogger('kount.request')
 
 
 class Request(object):
@@ -180,8 +180,8 @@ class Request(object):
     def authorization_status(self, auth_status):
         """Set the Authorization Status.
         Authorization Status returned to merchant from processor.
-        Acceptable values for the 
-        AUTH field are ASTAT. In orders where AUTH=A will 
+        Acceptable values for the
+        AUTH field are ASTAT. In orders where AUTH=A will
         aggregate towards order velocity of the persona while
         orders where AUTH=D will
         decrement the velocity of the persona.
@@ -235,18 +235,21 @@ class Request(object):
                 payment.khashed = True
                 self.params["PENC"] = "MASK"
             except ValueError as nfe:
-                LOGGER.debug("Error converting Merchant ID to integer" +
-                             " value. Set a valid Merchant ID." +
-                             str(nfe))
+                logger.debug("Error converting Merchant ID to integer"
+                               " value. Set a valid Merchant ID. %s",
+                               str(nfe))
                 raise nfe
             except Exception as nsae:
-                LOGGER.debug("Unable to create payment token hash. Caught " +
-                        str(nsae) + " KHASH payment encoding disabled")
+                logger.debug("Unable to create payment token hash. Caught %s"
+                               " KHASH payment encoding disabled", str(nsae))
                 #Default to plain text payment tokens
                 self.params["PENC"] = ""
         self.params["PTOK"] = payment.payment_token
         self.params["PTYP"] = payment.payment_type
         self.params["LAST4"] = payment.last4
+        logger.debug("payment ['PTOK']= %s, ['PTYP']=%s, ['LAST4']=%s",
+                       payment.payment_token, payment.payment_type,
+                       payment.last4)
 
     def mask_token(self, token):
         """Encodes the provided payment token according to the MASK
@@ -258,6 +261,7 @@ class Request(object):
         for _ in range(6, len(token) - 4, 1):
             encoded.append('X')
         encoded.append(token[-4:])
+        logger.debug("mask_token = %s", token)
         return encoded
 
     def set_payment(self, ptyp, ptok):
@@ -283,6 +287,7 @@ class Request(object):
             self.payment = payment_dict[ptyp]
         else:
             self.payment = Payment(ptyp, ptok)
+        logger.debug("mask_token = %s", self.payment)
 
     def payment_masked(self, payment):
         """Sets a card payment and masks the card number in the following way:
@@ -295,16 +300,21 @@ class Request(object):
         PTOK, PTYP, LAST4, PENC.
         Args: payment - card payment
         """
+        token = payment.payment_token
         if isinstance(self.payment, CardPayment) and not payment.khashed:
-            token = self.mask_token(payment.payment_token)
+            token = self.mask_token(token)
             self.params["PTOK"] = token
             self.params["PTYP"] = payment.payment_type
             self.params["LAST4"] = payment.last4
             self.params["PENC"] = "MASK"
+            logger.debug("PTOK = %s, PTYP= %s, LAST4=%s, PENC=MASK",
+                           token, payment.payment_type, payment.last4)
+            return self
         else:
-            LOGGER.debug("setPaymentMasked: provided payment is not "\
-                         "a CardPayment, applying khash instead of masking")
-            return self.set_payment(payment)
+            self.params["PTOK"] = token
+            logger.debug("Payment Masked: provided payment is not "
+                           "a CardPayment, applying khash instead of masking")
+            return self.set_payment(payment, token)
 
     def expiration_date(self, month, year):
         """Set Card Expiration Date.
@@ -313,12 +323,14 @@ class Request(object):
         """
         self.params["CCMM"] = month
         self.params["CCYY"] = year
+        logger.debug("expiration_date CCMM=%s, CCYY=%s", month, year)
 
     def is_set_khash_payment_encoding(self):
         """Check if KHASH payment encoding has been set.
            return boolean TRUE when set.
         """
         encoded = "PENC" in self.params and self.params["PENC"] == "KHASH"
+        logger.debug("is_set_khash_payment_encoding = %s", encoded)
         return encoded
 
     def set_close_on_finish(self, close_on_finish):
@@ -327,6 +339,7 @@ class Request(object):
            return boolean TRUE when set.
         """
         self.close_on_finish = close_on_finish
+        logger.debug("close_on_finish = %s", close_on_finish)
 
 
 if __name__ == "__main__":
