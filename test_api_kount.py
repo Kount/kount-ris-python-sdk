@@ -9,13 +9,10 @@ import unittest
 import os
 
 from json_test import example_data_products
-from local_settings import kount_api_key, url_api
+from local_settings import kount_api_key, url_api, raise_errors
 from settings import resource_folder, xml_filename
 from client import Client
-from local_settings import raise_errors
 from util.ris_validation_exception import RisValidationException
-
-
 
 __author__ = "Yordanka Spahieva"
 __version__ = "1.0.0"
@@ -132,14 +129,14 @@ class TestAPIRIS(unittest.TestCase):
         added, removed, modified, _ = dict_compare(actual, expected)
         self.assertEqual(added, set())
         self.assertEqual(removed, set())
-        self.assertEqual(modified.keys(),
-                         {'CARDS': ('196', '1'),
-                          'GEOX': ('CN', 'US'),
-                          'RULE_ID_0': ('6822', '1024842'),
-                          'REGN': ('CN_02', None),
-                          'TRAN': ('P04S03M57HSP', 'PTPN0Z04P8Y6'),
-                          'SCOR': ('99', '29'), 'NETW': ('A', 'N'),
-                          'EMAILS': ('20', '1')}.keys())
+        expected = {'CARDS': ('196', '1'),
+                    'GEOX': ('CN', 'US'),
+                    'RULE_ID_0': ('6822', '1024842'),
+                    'REGN': ('CN_02', None),
+                    'TRAN': ('P04S03M57HSP', 'PTPN0Z04P8Y6'),
+                    'SCOR': ('99', '29'), 'NETW': ('A', 'N'),
+                    'EMAILS': ('20', '1')}.keys()
+        self.assertEqual(sorted(modified.keys()), sorted(expected))
         #~ self.assertEqual(Client.process(), expected)
 
     def test_api_kount_2_items(self):
@@ -169,10 +166,8 @@ class TestAPIRIS(unittest.TestCase):
             'PIP_IPAD': None}
         actual = Client(url=url_api, key=kount_api_key).process(
             params=self.data)
-        del actual['TRAN']
-        del actual['RULE_ID_0']
-        del actual['VELO']
-        del actual['VMAX']
+        del (actual['TRAN'], actual['RULE_ID_0'],
+             actual['VELO'], actual['VMAX'])
         self.assertEqual(actual, expected)
 
     def test_last_2_items_bad_email(self):
@@ -267,10 +262,8 @@ class TestAPIRIS(unittest.TestCase):
         else:
             actual = Client(url=url_api, key=kount_api_key).process(
                 params=self.data)
-            del actual['TRAN']
-            del actual['RULE_ID_0']
-            del actual['VELO']
-            del actual['VMAX']
+            del (actual['TRAN'], actual['RULE_ID_0'],
+                 actual['VELO'], actual['VMAX'])
             self.assertEqual(actual, expected)
 
     def test_two_items_none_email(self):
