@@ -6,8 +6,8 @@
 
 
 import unittest
-from util.ris_validation_exception import RisResponseException
-from settings import error_messages
+from sdkpython.util.ris_validation_exception import RisResponseException
+from sdkpython.settings import error_messages
 
 __author__ = "Yordanka Spahieva"
 __version__ = "1.0.0"

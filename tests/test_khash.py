@@ -3,7 +3,7 @@
 # This file is part of the Kount python sdk project (https://bitbucket.org/panatonkount/sdkpython)
 # Copyright (C) 2017 Kount Inc. All Rights Reserved.
 import unittest
-from util.khash import Khash
+from sdkpython.util.khash import Khash
 
 __author__ = "Yordanka Spahieva"
 __version__ = "1.0.0"
@@ -40,11 +40,13 @@ class TestKhash(unittest.TestCase):
             card_solted = self.k.hash_payment_token(token="")
         with self.assertRaises(ValueError):
             card_solted = self.k.hash_payment_token(token=None)
-        card_solted = self.k.hash_payment_token(token=10**100000)
-        self.assertEqual(card_solted, "100000QKX0L46T00RKBW")
+        card_solted = self.k.hash_payment_token(token=str(10**100))
+        self.assertEqual(card_solted, "100000CV9G1E9RZ4D5HL")
         self.assertTrue(self.k.khashed(card_solted))
         with self.assertRaises(ValueError):
             card_solted = self.k.hash_payment_token(token=-42)
+        with self.assertRaises(ValueError):
+            card_solted = self.k.hash_payment_token(token=10**20)
         with self.assertRaises(ValueError):
             card_solted = self.k.hash_payment_token(token=0)
         card_solted = self.k.hash_payment_token(token="Beatles")

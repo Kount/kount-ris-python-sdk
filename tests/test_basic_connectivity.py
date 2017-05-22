@@ -11,21 +11,21 @@ Test Basic Connectivity
 import unittest
 import os
 import uuid
-from response import Response
+from sdkpython.response import Response
 
-from request import (ASTAT, BCRSTAT, INQUIRYMODE,
+from sdkpython.request import (ASTAT, BCRSTAT, INQUIRYMODE,
                      CURRENCYTYPE, MERCHANTACKNOWLEDGMENT)
-from inquiry import Inquiry
-from util.payment import CardPayment
-from util.cartitem import CartItem
-from util.address import Address
-from util.xmlparser import xml_to_dict
+from sdkpython.inquiry import Inquiry
+from sdkpython.util.payment import CardPayment
+from sdkpython.util.cartitem import CartItem
+from sdkpython.util.address import Address
+from sdkpython.util.xmlparser import xml_to_dict
 
-from client import Client
-from local_settings import (url_api, url_api_beta,
+from sdkpython.client import Client
+from sdkpython.local_settings import (url_api, url_api_beta,
                             kount_api_key999667,
                             merchant_id_999667, ptok as PTOK)
-from settings import resource_folder, xml_filename, sdk_version
+from sdkpython.settings import resource_folder, xml_filename, sdk_version
 
 
 __author__ = "Yordanka Spahieva"
@@ -34,7 +34,7 @@ __maintainer__ = "Yordanka Spahieva"
 __email__ = "yordanka.spahieva@sirma.bg"
 __status__ = "Development"
 
-xml_filename_path = os.path.join(os.path.dirname(__file__),
+xml_filename_path = os.path.join(os.path.dirname(__file__), '..',
                                  resource_folder, xml_filename)
 
 BILLING_ADDRESS = Address("1234 North B2A1 Tree Lane South",

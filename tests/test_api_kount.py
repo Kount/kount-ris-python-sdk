@@ -8,11 +8,11 @@ import logging
 import unittest
 import os
 
-from json_test import example_data_products
-from local_settings import kount_api_key, url_api, raise_errors
-from settings import resource_folder, xml_filename
-from client import Client
-from util.ris_validation_exception import RisValidationException
+from sdkpython.json_test import example_data_products
+from sdkpython.local_settings import kount_api_key, url_api, raise_errors
+from sdkpython.settings import resource_folder, xml_filename
+from sdkpython.client import Client
+from sdkpython.util.ris_validation_exception import RisValidationException
 
 __author__ = "Yordanka Spahieva"
 __version__ = "1.0.0"

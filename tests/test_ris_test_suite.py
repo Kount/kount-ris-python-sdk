@@ -6,20 +6,20 @@
 
 import unittest
 import os
-from response import Response
-from request import (ASTAT, BCRSTAT, INQUIRYMODE,
+from sdkpython.response import Response
+from sdkpython.request import (ASTAT, BCRSTAT, INQUIRYMODE,
                      MERCHANTACKNOWLEDGMENT)
-from update import Update, UPDATEMODE
-from util.khash import Khash
-from util.cartitem import CartItem
-from util.xmlparser import xml_to_dict
-from util.ris_validation_exception import RisValidationException
+from sdkpython.update import Update, UPDATEMODE
+from sdkpython.util.khash import Khash
+from sdkpython.util.cartitem import CartItem
+from sdkpython.util.xmlparser import xml_to_dict
+from sdkpython.util.ris_validation_exception import RisValidationException
 
-from client import Client
-from local_settings import (url_api_beta as RIS_ENDPOINT_BETA, kount_api_key,
+from sdkpython.client import Client
+from sdkpython.local_settings import (url_api_beta as RIS_ENDPOINT_BETA, kount_api_key,
                             raise_errors, merchant_id as MERCHANT_ID,
                             ptok as PTOK)
-from settings import resource_folder, xml_filename, sdk_version
+from sdkpython.settings import resource_folder, xml_filename, sdk_version
 from test_basic_connectivity import generate_unique_id, default_inquiry
 
 __author__ = "Yordanka Spahieva"
@@ -28,7 +28,7 @@ __maintainer__ = "Yordanka Spahieva"
 __email__ = "yordanka.spahieva@sirma.bg"
 __status__ = "Development"
 
-xml_filename_path = os.path.join(os.path.dirname(__file__),
+xml_filename_path = os.path.join(os.path.dirname(__file__), "..",
                                  resource_folder, xml_filename)
 
 

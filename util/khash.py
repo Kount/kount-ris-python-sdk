@@ -6,7 +6,7 @@
 import hashlib
 import re
 from string import digits, ascii_uppercase
-from local_settings import salt
+from sdkpython.local_settings import salt
 
 __author__ = "Yordanka Spahieva"
 __version__ = "1.0.0"

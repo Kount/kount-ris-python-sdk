@@ -10,7 +10,7 @@ __maintainer__ = "Yordanka Spahieva"
 __email__ = "yordanka.spahieva@sirma.bg"
 __status__ = "Development"
 
-from settings import error_messages
+from sdkpython.settings import error_messages
 
 class RisException(Exception):
     """RIS exeption class:

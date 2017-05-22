@@ -6,9 +6,9 @@
 
 import unittest
 import os
-from settings import resource_folder, xml_filename
-from util.xmlparser import xml_to_dict
-from util.xml_dict import xml_dict
+from sdkpython.settings import resource_folder, xml_filename
+from sdkpython.util.xmlparser import xml_to_dict
+from sdkpython.util.xml_dict import xml_dict
 
 __author__ = "Yordanka Spahieva"
 __version__ = "1.0.0"
@@ -16,7 +16,7 @@ __maintainer__ = "Yordanka Spahieva"
 __email__ = "yordanka.spahieva@sirma.bg"
 __status__ = "Development"
 
-xml_filename_path = os.path.join(os.path.dirname(__file__),
+xml_filename_path = os.path.join(os.path.dirname(__file__), '..',
                             resource_folder, xml_filename)
 
 
