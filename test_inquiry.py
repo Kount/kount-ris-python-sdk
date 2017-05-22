@@ -518,9 +518,9 @@ class TestBasicConnectivity(unittest.TestCase):
         actual = "321 BAD_EMAL Cause: [[%s is an invalid email address]"\
                  ", Field: [EMAL], Value: [%s]" % (bad, bad)
         self.assertEqual({
-            'ERRO': 321,
-            'ERROR_0': actual,
-            'ERROR_COUNT': 1, 'MODE': 'E', 'WARNING_COUNT': 0}, res)
+            u'ERRO': 321,
+            u'ERROR_0': actual,
+            u'ERROR_COUNT': 1, 'MODE': 'E', 'WARNING_COUNT': 0}, res)
 
     def test_16_expected_geox(self):
         "test_16_expected_geox"
