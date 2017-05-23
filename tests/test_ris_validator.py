@@ -5,6 +5,10 @@
 # Copyright (C) 2017 Kount Inc. All Rights Reserved.
 
 import unittest
+#~ import sys
+#~ from pathlib import Path # if you haven't already done so
+#~ root = str(Path(__file__).resolve().parents[1])
+#~ sys.path.append(root)
 from json_test import example_data, example_data_products
 from ris_validator import RisValidator
 #~ from util.validation_error import ValidationError

@@ -16,7 +16,7 @@ __status__ = "Development"
 
 
 xml_filename_path = os.path.join(os.path.dirname(__file__), '..',
-                            resource_folder, xml_filename)
+                                 resource_folder, xml_filename)
 
 
 class TestXMLtoDict(unittest.TestCase):

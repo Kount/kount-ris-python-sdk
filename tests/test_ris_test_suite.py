@@ -316,7 +316,6 @@ class TestRisTestSuite(unittest.TestCase):
         self.inq.params['PENC'] = penc
         res = self.client.process(params=self.inq.params)
         self.assertIsNotNone(res)
-
         rr = Response(res)
         self.assertEqual("AMEX", rr.params['BRND'])
 

@@ -62,7 +62,11 @@ class RisValidator(object):
                 regex = False
             mode_dict = p_xml.get('mode', None)
             mode = params.get('MODE', "Q")
-            if params[param] is not None and len(str(params[param])) == 0:
+            try:
+                a = len(str(params[param]))
+            except UnicodeEncodeError:
+                a = len(str(params[param].encode('utf-8')))
+            if params[param] is not None and a== 0:
                 empty.append(param)
                 logger.debug("empty value for %s", param)
                 continue

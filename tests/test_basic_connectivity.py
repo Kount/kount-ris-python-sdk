@@ -7,10 +7,16 @@ generate_unique_id
 default_inquiry
 Test Basic Connectivity
 """
-
+import sys
+from pathlib import Path
+root = str(Path(__file__).resolve().parents[1])
+tests = str(Path(__file__).resolve().parents[0])
+sys.path.append(root)
+sys.path.append(tests)
 import unittest
 import os
 import uuid
+from requests.exceptions import ConnectionError
 from response import Response
 
 from request import (ASTAT, BCRSTAT, INQUIRYMODE,
@@ -128,21 +134,60 @@ class TestBasicConnectivity(unittest.TestCase):
         self.assertEqual("NG", res["GEOX"])
         self.assertEqual("42", rr.params['SCOR'])
 
-    @unittest.skip("pull request for unicode chars")
     def test_cyrillic(self):
         "test_cyrillic"
-        bad = 'Сирма :ы№'
+        bad = u'Сирма :ы№'
         self.inq.params["S2NM"] = bad
         self.inq.params["EMAL"] = bad
         res = self.client.process(params=self.inq.params)
         self.assertIsNotNone(res)
-        actual = "321 BAD_EMAL Cause: [[%s is an invalid email address]"\
+        actual = u"321 BAD_EMAL Cause: [[%s is an invalid email address]"\
                  ", Field: [EMAL], Value: [%s]" % (bad, bad)
         self.assertEqual({
             u'ERRO': 321,
             u'ERROR_0': actual,
-            u'ERROR_COUNT': 1, 'MODE': 'E', 'WARNING_COUNT': 0}, res)
+            u'ERROR_COUNT': 1, u'MODE': u'E', u'WARNING_COUNT': 0}, res)
+
+    def test_long(self):
+        "test_long request"
+        self.maxDiff = None
+        bad = 'Сирма :ы№'
+        self.inq.params["S2NM"] = bad * 999
+        expected = """Neither JSON nor String """\
+            """<!DOCTYPE HTML PUBLIC "-//IETF//DTD HTML 2.0//EN">\n"""\
+            "<html><head>\n"\
+            "<title>413 Request Entity Too Large</title>\n"\
+            "</head><body>\n"\
+            "<h1>Request Entity Too Large</h1>\n"\
+            "The requested resource<br />/<br />\n"\
+            "does not allow request data with POST requests, or the"\
+            " amount of data provided in\n"\
+            "the request exceeds the capacity limit.\n"\
+            "</body></html>\n"\
+            "MODE=E\n"\
+            "ERRO=201"
+        try:
+            self.assertRaises(ValueError, self.client.process, self.inq.params)
+            self.client.process(params=self.inq.params)
+        except ValueError as vale:
+            self.assertEqual(expected, vale.__str__())
+
+    def test_connection_error(self):
+        "test_connection_error"
+        self.maxDiff = None
+        bad = 'Сирма :ы№'
+        self.inq.params["S2NM"] = bad * 1000000
+        expected = "('Connection aborted.', "\
+                   "timeout('The write operation timed out',))"
+        try:
+            self.assertRaises(ConnectionError,
+                              self.client.process, self.inq.params)
+            self.client.process(params=self.inq.params)
+        except ConnectionError as cone:
+            self.assertEqual(expected, cone.__str__())
 
 
 if __name__ == "__main__":
-    unittest.main()
+    unittest.main(
+        #~ defaultTest="TestBasicConnectivity.test_cyrillic"
+        )
