@@ -6,7 +6,7 @@
 
 "Test Payment Type"
 import unittest
-from sdkpython.util.payment import (BillMeLaterPayment, CardPayment, CheckPayment,
+from util.payment import (BillMeLaterPayment, CardPayment, CheckPayment,
                           GiftCardPayment, GooglePayment,
                           GreenDotMoneyPakPayment, NoPayment,
                           Payment, PaypalPayment)

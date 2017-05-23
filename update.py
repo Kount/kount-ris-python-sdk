@@ -53,6 +53,6 @@ class Update(Request):
             raise RisException("rc_status can not be None")
 
 
-if __name__ == "__main__":
-    r = Update()
-    print(Update().params)
+#~ if __name__ == "__main__":
+    #~ r = Update()
+    #~ print(Update().params)

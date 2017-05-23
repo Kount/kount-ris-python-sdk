@@ -10,7 +10,7 @@ __maintainer__ = "Yordanka Spahieva"
 __email__ = "yordanka.spahieva@sirma.bg"
 __status__ = "Development"
 
-from sdkpython.settings import error_messages
+from settings import error_messages
 
 class RisException(Exception):
     """RIS exeption class:
@@ -42,14 +42,14 @@ class RisResponseException(RisException):
         self.exception_code = error_messages[exception_code]
         super(RisResponseException, self).__init__(self.exception_code)
 
-
-if __name__ == "__main__":
-    c = RisException("REQUIRED", "42")
+#~ if __name__ == "__main__":
+    #~ pass
+    #~ c = RisException("REQUIRED", "42")
     #~ raise c
     #~ raise RisException("REQUIRED", "42")
     #~ c = RisValidationException("REQUIRED", "42")
     #~ raise c
     #~ raise RisValidationException(message="REQUIRED", cause="42", errors=[1, 2, 3])
-    c = RisResponseException(301)
-    raise c
-    raise RisValidationException(message="REQUIRED", cause="42", errors=[1, 2, 3])
+    #~ c = RisResponseException(301)
+    #~ raise c
+    #~ raise RisValidationException(message="REQUIRED", cause="42", errors=[1, 2, 3])

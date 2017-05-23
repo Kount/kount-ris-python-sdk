@@ -5,8 +5,8 @@
 "Test XML to python dict"
 import unittest
 import os
-from sdkpython.util.xmlparser import xml_to_dict
-from sdkpython.settings import resource_folder, xml_filename
+from util.xmlparser import xml_to_dict
+from settings import resource_folder, xml_filename
 
 __author__ = "Yordanka Spahieva"
 __version__ = "1.0.0"

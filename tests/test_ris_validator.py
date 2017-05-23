@@ -5,10 +5,10 @@
 # Copyright (C) 2017 Kount Inc. All Rights Reserved.
 
 import unittest
-from sdkpython.json_test import example_data, example_data_products
-from sdkpython.ris_validator import RisValidator
+from json_test import example_data, example_data_products
+from ris_validator import RisValidator
 #~ from util.validation_error import ValidationError
-from sdkpython.util.ris_validation_exception import RisValidationException
+from util.ris_validation_exception import RisValidationException
 
 
 __author__ = "Yordanka Spahieva"

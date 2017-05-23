@@ -4,7 +4,7 @@
 # Copyright (C) 2017 Kount Inc. All Rights Reserved.
 
 import unittest
-from sdkpython.util.address import Address
+from util.address import Address
 
 __author__ = "Yordanka Spahieva"
 __version__ = "1.0.0"

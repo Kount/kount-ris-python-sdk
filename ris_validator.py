@@ -73,7 +73,6 @@ class RisValidator(object):
                         len(params[param]), param)
                     errors.append(required_err)
                     logger.debug(required_err)
-                    #~ raise ValidationError(params[param], regex)
             if regex and isinstance(param, str) and \
                     isinstance(params[param], str):
                 if not re.match(regex, params[param]):
@@ -81,10 +80,7 @@ class RisValidator(object):
                         p_xml['reg_ex'], param)
                     errors.append(required_err)
                     logger.debug("required_err %s", required_err)
-                #~ raise ValidationError(field=param,
-                                      #~ value=params[param], pattern=regex)
             if mode is not None and mode_dict is not None:
-                #~ 'ANID': {'max_length': '64', 'mode': ['P'], 'required': True},
                 if params[param] == "" and mode in mode_dict:
                     required_err = "Invalid parameter [%s] "\
                                    "for mode [%s]" % (param, mode)
@@ -92,11 +88,9 @@ class RisValidator(object):
                     logger.debug("required_err %s", required_err)
                     raise ValidationError(param, mode)
                 if params[param] != "" and mode not in mode_dict:
-                     #~ 'PROD_QUANT': {'mode': ['Q', 'P', 'W'], 'reg_ex': '^[0-9]+$'},
                     required_err = "Mode %s invalid for %s" % (mode, param)
                     errors.append(required_err)
                     logger.debug("required_err %s", required_err)
-                    #~ raise ValidationError(param, mode)
         product_type = sorted(
             [cpt for cpt in params if cpt.startswith("PROD_TYPE[")])
         product_name = sorted(

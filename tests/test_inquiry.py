@@ -5,9 +5,9 @@
 """Test Cases for Inquiry class"""
 
 import unittest
-from sdkpython.local_settings import (merchant_id as MERCHANT_ID,
+from local_settings import (merchant_id as MERCHANT_ID,
                             ptok as PTOK)
-from sdkpython.settings import sdk_version
+from settings import sdk_version
 from test_basic_connectivity import generate_unique_id, default_inquiry
 
 __author__ = "Yordanka Spahieva"

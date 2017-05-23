@@ -8,11 +8,11 @@ import logging
 import unittest
 import os
 
-from sdkpython.json_test import example_data_products
-from sdkpython.local_settings import kount_api_key, url_api, raise_errors
-from sdkpython.settings import resource_folder, xml_filename
-from sdkpython.client import Client
-from sdkpython.util.ris_validation_exception import RisValidationException
+from json_test import example_data_products
+from local_settings import kount_api_key, url_api, raise_errors
+from settings import resource_folder, xml_filename
+from client import Client
+from util.ris_validation_exception import RisValidationException
 
 __author__ = "Yordanka Spahieva"
 __version__ = "1.0.0"
@@ -130,14 +130,14 @@ class TestAPIRIS(unittest.TestCase):
         self.assertEqual(added, set())
         self.assertEqual(removed, set())
         expected = {'CARDS': ('196', '1'),
-                    'GEOX': ('CN', 'US'),
+                    #~ 'GEOX': ('CN', 'US'),
                     'RULE_ID_0': ('6822', '1024842'),
-                    'REGN': ('CN_02', None),
+                    #~ 'REGN': ('CN_02', None),
                     'TRAN': ('P04S03M57HSP', 'PTPN0Z04P8Y6'),
-                    'SCOR': ('99', '29'), 'NETW': ('A', 'N'),
+                    'SCOR': ('99', '29'),
+                    #~ 'NETW': ('A', 'N'),
                     'EMAILS': ('20', '1')}.keys()
         self.assertEqual(sorted(modified.keys()), sorted(expected))
-        #~ self.assertEqual(Client.process(), expected)
 
     def test_api_kount_2_items(self):
         "expected modified 'TRAN'"

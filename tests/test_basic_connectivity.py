@@ -11,21 +11,21 @@ Test Basic Connectivity
 import unittest
 import os
 import uuid
-from sdkpython.response import Response
+from response import Response
 
-from sdkpython.request import (ASTAT, BCRSTAT, INQUIRYMODE,
+from request import (ASTAT, BCRSTAT, INQUIRYMODE,
                      CURRENCYTYPE, MERCHANTACKNOWLEDGMENT)
-from sdkpython.inquiry import Inquiry
-from sdkpython.util.payment import CardPayment
-from sdkpython.util.cartitem import CartItem
-from sdkpython.util.address import Address
-from sdkpython.util.xmlparser import xml_to_dict
+from inquiry import Inquiry
+from util.payment import CardPayment
+from util.cartitem import CartItem
+from util.address import Address
+from util.xmlparser import xml_to_dict
 
-from sdkpython.client import Client
-from sdkpython.local_settings import (url_api, url_api_beta,
+from client import Client
+from local_settings import (url_api, url_api_beta,
                             kount_api_key999667,
                             merchant_id_999667, ptok as PTOK)
-from sdkpython.settings import resource_folder, xml_filename, sdk_version
+from settings import resource_folder, xml_filename, sdk_version
 
 
 __author__ = "Yordanka Spahieva"
@@ -128,7 +128,8 @@ class TestBasicConnectivity(unittest.TestCase):
         self.assertEqual("NG", res["GEOX"])
         self.assertEqual("42", rr.params['SCOR'])
 
-    def _test_cyrillic(self):
+    @unittest.skip("pull request for unicode chars")
+    def test_cyrillic(self):
         "test_cyrillic"
         bad = 'Сирма :ы№'
         self.inq.params["S2NM"] = bad
