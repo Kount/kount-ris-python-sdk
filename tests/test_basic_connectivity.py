@@ -172,22 +172,6 @@ class TestBasicConnectivity(unittest.TestCase):
         except ValueError as vale:
             self.assertEqual(expected, vale.__str__())
 
-    def test_connection_error(self):
-        "test_connection_error"
-        self.maxDiff = None
-        bad = 'Сирма :ы№'
-        self.inq.params["S2NM"] = bad * 1000000
-        expected = "('Connection aborted.', "\
-                   "timeout('The write operation timed out',))"
-        try:
-            self.assertRaises(ConnectionError,
-                              self.client.process, self.inq.params)
-            self.client.process(params=self.inq.params)
-        except ConnectionError as cone:
-            self.assertEqual(expected, cone.__str__())
-
 
 if __name__ == "__main__":
-    unittest.main(
-        #~ defaultTest="TestBasicConnectivity.test_cyrillic"
-        )
+    unittest.main()
