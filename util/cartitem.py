@@ -1,7 +1,8 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 # This file is part of the Kount python sdk project (https://bitbucket.org/panatonkount/sdkpython)
-# Copyright (C) 2017 Kount Inc. All Rights Reserved.
+# Copyright (C) 2017 Kount Inc. All Rights Reserved
+"CartItem class"
 
 __author__ = "Yordanka Spahieva"
 __version__ = "1.0.0"
@@ -19,7 +20,8 @@ class CartItem(object):
         quantity - quantity
         price - the price of the item
     """
-    def __init__(self, product_type="", item_name="", description="", quantity="", price=""):
+    def __init__(self, product_type="", item_name="",
+                 description="", quantity="", price=""):
         "Constructor for a cart item."
         self.product_type = product_type
         self.item_name = item_name
@@ -29,16 +31,8 @@ class CartItem(object):
 
     def to_string(self):
         "String representation of this shopping cart item"
-        cart = "Product Type: %s\nItem Name: %s\nDescription: %s\nQuantity: %s\nPrice: %s\n"%(
-        self.product_type, self.item_name, self.description, self.quantity, self.price)
+        cart = "Product Type: %s\nItem Name: %s\nDescription:"\
+               "%s\nQuantity: %s\nPrice: %s\n" % (
+                   self.product_type, self.item_name, self.description,
+                   self.quantity, self.price)
         return cart
-
-
-if __name__ == "__main__":
-    c = CartItem()
-    c.product_type = 666
-    c.item_name = 666
-    c.description = 666
-    c.quantity = 666
-    c.price = 666
-    print(c.to_string())

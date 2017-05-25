@@ -2,6 +2,7 @@
 # -*- coding: utf-8 -*-
 # This file is part of the Kount python sdk project (https://bitbucket.org/panatonkount/sdkpython)
 # Copyright (C) 2017 Kount Inc. All Rights Reserved.
+"class RisValidator"
 import re
 import os
 import logging
@@ -10,8 +11,8 @@ from util.ris_validation_exception import RisValidationException
 from util.validation_error import ValidationError
 from util.xmlparser import xml_to_dict
 from settings import resource_folder, xml_filename
-
 from local_settings import raise_errors as raise_err
+
 xml_filename_path = os.path.join(
     os.path.dirname(__file__), resource_folder, xml_filename)
 logger = logging.getLogger('kount.request')
@@ -31,15 +32,16 @@ class RisValidator(object):
     def __init__(self, raise_errors=raise_err):
         """parse against xml file provided is sdk"""
         self.errors = []
-        self.xml_to_dict1, self.required_field_names,\
+        self.xml_2_dict, self.required_field_names,\
             self.notrequired_field_names =\
             xml_to_dict(xml_filename_path)
         self.raise_errors = raise_errors
 
-    def ris_validator(self, params, xml_to_dict1):
+    def ris_validator(self, params, xml_2_dict):
         """Client side validate the data to be passed to RIS.
         kwargs
             params - Map of data parameters from request,
+            xml_2_dict - python dict
             raise RisValidationException - Ris validation exception
             return List of errors encountered as util.ValidationError objects
         """
@@ -51,7 +53,7 @@ class RisValidator(object):
             if params[param] is None or isinstance(params[param], bool):
                 continue
             try:
-                p_xml = xml_to_dict1[param.split("[")[0]]
+                p_xml = xml_2_dict[param.split("[")[0]]
             except KeyError:
                 missing_in_xml.append(param)
                 logger.debug("missing_in_xml = %s", param)
@@ -63,18 +65,18 @@ class RisValidator(object):
             mode_dict = p_xml.get('mode', None)
             mode = params.get('MODE', "Q")
             try:
-                a = len(str(params[param]))
+                param_len = len(str(params[param]))
             except UnicodeEncodeError:
-                a = len(str(params[param].encode('utf-8')))
-            if params[param] is not None and a== 0:
+                param_len = len(str(params[param].encode('utf-8')))
+            if params[param] is not None and param_len == 0:
                 empty.append(param)
                 logger.debug("empty value for %s", param)
                 continue
             max_length = p_xml.get('max_length', None)
             if max_length:
-                if int(p_xml['max_length']) < len(params[param]):
+                if int(p_xml['max_length']) < param_len:
                     required_err = "max_length %s invalid for %s" % (
-                        len(params[param]), param)
+                        param_len, param)
                     errors.append(required_err)
                     logger.debug(required_err)
             if regex and isinstance(param, str) and \

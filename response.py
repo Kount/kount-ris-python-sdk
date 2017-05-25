@@ -30,8 +30,8 @@ class KcEvent(object):
         self.event_expression = expression
         self.event_code = code
         logger.debug("KcEvent - event_decision = %s, "
-                       "event_expression = %s, event_code= %s",
-                       decision, expression, code)
+                     "event_expression = %s, event_code= %s",
+                     decision, expression, code)
 
 
 class Response(object):
@@ -57,15 +57,16 @@ class Response(object):
         "NETW" - Get the network type.
         "KYCF" - Get the know your customer flag.
         "REGN" - Get the region the remote device is located in.
-        "KAPT" - Get the Kaptcha flag: enabled upon request and for when RIS has no
+        "KAPT" - Get the Kaptcha flag: enabled upon request and for
+                 when RIS has no
         "SITE" - Get the site ID.
         "PROXY" - Get a string representing whether the remote device is
             using a proxy. return "Y" or "N"
         "EMAILS" - Get the number of transactions associated with the email.
         "HTTP_COUNTRY" - Get the two character country code setting in
-		    the remote device's
+                         the remote device's
         "TIMEZONE"- Get a string representing the time zone of the customer
-		    as a 3 digit
+                    as a 3 digit
         "CARDS" - Get the number of transactions associated with the credit card
         "PC_REMOTE" - Get a string representing whether the end device is a
             remotely controlled, return "Y" or "N"
@@ -110,16 +111,23 @@ class Response(object):
         "BROWSER" - Get browser (derived from user agent string).
         "KC_CUSTOMER_ID" - Get the Kount Central Customer ID.
         "KC_DECISION" - Get the Kount Central Decision.
-        "KC_WARNING_COUNT" - Get the number of KC warnings associated with the response.
-        "KC_ERROR_COUNT" - Get the number of KC errors associated with the response.
-        "KC_TRIGGERED_COUNT" - Get the number of KC events associated with the response.
-        "COUNTERS_TRIGGERED" - Get the number of rules counters triggered in the response.
-        "MASTERCARD" - Get MasterCard Fraud Score associated with the RIS transaction.
+        "KC_WARNING_COUNT" - Get the number of KC warnings associated with
+                             the response.
+        "KC_ERROR_COUNT" - Get the number of KC errors associated
+                            with the response.
+        "KC_TRIGGERED_COUNT" - Get the number of KC events associated
+                                with the response.
+        "COUNTERS_TRIGGERED" - Get the number of rules counters triggered
+                                in the response.
+        "MASTERCARD" - Get MasterCard Fraud Score associated
+                        with the RIS transaction.
             Please contact your Kount representative to enable support for this
             feature in your merchant account.
-        "RULES_TRIGGERED" - A RIS response will always contain the field RULES_TRIGGERED
-            which will be set to zero if there are no rules triggered.
-        "WARNING_COUNT" - Get the number of warnings associated with the response.
+        "RULES_TRIGGERED" - A RIS response will always contain the field
+                            RULES_TRIGGERED which will be set to zero
+                            if there are no rules triggered.
+        "WARNING_COUNT" - Get the number of warnings associated
+                            with the response.
         "ERROR_COUNT" - Get the number of errors associated with the response.
         """
         self.params = params

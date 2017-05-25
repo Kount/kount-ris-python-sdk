@@ -3,6 +3,7 @@
 # This file is part of the Kount python sdk project (https://bitbucket.org/panatonkount/sdkpython)
 # Copyright (C) 2017 Kount Inc. All Rights Reserved.
 
+import xml.etree.ElementTree as ET
 
 __author__ = "Yordanka Spahieva"
 __version__ = "1.0.0"
@@ -10,10 +11,9 @@ __maintainer__ = "Yordanka Spahieva"
 __email__ = "yordanka.spahieva@sirma.bg"
 __status__ = "Development"
 
-import xml.etree.ElementTree as ET
-
 
 def xml_to_dict(xml_filename_path):
+    "parse xml to_python dict"
     with open(xml_filename_path, 'r'):
         tree = ET.parse(xml_filename_path)
         root = tree.getroot()
@@ -38,5 +38,5 @@ def xml_to_dict(xml_filename_path):
         max_length = child.find('max_length')
         if max_length is not None:
             current["max_length"] = max_length.text
-    assert(len(valid_data_dict.keys()) == len(root))
+    assert len(valid_data_dict.keys()) == len(root)
     return valid_data_dict, required_field_names, notrequired_field_names

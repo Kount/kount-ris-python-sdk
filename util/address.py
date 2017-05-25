@@ -2,6 +2,7 @@
 # -*- coding: utf-8 -*-
 # This file is part of the Kount python sdk project (https://bitbucket.org/panatonkount/sdkpython)
 # Copyright (C) 2017 Kount Inc. All Rights Reserved.
+"Address class - representing a street address"
 
 __author__ = "Yordanka Spahieva"
 __version__ = "1.0.0"
@@ -11,7 +12,7 @@ __status__ = "Development"
 
 
 class Address(object):
-    """An class representing a street address.
+    """A class representing a street address.
         Keyword arguments:
             address1 - Address 1 (default empty string)
             address2 - Address 2 (default empty string)
@@ -23,7 +24,8 @@ class Address(object):
             street - Street (default empty string)
     """
 
-    def __init__(self, address1="", address2="", city="", state="", postal_code="", country="", premise="", street=""):
+    def __init__(self, address1="", address2="", city="", state="",
+                 postal_code="", country="", premise="", street=""):
         """Address constructor."""
         self.address1 = address1
         self.address2 = address2

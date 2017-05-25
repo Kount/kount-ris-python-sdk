@@ -2,6 +2,7 @@
 # -*- coding: utf-8 -*-
 # This file is part of the Kount python sdk project (https://bitbucket.org/panatonkount/sdkpython)
 # Copyright (C) 2017 Kount Inc. All Rights Reserved.
+"settings"
 
 
 __author__ = "Yordanka Spahieva"
@@ -10,7 +11,7 @@ __maintainer__ = "Yordanka Spahieva"
 __email__ = "yordanka.spahieva@sirma.bg"
 __status__ = "Development"
 
-python_version = "3.6"
+python_version = "3.6.1"
 resource_folder = "resources"
 xml_filename = 'validate.xml'
 xml_dict = 'xml_dict.py'

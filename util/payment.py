@@ -1,5 +1,5 @@
 #!/usr/bin/env python
-"RIS payment type object"
+"class Payment - RIS payment type object"
 # -*- coding: utf-8 -*-
 # This file is part of the Kount python sdk project (https://bitbucket.org/panatonkount/sdkpython)
 # Copyright (C) 2017 Kount Inc. All Rights Reserved.

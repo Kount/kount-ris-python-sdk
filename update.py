@@ -51,8 +51,3 @@ class Update(Request):
             self.params["RFCB"] = rc_status
         else:
             raise RisException("rc_status can not be None")
-
-
-#~ if __name__ == "__main__":
-    #~ r = Update()
-    #~ print(Update().params)

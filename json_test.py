@@ -2,6 +2,7 @@
 # -*- coding: utf-8 -*-
 # This file is part of the Kount python sdk project (https://bitbucket.org/panatonkount/sdkpython)
 # Copyright (C) 2017 Kount Inc. All Rights Reserved.
+"example data from https://kopana.atlassian.net/wiki/display/KS/Testing"
 
 __author__ = "Yordanka Spahieva"
 __version__ = "1.0.0"
@@ -9,7 +10,7 @@ __maintainer__ = "Yordanka Spahieva"
 __email__ = "yordanka.spahieva@sirma.bg"
 __status__ = "Development"
 
-#~ https://kopana.atlassian.net/wiki/display/KS/Testing
+
 example_data = {
     'ANID': '',
     'AUTH': 'A',
@@ -51,7 +52,9 @@ example_data = {
     'SESS': '088E9F4961354D4F90041988B8D5C66B',
     'SITE': 'DEFAULT',
     'TOTL': '123456',
-    'UAGT': 'Mozilla%2F5.0+%28Macintosh%3B+Intel+Mac+OS+X+10%5F9%5F5%29+AppleWebKit%2F537.36+%28KHTML%2C+like+Gecko%29+Chrome%2F37.0.2062.124+Safari%2F537.36',
+    'UAGT': 'Mozilla%2F5.0+%28Macintosh%3B+Intel+Mac+OS+X+10%5F9%5F5%29+'\
+            'AppleWebKit%2F537.36+%28KHTML%2C+like+Gecko%29+'\
+            'Chrome%2F37.0.2062.124+Safari%2F537.36',
     'UNIQ': '088E9F4961354D4F9004',
     'VERS': '0695'
 }
@@ -70,7 +73,6 @@ example_data_products = {
     'CASH': '4444',
     'CURR': 'USD',
     'CVVR': 'M',
-    #~ 'EMAL': 'curly.riscaller12%40kountqa.com ', - bad/invalid email
     'EMAL': 'ccurly.riscaller15@kountqa.com ',
     'FRMT': 'JSON', # set if not via sdk
     'IPAD': '129.173.116.98',
@@ -85,7 +87,6 @@ example_data_products = {
     'PROD_ITEM[1]': 'TP999999',
     'PROD_PRICE[0]': '68990',
     'PROD_PRICE[1]': '1000990',
-    #~ 'PROD_PRICE[1]': '100',
     'PROD_QUANT[0]': '2',
     'PROD_QUANT[1]': '44',
     'PROD_TYPE[0]': 'SPORTING%5FGOODS',
@@ -95,7 +96,6 @@ example_data_products = {
     'S2A1': '567+West+S2A1+Court+North',
     'S2CC': 'US',
     'S2CI': 'Gnome',
-    #~ 'S2EM': 'sdkTestShipTo%40kountsdktestdomain.com',  #- bad/invalid email
     'S2EM': 'sdkTestShipTo@kountsdktestdomain.com',
     'S2NM': 'SdkTestShipToFirst+SdkShipToLast',
     'S2PC': '99762',
@@ -104,9 +104,10 @@ example_data_products = {
     'SESS': 'F8E874A38B7B4B6DBB71492A584A969D',
     'SITE': 'DEFAULT',
     'TOTL': '107783',
-    'UAGT': 'Mozilla%2F5.0+%28Macintosh%3B+Intel+Mac+OS+X+10%5F9%5F5%29+AppleWebKit%2F537.36+%28KHTML%2C+like+Gecko%29+Chrome%2F37.0.2062.124+Safari%2F537.36',
+    'UAGT': 'Mozilla%2F5.0+%28Macintosh%3B+Intel+Mac+OS+X+10%5F9%5F5%29+'\
+            'AppleWebKit%2F537.36+%28KHTML%2C+like+Gecko%29+'\
+            'Chrome%2F37.0.2062.124+Safari%2F537.36',
     'UNIQ': 'F8E874A38B7B4B6DBB71',
-    #~ 'VERS': '0630'
     'SDK': 'CUST',
     'VERS': '0695'
- }
+    }

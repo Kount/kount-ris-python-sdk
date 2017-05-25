@@ -1,15 +1,16 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 # This file is part of the Kount python sdk project (https://bitbucket.org/panatonkount/sdkpython)
-# Copyright (C) 2017 Kount Inc. All Rights Reserved.
+# Copyright (C) 2017 Kount Inc. All Rights Reserved
+"RIS initial inquiry class"
+
 from datetime import datetime
 import time
 import logging
-
-from request import Request
+from request import (Request, CURRENCYTYPE, INQUIRYMODE,
+                     GENDER, ADDRESS, SHIPPINGTYPESTAT)
 from util.cartitem import CartItem
 from util.address import Address
-from request import CURRENCYTYPE, INQUIRYMODE, GENDER, ADDRESS, SHIPPINGTYPESTAT
 from settings import sdk_version
 
 __author__ = "Yordanka Spahieva"
@@ -139,10 +140,10 @@ class Inquiry(Request):
         """
         self._address(ADDRESS.BILLING, address)
         logger.debug("B2A1 = %s, B2A2 = %s, B2CI = %s, B2ST = %s, "
-                       "B2PC = %s, B2CC = %s, BPREMISE = %s, BSTREET = %s",
-                       address.address1, address.address2, address.city,
-                       address.state, address.postal_code, address.country,
-                       address.premise, address.street)
+                     "B2PC = %s, B2CC = %s, BPREMISE = %s, BSTREET = %s",
+                     address.address1, address.address2, address.city,
+                     address.state, address.postal_code, address.country,
+                     address.premise, address.street)
 
     def shipping_address(self, address):
         """Set the shipping address.
@@ -150,10 +151,10 @@ class Inquiry(Request):
         """
         self._address(ADDRESS.SHIPPING, address)
         logger.debug("S2A1 = %s, S2A2 = %s, S2CI = %s, S2ST = %s, "
-                       "S2PC = %s, S2CC = %s, SPREMISE = %s, SSTREET = %s",
-                       address.address1, address.address2, address.city,
-                       address.state, address.postal_code, address.country,
-                       address.premise, address.street)
+                     "S2PC = %s, S2CC = %s, SPREMISE = %s, SSTREET = %s",
+                     address.address1, address.address2, address.city,
+                     address.state, address.postal_code, address.country,
+                     address.premise, address.street)
 
     def billing_phone_number(self, billing_phone=""):
         """Set the billing phone number.
@@ -257,10 +258,10 @@ class Inquiry(Request):
             self.params["PROD_QUANT[%i]" % index] = cart.quantity
             self.params["PROD_PRICE[%i]" % index] = cart.price
             logger.debug("PROD_TYPE[%i] = %s, PROD_ITEM[%i] = %s, "
-                           "PROD_DESC[%i] = %s, PROD_QUANT[%i] = %s, "
-                           "PROD_PRICE[%i] = %s",
-                           index, cart.product_type,
-                           index, cart.item_name,
-                           index, cart.description,
-                           index, cart.quantity,
-                           index, cart.price)
+                         "PROD_DESC[%i] = %s, PROD_QUANT[%i] = %s, "
+                         "PROD_PRICE[%i] = %s",
+                         index, cart.product_type,
+                         index, cart.item_name,
+                         index, cart.description,
+                         index, cart.quantity,
+                         index, cart.price)

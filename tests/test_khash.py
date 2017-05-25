@@ -2,6 +2,7 @@
 # -*- coding: utf-8 -*-
 # This file is part of the Kount python sdk project (https://bitbucket.org/panatonkount/sdkpython)
 # Copyright (C) 2017 Kount Inc. All Rights Reserved.
+"TestKhash"
 import unittest
 from util.khash import Khash
 

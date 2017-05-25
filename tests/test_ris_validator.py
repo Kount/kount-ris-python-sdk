@@ -31,7 +31,7 @@ class TestRisValidator(unittest.TestCase):
         "test_examle_data_array - PROD_TYPE[0]"
         invalid, missing_in_xml, empty = self.validator.ris_validator(
             params=example_data_products,
-            xml_to_dict1=self.validator.xml_to_dict1)
+            xml_2_dict=self.validator.xml_2_dict)
         self.assertEqual(invalid, [])
         missing_in_xml.sort()
         self.assertIn('PTOK', missing_in_xml)
@@ -41,7 +41,7 @@ class TestRisValidator(unittest.TestCase):
         "example data PROD_TYPE[]"
         invalid, missing_in_xml, empty = self.validator.ris_validator(
             params=example_data,
-            xml_to_dict1=self.validator.xml_to_dict1)
+            xml_2_dict=self.validator.xml_2_dict)
         self.assertEqual(invalid, [])
         missing_in_xml.sort()
         self.assertEqual(missing_in_xml, ['PTOK'])
@@ -55,12 +55,12 @@ class TestRisValidator(unittest.TestCase):
         with self.assertRaises(RisValidationException):
             self.validator.ris_validator(
                 params=example,
-                xml_to_dict1=self.validator.xml_to_dict1,
+                xml_2_dict=self.validator.xml_2_dict,
                 )
         try:
             self.validator.ris_validator(
                 params=example,
-                xml_to_dict1=self.validator.xml_to_dict1)
+                xml_2_dict=self.validator.xml_2_dict)
         except RisValidationException as vale:
             self.assertIn("Regex", str(vale))
 

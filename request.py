@@ -2,6 +2,7 @@
 # -*- coding: utf-8 -*-
 # This file is part of the Kount python sdk project (https://bitbucket.org/panatonkount/sdkpython)
 # Copyright (C) 2017 Kount Inc. All Rights Reserved.
+"RIS Request superclass for Inquiry and Update"
 import logging
 from enum import Enum
 from util.payment import (
@@ -9,7 +10,6 @@ from util.payment import (
     GiftCardPayment, GooglePayment,	GreenDotMoneyPakPayment,
     NoPayment, Payment, PaypalPayment)
 from util.khash import Khash
-
 from settings import sdk_version
 
 __author__ = "Yordanka Spahieva"
@@ -20,6 +20,7 @@ __status__ = "Development"
 
 
 class ASTAT:
+    "Authorization status"
     Approve = 'A'
     Decline = 'D'
     Review = 'R'
@@ -30,27 +31,30 @@ class ASTAT:
 
 
 class BCRSTAT:
+    "Bankcard Reply"
     MATCH = 'M'
     NO_MATCH = 'N'
     UNAVAILABLE = 'X'
 
 
 class GENDER(Enum):
+    "gender"
     MALE = 'M'
     FEMALE = 'F'
 
 
 class ADDRESS:
+    'address type'
     BILLING = 'B'
     SHIPPING = 'S'
 
 
 class SHIPPINGTYPESTAT(Enum):
     """
-        "SD". Same day shipping type.
-        "ND". Next day shipping type.
-        "2D". Second day shipping type.
-        "ST". Standard shipping type.
+    "SD". Same day shipping type.
+    "ND". Next day shipping type.
+    "2D". Second day shipping type.
+    "ST". Standard shipping type.
     """
     SAMEDAY = 'SD'
     NEXDAY = 'ND'
@@ -68,7 +72,9 @@ class REFUNDCBSTAT:
 
 
 class MERCHANTACKNOWLEDGMENT:
-    """MERCHANTACKNOWLEDGMENT
+    """merchant acknowledgment
+    "Y". The product expects to ship.
+    "N". The product does not expect to ship.
     """
     FALSE = 'N'
     TRUE = 'Y'
@@ -236,20 +242,20 @@ class Request(object):
                 self.params["PENC"] = "MASK"
             except ValueError as nfe:
                 logger.debug("Error converting Merchant ID to integer"
-                               " value. Set a valid Merchant ID. %s",
-                               str(nfe))
+                             " value. Set a valid Merchant ID. %s",
+                             str(nfe))
                 raise nfe
             except Exception as nsae:
                 logger.debug("Unable to create payment token hash. Caught %s"
-                               " KHASH payment encoding disabled", str(nsae))
+                              " KHASH payment encoding disabled", str(nsae))
                 #Default to plain text payment tokens
                 self.params["PENC"] = ""
         self.params["PTOK"] = payment.payment_token
         self.params["PTYP"] = payment.payment_type
         self.params["LAST4"] = payment.last4
         logger.debug("payment ['PTOK']= %s, ['PTYP']=%s, ['LAST4']=%s",
-                       payment.payment_token, payment.payment_type,
-                       payment.last4)
+                     payment.payment_token, payment.payment_type,
+                     payment.last4)
 
     def mask_token(self, token):
         """Encodes the provided payment token according to the MASK
@@ -308,12 +314,12 @@ class Request(object):
             self.params["LAST4"] = payment.last4
             self.params["PENC"] = "MASK"
             logger.debug("PTOK = %s, PTYP= %s, LAST4=%s, PENC=MASK",
-                           token, payment.payment_type, payment.last4)
+                         token, payment.payment_type, payment.last4)
             return self
         else:
             self.params["PTOK"] = token
             logger.debug("Payment Masked: provided payment is not "
-                           "a CardPayment, applying khash instead of masking")
+                         "a CardPayment, applying khash instead of masking")
             return self.set_payment(payment, token)
 
     def expiration_date(self, month, year):
@@ -340,8 +346,3 @@ class Request(object):
         """
         self.close_on_finish = close_on_finish
         logger.debug("close_on_finish = %s", close_on_finish)
-
-
-if __name__ == "__main__":
-	r = Request()
-	#~ print(Request().params)

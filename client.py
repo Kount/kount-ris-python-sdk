@@ -3,8 +3,8 @@
 # This file is part of the Kount python sdk project
 # https://bitbucket.org/panatonkount/sdkpython
 # Copyright (C) 2017 Kount Inc. All Rights Reserved.
+"class Client"
 import logging
-import unittest
 import os
 import requests
 
@@ -33,13 +33,11 @@ class Client:
     raise_errors - False - log them only
                    True - raise them before request.post
     """
-    #~ logger = logging.getLogger('kount.client')
-
     def __init__(self, url, key):
         self.url = url
         self.kount_api_key = key
         self.headers_api = {'X-Kount-Api-Key': self.kount_api_key}
-        self.xml_to_dict1, self.required, self.notrequired = xml_to_dict(
+        self.xml_2_dict, self.required, self.notrequired = xml_to_dict(
             XML_FILE)
         self.validator = RisValidator(raise_errors=raise_errors)
         self.raise_errors = raise_errors
@@ -53,16 +51,16 @@ class Client:
             params['FRMT'] = 'JSON'
         invalid, missing_in_xml, empty = self.validator.ris_validator(
             params=params,
-            xml_to_dict1=self.validator.xml_to_dict1,
+            xml_2_dict=self.validator.xml_2_dict,
             )
         logger.debug("validation errors= %s, missing_in_xml = %s, "
-                       "empty = %s", invalid, missing_in_xml, empty)
+                     "empty = %s", invalid, missing_in_xml, empty)
         request = requests.post(self.url,
                                 headers=self.headers_api,
                                 data=params,
                                 timeout=timeout)
         logger.debug("url %s, headers %s, params %s", self.url,
-                       self.headers_api, params)
+                     self.headers_api, params)
         try:
             req_json = request.json()
             logger.debug("process json: %s", req_json)
@@ -79,7 +77,3 @@ class Client:
                 error = "Neither JSON nor String %s" % request.text
                 logger.debug(error)
                 raise ValueError(error)
-
-
-if __name__ == "__main__":
-    unittest.main()

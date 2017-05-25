@@ -2,7 +2,7 @@
 # -*- coding: utf-8 -*-
 # This file is part of the Kount python sdk project (https://bitbucket.org/panatonkount/sdkpython)
 # Copyright (C) 2017 Kount Inc. All Rights Reserved.
-
+"RisException, RisValidationException RisResponseException"
 
 __author__ = "Yordanka Spahieva"
 __version__ = "1.0.0"
@@ -11,6 +11,7 @@ __email__ = "yordanka.spahieva@sirma.bg"
 __status__ = "Development"
 
 from settings import error_messages
+
 
 class RisException(Exception):
     """RIS exeption class:
@@ -30,7 +31,8 @@ class RisValidationException(RisException):
         self.message = message
         self.errors = errors
         self.cause = cause
-        super(RisValidationException, self).__init__(self.message, self.cause, self.errors)
+        super(RisValidationException, self).__init__(
+            self.message, self.cause, self.errors)
 
 
 class RisResponseException(RisException):
@@ -41,15 +43,3 @@ class RisResponseException(RisException):
     def __init__(self, exception_code):
         self.exception_code = error_messages[exception_code]
         super(RisResponseException, self).__init__(self.exception_code)
-
-#~ if __name__ == "__main__":
-    #~ pass
-    #~ c = RisException("REQUIRED", "42")
-    #~ raise c
-    #~ raise RisException("REQUIRED", "42")
-    #~ c = RisValidationException("REQUIRED", "42")
-    #~ raise c
-    #~ raise RisValidationException(message="REQUIRED", cause="42", errors=[1, 2, 3])
-    #~ c = RisResponseException(301)
-    #~ raise c
-    #~ raise RisValidationException(message="REQUIRED", cause="42", errors=[1, 2, 3])

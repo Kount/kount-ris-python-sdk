@@ -2,6 +2,8 @@
 # -*- coding: utf-8 -*-
 # This file is part of the Kount python sdk project (https://bitbucket.org/panatonkount/sdkpython)
 # Copyright (C) 2017 Kount Inc. All Rights Reserved.
+"""generated from xmlparser.py, must be updated if
+changed xml_filename = 'validate.xml' from settings.py"""
 
 
 __author__ = "Yordanka Spahieva"
@@ -11,7 +13,6 @@ __email__ = "yordanka.spahieva@sirma.bg"
 __status__ = "Development"
 
 
-#~ generated from xmlparser.py, must be updated if changed xml_filename = 'validate.xml' from settings.py
 xml_dict = {
     'ANID': {'max_length': '64', 'mode': ['P'], 'required': True},
     'AUTH': {'reg_ex': '^[AD]$'},
@@ -34,14 +35,16 @@ xml_dict = {
              'required': True},
     'CUSTOMER_ID': {'mode': ['W', 'J'], 'required': True},
     'CVVR': {'reg_ex': '^[MNX]?$'},
-    'DOB': {'reg_ex': '^(19|20)\\d\\d-(0[1-9]|1[012])-(0[1-9]|[12][0-9]|3[01])$'},
+    'DOB': {'reg_ex': '^(19|20)\\d\\d-(0[1-9]|1[012])-'\
+            '(0[1-9]|[12][0-9]|3[01])$'},
     'EMAL': {'max_length': '64', 'reg_ex': '^.+@.+\\..+$'},
     'EPOC': {'reg_ex': '^\\d{9,10}$'},
     'FRMT': {'max_length': '4', 'reg_ex': '^[JSON]+$'},
     'GENDER': {'reg_ex': '^[MFmf]?$'},
     'IPAD': {'max_length': '16',
              'mode': ['Q', 'P', 'W', 'J'],
-             'reg_ex': '^\\b(?:(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\\.){3}(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\\b$',
+             'reg_ex': '^\\b(?:(?:25[0-5]|2[0-4][0-9]|[01]?[0-9]'\
+             '[0-9]?)\\.){3}(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\\b$',
              'required': True},
     'LAST4': {'reg_ex': '^([a-zA-Z0-9]{4})?$'},
     'MACK': {'mode': ['Q', 'P', 'X', 'U', 'W'],
@@ -52,14 +55,16 @@ xml_dict = {
     'NAME': {'max_length': '64'},
     'ORDR': {'max_length': '32'},
     'PROD_DESC': {'max_length': '255'},
-    'PROD_ITEM': {'max_length': '255', 'mode': ['Q', 'P', 'W'], 'required': True},
+    'PROD_ITEM': {'max_length': '255', 'mode': ['Q', 'P', 'W'],
+                  'required': True},
     'PROD_PRICE': {'mode': ['Q', 'P', 'W'],
                    'reg_ex': '^[0-9]+$',
                    'required': True},
     'PROD_QUANT': {'mode': ['Q', 'P', 'W'],
                    'reg_ex': '^[0-9]+$',
                    'required': True},
-    'PROD_TYPE': {'max_length': '255', 'mode': ['Q', 'P', 'W'], 'required': True},
+    'PROD_TYPE': {'max_length': '255', 'mode': ['Q', 'P', 'W'],
+                  'required': True},
     'PTYP': {'mode': ['Q', 'P', 'W', 'J'], 'reg_ex': '^.+$', 'required': True},
     'RFCB': {'reg_ex': '^[RC]?$'},
     'S2A1': {'max_length': '256'},

@@ -7,16 +7,9 @@ generate_unique_id
 default_inquiry
 Test Basic Connectivity
 """
-import sys
-from pathlib import Path
-root = str(Path(__file__).resolve().parents[1])
-tests = str(Path(__file__).resolve().parents[0])
-sys.path.append(root)
-sys.path.append(tests)
 import unittest
 import os
 import uuid
-from requests.exceptions import ConnectionError
 from response import Response
 
 from request import (ASTAT, BCRSTAT, INQUIRYMODE,
@@ -104,7 +97,7 @@ class TestBasicConnectivity(unittest.TestCase):
                                    email_client, ptok=PTOK)
         self.inq.params["MERC"] = merchant_id_999667
         self.client = Client(url_api_beta, kount_api_key999667)
-        self.xml_to_dict1, self.req, self.notreq = xml_to_dict(
+        self.xml_2_dict, self.req, self.notreq = xml_to_dict(
             xml_filename_path)
 
     def test_12_expected_score(self):

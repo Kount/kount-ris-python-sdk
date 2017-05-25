@@ -49,7 +49,7 @@ class TestRisTestSuite(unittest.TestCase):
                                    merchant_id=MERCHANT_ID,
                                    email_client=EMAIL_CLIENT,
                                    ptok=PTOK)
-        self.xml_to_dict1, self.required_field_names,\
+        self.xml_2_dict, self.required_field_names,\
             self.notrequired_field_names = \
             xml_to_dict(xml_filename_path)
 

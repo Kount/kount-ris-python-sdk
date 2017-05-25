@@ -1,5 +1,5 @@
 #!/usr/bin/env python
-"""Test class Payment"""
+"""Test class TestAPIRIS"""
 # -*- coding: utf-8 -*-
 # This file is part of the Kount python sdk project
 # https://bitbucket.org/panatonkount/sdkpython
