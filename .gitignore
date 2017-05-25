@@ -1,8 +1,7 @@
 __pycache__/
 *.pyc
 *.komodoproject
-*.java
-py36
-py-36
-local_settings.py
+*htmlcov*
+*.txt
+
 

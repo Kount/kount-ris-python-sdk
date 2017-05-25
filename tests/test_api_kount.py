@@ -294,6 +294,7 @@ class TestAPIRIS(unittest.TestCase):
             params=self.data)
         self.assertEqual(actual, expected)
 
+    @unittest.skip('KS-92')
     def test_api_kount_empty_data(self):
         "empty data"
         self.data = {'FRMT': 'JSON'}
