@@ -2,7 +2,7 @@
 """Test class TestAPIRIS"""
 # -*- coding: utf-8 -*-
 # This file is part of the Kount python sdk project
-# https://bitbucket.org/panatonkount/sdkpython
+# https://github.com/Kount/kount-ris-python-sdk
 # Copyright (C) 2017 Kount Inc. All Rights Reserved.
 import logging
 import unittest
