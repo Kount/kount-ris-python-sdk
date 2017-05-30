@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 "class Payment - RIS payment type object"
 # -*- coding: utf-8 -*-
-# This file is part of the Kount python sdk project (https://bitbucket.org/panatonkount/sdkpython)
+# This file is part of the Kount python sdk project https://github.com/Kount/kount-ris-python-sdk/)
 # Copyright (C) 2017 Kount Inc. All Rights Reserved.
 
 __author__ = "Yordanka Spahieva"
