@@ -6,7 +6,7 @@ Contains the Kount Python SDK, tests, and build/package routines.
 
     Contains sources, tests, and resources for the Kount Python SDK
     SDK version: 1.0.0
-        Python 2.7.13 and 3.5, 3.6.1 
+    Python 2.7.13 and 3.5, 3.6.1 
 
 How do I get set up?  
 
