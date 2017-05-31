@@ -4,15 +4,16 @@
 # This file is part of the Kount python sdk project
 # https://github.com/Kount/kount-ris-python-sdk
 # Copyright (C) 2017 Kount Inc. All Rights Reserved.
+from __future__ import (
+    absolute_import, unicode_literals, division, print_function)
 import logging
 import unittest
 import os
+import kount
 
 from json_test import example_data_products
-from local_settings import kount_api_key, url_api, raise_errors
-from settings import resource_folder, xml_filename
-from client import Client
-from util.ris_validation_exception import RisValidationException
+from kount.client import Client
+from kount.util.ris_validation_exception import RisValidationException
 
 __author__ = "Yordanka Spahieva"
 __version__ = "1.0.0"
@@ -20,8 +21,14 @@ __maintainer__ = "Yordanka Spahieva"
 __email__ = "yordanka.spahieva@sirma.bg"
 __status__ = "Development"
 
+kount_api_key = "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiI5OTk2NjYiLCJhdWQiOiJLb3VudC4xIiwiaWF0IjoxNDk0NTM0Nzk5LCJzY3AiOnsia2EiOm51bGwsImtjIjpudWxsLCJhcGkiOmZhbHNlLCJyaXMiOnRydWV9fQ.eMmumYFpIF-d1up_mfxA5_VXBI41NSrNVe9CyhBUGck"
+url_api = "https://risk.beta.kount.net"
+#~ url_api = "https://risk.test.kount.net"
+raise_errors = False
+resource_folder = "resources"
+xml_filename = 'validate.xml'
 
-XML_FILE = os.path.join(os.path.dirname(__file__),
+XML_FILE = os.path.join('..', '..',
                         resource_folder, xml_filename)
 
 LOGGER = logging.getLogger('kount')
@@ -305,4 +312,6 @@ class TestAPIRIS(unittest.TestCase):
 
 
 if __name__ == "__main__":
-    unittest.main()
+    unittest.main(
+        #~ defaultTest="TestAPIRIS.test_api_kount_empty_data"
+        )

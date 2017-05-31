@@ -2,7 +2,8 @@
 # -*- coding: utf-8 -*-
 # This file is part of the Kount python sdk project https://github.com/Kount/kount-ris-python-sdk/)
 # Copyright (C) 2017 Kount Inc. All Rights Reserved.
-
+from __future__ import (
+    absolute_import, unicode_literals, division, print_function)
 import logging
 
 __author__ = "Yordanka Spahieva"
@@ -11,7 +12,7 @@ __maintainer__ = "Yordanka Spahieva"
 __email__ = "yordanka.spahieva@sirma.bg"
 __status__ = "Development"
 
-logger = logging.getLogger('kount.request')
+logger = logging.getLogger('kount.response')
 
 
 class KcEvent(object):

@@ -3,23 +3,21 @@
 # This file is part of the Kount python sdk project https://github.com/Kount/kount-ris-python-sdk/)
 # Copyright (C) 2017 Kount Inc. All Rights Reserved.
 """Test Cases from sdk documentation"""
-
+from __future__ import (
+    absolute_import, unicode_literals, division, print_function)
 import unittest
 import os
-from response import Response
-from request import (ASTAT, BCRSTAT, INQUIRYMODE,
+from kount.response import Response
+from kount.request import (ASTAT, BCRSTAT, INQUIRYMODE,
                      MERCHANTACKNOWLEDGMENT)
-from update import Update, UPDATEMODE
-from util.khash import Khash
-from util.cartitem import CartItem
-from util.xmlparser import xml_to_dict
-from util.ris_validation_exception import RisValidationException
+from kount.request import Update, UPDATEMODE
+from kount.util.khash import Khash
+from kount.util.cartitem import CartItem
+from kount.util.xmlparser import xml_to_dict
+from kount.util.ris_validation_exception import RisValidationException
 
-from client import Client
-from local_settings import (url_api_beta as RIS_ENDPOINT_BETA, kount_api_key,
-                            raise_errors, merchant_id as MERCHANT_ID,
-                            ptok as PTOK)
-from settings import resource_folder, xml_filename, sdk_version
+from kount.client import Client
+from kount.settings import resource_folder, xml_filename, sdk_version
 from test_basic_connectivity import generate_unique_id, default_inquiry
 
 __author__ = "Yordanka Spahieva"
@@ -31,8 +29,22 @@ __status__ = "Development"
 xml_filename_path = os.path.join(os.path.dirname(__file__), "..",
                                  resource_folder, xml_filename)
 
+url_api = "https://risk.beta.kount.net"
+RIS_ENDPOINT_BETA = url_api
 
+
+#~ request timeout in seconds
+timeout = 5
+
+#~ raise_errors - if  True - raise errors instead of logging in debugger
+raise_errors = False
+
+MERCHANT_ID = '999666'
+merchant_id_999667 = '999667'
+PTOK = "0007380568572514"
 EMAIL_CLIENT = "sdkTest@kountsdktestdomain.com"
+kount_api_key = "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiI5OTk2NjYiLCJhdWQiOiJLb3VudC4xIiwiaWF0IjoxNDk0NTM0Nzk5LCJzY3AiOnsia2EiOm51bGwsImtjIjpudWxsLCJhcGkiOmZhbHNlLCJyaXMiOnRydWV9fQ.eMmumYFpIF-d1up_mfxA5_VXBI41NSrNVe9CyhBUGck"
+kount_api_key999667 = "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiI5OTk2NjciLCJhdWQiOiJLb3VudC4xIiwiaWF0IjoxNDk0NTM1OTE2LCJzY3AiOnsia2EiOm51bGwsImtjIjpudWxsLCJhcGkiOmZhbHNlLCJyaXMiOnRydWV9fQ.KK3zG4dMIhTIaE5SeCbej1OAFhZifyBswMPyYFAVRrM"
 
 
 class TestRisTestSuite(unittest.TestCase):
@@ -44,7 +56,7 @@ class TestRisTestSuite(unittest.TestCase):
     def setUp(self):
         self.maxDiff = None
         self.session_id = generate_unique_id()[:32]
-        self.client = Client(RIS_ENDPOINT_BETA, kount_api_key)
+        self.client = Client(RIS_ENDPOINT_BETA, kount_api_key, timeout=5, raise_errors=False)
         self.inq = default_inquiry(session_id=self.session_id,
                                    merchant_id=MERCHANT_ID,
                                    email_client=EMAIL_CLIENT,
@@ -344,4 +356,6 @@ class TestRisTestSuite(unittest.TestCase):
 
 
 if __name__ == "__main__":
-    unittest.main()
+    unittest.main(
+        #~ defaultTest="TestRisTestSuite.test_10_mode_x_after_mode_q"
+    )

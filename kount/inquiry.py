@@ -3,15 +3,16 @@
 # This file is part of the Kount python sdk project https://github.com/Kount/kount-ris-python-sdk/)
 # Copyright (C) 2017 Kount Inc. All Rights Reserved
 "RIS initial inquiry class"
-
+from __future__ import (
+    absolute_import, unicode_literals, division, print_function)
 from datetime import datetime
 import time
 import logging
-from request import (Request, CURRENCYTYPE, INQUIRYMODE,
-                     GENDER, ADDRESS, SHIPPINGTYPESTAT)
-from util.cartitem import CartItem
-from util.address import Address
-from settings import sdk_version
+from .request import (Request, CURRENCYTYPE, INQUIRYMODE,
+                      GENDER, ADDRESS, SHIPPINGTYPESTAT)
+from .util.cartitem import CartItem
+from .util.address import Address
+from .settings import sdk_version
 
 __author__ = "Yordanka Spahieva"
 __version__ = "1.0.0"
@@ -38,8 +39,8 @@ class Inquiry(Request):
         self.params["SDK"] = "CUST"
         self.params["ANID"] = ""
         self.params["FRMT"] = "JSON"
-        self.inquiry_mode = INQUIRYMODE.DEFAULT
-        self.currency_type = CURRENCYTYPE.USD
+        self.inquiry_mode = INQUIRYMODE.DEFAULT.value
+        self.currency_type = CURRENCYTYPE.USD.value
         logger.debug('Inquiry: %s', self.params)
 
     def version(self):
@@ -138,7 +139,7 @@ class Inquiry(Request):
             Arg: address - The billing address, type Address
             Address
         """
-        self._address(ADDRESS.BILLING, address)
+        self._address(ADDRESS.BILLING.value, address)
         logger.debug("B2A1 = %s, B2A2 = %s, B2CI = %s, B2ST = %s, "
                      "B2PC = %s, B2CC = %s, BPREMISE = %s, BSTREET = %s",
                      address.address1, address.address2, address.city,
@@ -149,7 +150,8 @@ class Inquiry(Request):
         """Set the shipping address.
             Arg: address - The shipping address, type Address
         """
-        self._address(ADDRESS.SHIPPING, address)
+        #~ self._address(ADDRESS.SHIPPING, address)
+        self._address(ADDRESS.SHIPPING.value, address)
         logger.debug("S2A1 = %s, S2A2 = %s, S2CI = %s, S2ST = %s, "
                      "S2PC = %s, S2CC = %s, SPREMISE = %s, SSTREET = %s",
                      address.address1, address.address2, address.city,

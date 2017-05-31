@@ -1,9 +1,12 @@
 ﻿#!/usr/bin/env python
 # -*- coding: utf-8 -*-
-# This file is part of the Kount python sdk project https://github.com/Kount/kount-ris-python-sdk/)
+# This file is part of the Kount python sdk project
+# https://github.com/Kount/kount-ris-python-sdk/)
 # Copyright (C) 2017 Kount Inc. All Rights Reserved.
 "Address class - representing a street address"
 
+from __future__ import (
+    absolute_import, unicode_literals, division, print_function)
 __author__ = "Yordanka Spahieva"
 __version__ = "1.0.0"
 __maintainer__ = "Yordanka Spahieva"
@@ -13,7 +16,7 @@ __status__ = "Development"
 
 class Address(object):
     """A class representing a street address.
-        Keyword arguments:
+       Keyword arguments:
             address1 - Address 1 (default empty string)
             address2 - Address 2 (default empty string)
             city - City (default empty string)

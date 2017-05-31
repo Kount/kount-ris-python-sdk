@@ -3,9 +3,10 @@
 # This file is part of the Kount python sdk project https://github.com/Kount/kount-ris-python-sdk/)
 # Copyright (C) 2017 Kount Inc. All Rights Reserved.
 """TestValidationError"""
-
+from __future__ import (
+    absolute_import, unicode_literals, division, print_function)
 import unittest
-from util.validation_error import ValidationError, ValidationErrorType
+from kount.util.validation_error import ValidationError, ValidationErrorType
 
 __author__ = "Yordanka Spahieva"
 __version__ = "1.0.0"

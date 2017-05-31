@@ -1,20 +1,23 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
-# This file is part of the Kount python sdk project https://github.com/Kount/kount-ris-python-sdk/)
+# This file is part of the Kount python sdk project
+# https://github.com/Kount/kount-ris-python-sdk/)
 # Copyright (C) 2017 Kount Inc. All Rights Reserved.
 "class RisValidator"
+
+from __future__ import (
+    absolute_import, unicode_literals, division, print_function)
 import re
 import os
 import logging
-from util.cartitem import CartItem
-from util.ris_validation_exception import RisValidationException
-from util.validation_error import ValidationError
-from util.xmlparser import xml_to_dict
-from settings import resource_folder, xml_filename
-from local_settings import raise_errors as raise_err
+from .util.cartitem import CartItem
+from .util.ris_validation_exception import RisValidationException
+from .util.validation_error import ValidationError
+from .util.xmlparser import xml_to_dict
+from .settings import resource_folder, xml_filename
 
 xml_filename_path = os.path.join(
-    os.path.dirname(__file__), resource_folder, xml_filename)
+    os.path.dirname(__file__), '..', resource_folder, xml_filename)
 logger = logging.getLogger('kount.request')
 
 __author__ = "Yordanka Spahieva"
@@ -29,7 +32,7 @@ class RisValidator(object):
     RIS input data validator class.
     """
 
-    def __init__(self, raise_errors=raise_err):
+    def __init__(self, raise_errors=False):
         """parse against xml file provided is sdk"""
         self.errors = []
         self.xml_2_dict, self.required_field_names,\

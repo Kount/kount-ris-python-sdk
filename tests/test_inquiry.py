@@ -3,11 +3,13 @@
 # This file is part of the Kount python sdk project https://github.com/Kount/kount-ris-python-sdk/)
 # Copyright (C) 2017 Kount Inc. All Rights Reserved.
 """Test Cases for Inquiry class"""
-
+from __future__ import (
+    absolute_import, unicode_literals, division, print_function)
 import unittest
-from local_settings import (merchant_id as MERCHANT_ID,
-                            ptok as PTOK)
-from settings import sdk_version
+MERCHANT_ID = '999666'
+merchant_id_999667 = '999667'
+PTOK = "0007380568572514"
+from kount.settings import sdk_version
 from test_basic_connectivity import generate_unique_id, default_inquiry
 
 __author__ = "Yordanka Spahieva"

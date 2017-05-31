@@ -2,7 +2,8 @@
 # -*- coding: utf-8 -*-
 # This file is part of the Kount python sdk project https://github.com/Kount/kount-ris-python-sdk/)
 # Copyright (C) 2017 Kount Inc. All Rights Reserved.
-
+from __future__ import (
+    absolute_import, unicode_literals, division, print_function)
 import xml.etree.ElementTree as ET
 
 __author__ = "Yordanka Spahieva"

@@ -3,16 +3,12 @@
 # -*- coding: utf-8 -*-
 # This file is part of the Kount python sdk project https://github.com/Kount/kount-ris-python-sdk/)
 # Copyright (C) 2017 Kount Inc. All Rights Reserved.
-
+from __future__ import (
+    absolute_import, unicode_literals, division, print_function)
 import unittest
-#~ import sys
-#~ from pathlib import Path # if you haven't already done so
-#~ root = str(Path(__file__).resolve().parents[1])
-#~ sys.path.append(root)
 from json_test import example_data, example_data_products
-from ris_validator import RisValidator
-#~ from util.validation_error import ValidationError
-from util.ris_validation_exception import RisValidationException
+from kount.ris_validator import RisValidator
+from kount.util.ris_validation_exception import RisValidationException
 
 
 __author__ = "Yordanka Spahieva"

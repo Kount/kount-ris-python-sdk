@@ -1,12 +1,15 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
-# This file is part of the Kount python sdk project https://github.com/Kount/kount-ris-python-sdk/)
+# This file is part of the Kount python sdk project
+# https://github.com/Kount/kount-ris-python-sdk/)
 # Copyright (C) 2017 Kount Inc. All Rights Reserved.
 "class Khash"
+
+from __future__ import (
+    absolute_import, unicode_literals, division, print_function)
 import hashlib
 import re
 from string import digits, ascii_uppercase
-from local_settings import salt
 
 __author__ = "Yordanka Spahieva"
 __version__ = "1.0.0"
@@ -22,12 +25,21 @@ def validator(*args):
     returns: list with args as strings
     """
     for current in args:
-        is_string = isinstance(current, str)
+        try:
+            str(current)
+            is_string = True
+        except ValueError:
+            is_string = False
         curr_len = len(str(current))
         invalid = curr_len not in range(6, 100) or current is None
-        is_digit = isinstance(current, (int))
-        if ((is_digit and current <= 0) or (not is_digit and not is_string) or
-                invalid):
+        try:
+            current = int(current)
+            is_digit = True
+        except (TypeError, ValueError):
+            is_digit = False
+        if is_digit and int(current) <= 0:
+            raise ValueError("incorrect arg: [%s]" % current)
+        elif invalid or not is_string:
             raise ValueError("incorrect arg: [%s]" % current)
     return [str(current) for current in args]
 
@@ -37,6 +49,7 @@ class Khash(object):
     Uninstantiable class constructor.
     Class for creating Kount RIS KHASH encoding payment tokens.
     """
+    salt = 'very secret salt provided by Kount'
 
     @classmethod
     def hash_payment_token(cls, token):
@@ -50,20 +63,20 @@ class Khash(object):
         if len(token) < 6 - need to clarify the expected behaviour
         """
         token_valid = validator(token)[0]
-        return "%s%s" % (token_valid[:6], cls.hash(token_valid))
+        return "%s%s" % (token_valid[:6], cls.hash(cls, plain_text=token_valid))
 
     @classmethod
     def hash_gift_card(cls, merchant_id, card_number):
         """ Hash a gift card payment token using the Kount hashing algorithm.
-        Args:     merchant_id - Merchant ID number
-                card_number - Card number to be hashed
-        returns: String hashed
+            Args:   merchant_id - Merchant ID number
+                    card_number - Card number to be hashed
+            returns: String hashed
         """
         merchant_id, card_number = validator(merchant_id, card_number)
-        return "%s%s" % (merchant_id, cls.hash(card_number))
+        return "%s%s" % (merchant_id, cls.hash(cls, plain_text=card_number))
 
     @staticmethod
-    def hash(plain_text):
+    def hash(cls, plain_text):
         """
         Compute a Kount hash of a given plain text string.
         Preserves the first six characters of the input
@@ -81,7 +94,7 @@ class Khash(object):
             length = len(legal_chars)
             hashed = []
             plain_text_bytes = plain_text.encode('utf-8') #Python 3.x
-            salt_bytes = salt.encode('utf-8')
+            salt_bytes = cls.salt.encode('utf-8')
             sha1 = hashlib.sha1(plain_text_bytes + ".".encode('utf-8') +
                                 salt_bytes).hexdigest()
             for i in range(0, loop_max, 2):

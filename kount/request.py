@@ -1,16 +1,21 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
-# This file is part of the Kount python sdk project https://github.com/Kount/kount-ris-python-sdk/)
+# This file is part of the Kount python sdk project
+# https://github.com/Kount/kount-ris-python-sdk/)
 # Copyright (C) 2017 Kount Inc. All Rights Reserved.
 "RIS Request superclass for Inquiry and Update"
+
+from __future__ import (
+    absolute_import, unicode_literals, division, print_function)
 import logging
 from enum import Enum
-from util.payment import (
+from .util.payment import (
     BillMeLaterPayment, CardPayment, CheckPayment,
-    GiftCardPayment, GooglePayment,	GreenDotMoneyPakPayment,
+    GiftCardPayment, GooglePayment, GreenDotMoneyPakPayment,
     NoPayment, Payment, PaypalPayment)
-from util.khash import Khash
-from settings import sdk_version
+from .util.khash import Khash
+from .util.ris_validation_exception import RisException
+from .settings import sdk_version
 
 __author__ = "Yordanka Spahieva"
 __version__ = "1.0.0"
@@ -19,7 +24,7 @@ __email__ = "yordanka.spahieva@sirma.bg"
 __status__ = "Development"
 
 
-class ASTAT:
+class ASTAT(Enum):
     "Authorization status"
     Approve = 'A'
     Decline = 'D'
@@ -30,7 +35,7 @@ class ASTAT:
     Elevated = 'C'
 
 
-class BCRSTAT:
+class BCRSTAT(Enum):
     "Bankcard Reply"
     MATCH = 'M'
     NO_MATCH = 'N'
@@ -43,7 +48,7 @@ class GENDER(Enum):
     FEMALE = 'F'
 
 
-class ADDRESS:
+class ADDRESS(Enum):
     'address type'
     BILLING = 'B'
     SHIPPING = 'S'
@@ -62,7 +67,7 @@ class SHIPPINGTYPESTAT(Enum):
     STANDARD = "ST"
 
 
-class REFUNDCBSTAT:
+class REFUNDCBSTAT(Enum):
     """Refund charge back status.
     R - The transaction was a refund.
     C - The transaction was a chargeback.
@@ -71,7 +76,7 @@ class REFUNDCBSTAT:
     CHARGEBACK = 'C'
 
 
-class MERCHANTACKNOWLEDGMENT:
+class MERCHANTACKNOWLEDGMENT(Enum):
     """merchant acknowledgment
     "Y". The product expects to ship.
     "N". The product does not expect to ship.
@@ -181,7 +186,7 @@ class Request(object):
         collected to strengthen the score.
         Args: ma_type - merchant acknowledgment type
         """
-        self.params["MACK"] = ma_type
+        self.params["MACK"] = ma_type.value
 
     def authorization_status(self, auth_status):
         """Set the Authorization Status.
@@ -193,7 +198,7 @@ class Request(object):
         decrement the velocity of the persona.
         Args: auth_status - Auth status by issuer
         """
-        self.params["AUTH"] = auth_status
+        self.params["AUTH"] = auth_status.value
 
     def avs_zip_reply(self, avs_zip_reply):
         """Set the Bankcard AVS zip code reply.
@@ -202,7 +207,7 @@ class Request(object):
         processor. Acceptable values are BCRSTAT.
         Args: avs_zip_reply - Bankcard AVS zip code reply
         """
-        self.params["AVSZ"] = avs_zip_reply
+        self.params["AVSZ"] = avs_zip_reply.value
 
     def avs_address_reply(self, avs_address_reply):
         """Set the Bankcard AVS street addres reply.
@@ -210,7 +215,7 @@ class Request(object):
         returned to merchant from processor. Acceptable values are BCRSTAT.
         Args: avs_address_reply - Bankcard AVS street address reply
         """
-        self.params["AVST"] = avs_address_reply
+        self.params["AVST"] = avs_address_reply.value
 
     def avs_cvv_reply(self, cvv_reply):
         """Set the Bankcard CVV/CVC/CVV2 reply.
@@ -218,15 +223,15 @@ class Request(object):
         Acceptable values are BCRSTAT
         Args: cvv_reply -  Bankcard CVV/CVC/CVV2 reply
         """
-        self.params["CVVR"] = cvv_reply
+        self.params["CVVR"] = cvv_reply.value
 
     def payment_set(self, payment):
-        """Set a payment.
-        Depending on the payment type, various request parameters are set:
-        PTOK, PTYP, LAST4.
-        If payment token hashing is not possible, the PENC parameter is set
-        to empty string.
-        Args: payment -  Payment
+        """ Set a payment.
+            Depending on the payment type, various request parameters are set:
+            PTOK, PTYP, LAST4.
+            If payment token hashing is not possible, the PENC parameter is set
+            to empty string.
+            Args: payment -  Payment
         """
         if "PENC" in self.params and not (isinstance(payment, NoPayment))\
                 and not payment.khashed:
@@ -259,7 +264,7 @@ class Request(object):
 
     def mask_token(self, token):
         """Encodes the provided payment token according to the MASK
-        encoding scheme
+           encoding scheme
            Args: token -  the Payment token for this request
            return - MASK-encoded token
         """
@@ -271,12 +276,12 @@ class Request(object):
         return encoded
 
     def set_payment(self, ptyp, ptok):
-        """Set a payment by payment type and payment token.
+        """ Set a payment by payment type and payment token.
             The payment type parameter provided is checked
             if it's one of the predefined payment types
             and Payment is created appropriately
             Args: ptyp - See SDK documentation for a list of accepted
-                         payment types
+                        payment types
                   ptok - The payment token
         """
         payment_dict = {
@@ -324,8 +329,8 @@ class Request(object):
 
     def expiration_date(self, month, year):
         """Set Card Expiration Date.
-        Args: month - String Month in two digit format: MM.
-              year - String Year in four digit format: YYYY.
+           Args: month - String Month in two digit format: MM.
+                 year - String Year in four digit format: YYYY.
         """
         self.params["CCMM"] = month
         self.params["CCYY"] = year
@@ -341,8 +346,49 @@ class Request(object):
 
     def set_close_on_finish(self, close_on_finish):
         """Set a flag for the request transport.
-        Arg: close_on_finish - Sets the close_on_finish flag
+           Arg: close_on_finish - Sets the close_on_finish flag
            return boolean TRUE when set.
         """
         self.close_on_finish = close_on_finish
         logger.debug("close_on_finish = %s", close_on_finish)
+
+
+class UPDATEMODE(Enum):
+    "UPDATEMODE - U, X"
+    NO_RESPONSE = 'U'
+    WITH_RESPONSE = 'X'
+
+
+class Update(Request):
+    """RIS update class.
+     defaults to update_mode WithResponse.
+     """
+    def __init__(self):
+        super(Update, self).__init__()
+        self.set_mode(UPDATEMODE.NO_RESPONSE)
+        del self.params["SDK"]
+
+    def set_mode(self, mode):
+        """Set the mode.
+        Args - mode - Mode of the request
+        raise RisException when mode is None"""
+        if mode is None:
+            raise RisException("Mode can not be None")
+        if mode.value in 'UX':
+            self.params["MODE"] = mode.value
+
+    def set_transaction_id(self, transaction_id):
+        """Set the transaction id.
+        Arg - transaction_id, String Transaction id
+        """
+        self.params["TRAN"] = transaction_id
+
+    def refund_chargeback_status(self, rc_status):
+        """Set the Refund/Chargeback status: R = Refund C = Chargeback.
+        Arg - rc_status, String Refund or chargeback status
+        raise RisException when refund_chargeback_status is None
+        """
+        if rc_status in 'RC':
+            self.params["RFCB"] = rc_status
+        else:
+            raise RisException("rc_status can not be None")

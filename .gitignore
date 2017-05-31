@@ -3,3 +3,4 @@ __pycache__/
 *.komodoproject
 *htmlcov*
 *.txt
+_build

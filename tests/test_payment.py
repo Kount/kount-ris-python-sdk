@@ -7,7 +7,7 @@
 "Test Payment Type"
 import unittest
 
-from util.payment import (BillMeLaterPayment, CardPayment, CheckPayment,
+from kount.util.payment import (BillMeLaterPayment, CardPayment, CheckPayment,
                           GiftCardPayment, GooglePayment,
                           GreenDotMoneyPakPayment, NoPayment,
                           Payment, PaypalPayment)

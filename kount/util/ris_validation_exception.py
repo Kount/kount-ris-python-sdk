@@ -1,9 +1,13 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
-# This file is part of the Kount python sdk project https://github.com/Kount/kount-ris-python-sdk/)
+# This file is part of the Kount python sdk project
+# https://github.com/Kount/kount-ris-python-sdk/)
 # Copyright (C) 2017 Kount Inc. All Rights Reserved.
 "RisException, RisValidationException RisResponseException"
-from settings import error_messages
+
+from __future__ import (
+    absolute_import, unicode_literals, division, print_function)
+from kount.settings import error_messages
 
 __author__ = "Yordanka Spahieva"
 __version__ = "1.0.0"

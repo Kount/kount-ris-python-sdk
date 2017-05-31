@@ -8,6 +8,8 @@ example ussage:
     raise exc
     raise RisException(message="REQUIRED", cause="jjjj", kwargs={})
 """
+from __future__ import (
+    absolute_import, unicode_literals, division, print_function)
 
 __author__ = "Yordanka Spahieva"
 __version__ = "1.0.0"

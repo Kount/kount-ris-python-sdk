@@ -3,10 +3,12 @@
 # This file is part of the Kount python sdk project https://github.com/Kount/kount-ris-python-sdk/)
 # Copyright (C) 2017 Kount Inc. All Rights Reserved.
 "Test XML to python dict"
+from __future__ import (
+    absolute_import, unicode_literals, division, print_function)
 import unittest
 import os
-from util.xmlparser import xml_to_dict
-from settings import resource_folder, xml_filename
+from kount.util.xmlparser import xml_to_dict
+from kount.settings import resource_folder, xml_filename
 
 __author__ = "Yordanka Spahieva"
 __version__ = "1.0.0"

@@ -7,24 +7,24 @@ generate_unique_id
 default_inquiry
 Test Basic Connectivity
 """
+from __future__ import (
+    absolute_import, unicode_literals, division, print_function)
 import unittest
 import os
 import uuid
-from response import Response
+from kount.response import Response
 
-from request import (ASTAT, BCRSTAT, INQUIRYMODE,
+from kount.request import (ASTAT, BCRSTAT, INQUIRYMODE,
                      CURRENCYTYPE, MERCHANTACKNOWLEDGMENT)
-from inquiry import Inquiry
-from util.payment import CardPayment
-from util.cartitem import CartItem
-from util.address import Address
-from util.xmlparser import xml_to_dict
+from kount.inquiry import Inquiry
+from kount.util.payment import CardPayment
+from kount.util.cartitem import CartItem
+from kount.util.address import Address
+from kount.util.xmlparser import xml_to_dict
 
-from client import Client
-from local_settings import (url_api, url_api_beta,
-                            kount_api_key999667,
-                            merchant_id_999667, ptok as PTOK)
-from settings import resource_folder, xml_filename, sdk_version
+from kount.client import Client
+from kount.settings import resource_folder, xml_filename, sdk_version
+#~ from pprint import pprint
 
 
 __author__ = "Yordanka Spahieva"
@@ -40,6 +40,17 @@ BILLING_ADDRESS = Address("1234 North B2A1 Tree Lane South",
                           "", "Albuquerque", "NM", "87101", "US")
 SHIPPING_ADDRESS = Address("567 West S2A1 Court North", "",
                            "Gnome", "AK", "99762", "US")
+url_api = "https://risk.beta.kount.net"
+url_api_beta = url_api
+
+#~ raise_errors - if  True - raise errors instead of logging in debugger
+raise_errors = False
+
+merchant_id = '999666'
+merchant_id_999667 = '999667'
+PTOK = "0007380568572514"
+kount_api_key = "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiI5OTk2NjYiLCJhdWQiOiJLb3VudC4xIiwiaWF0IjoxNDk0NTM0Nzk5LCJzY3AiOnsia2EiOm51bGwsImtjIjpudWxsLCJhcGkiOmZhbHNlLCJyaXMiOnRydWV9fQ.eMmumYFpIF-d1up_mfxA5_VXBI41NSrNVe9CyhBUGck"
+kount_api_key999667 = "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiI5OTk2NjciLCJhdWQiOiJLb3VudC4xIiwiaWF0IjoxNDk0NTM1OTE2LCJzY3AiOnsia2EiOm51bGwsImtjIjpudWxsLCJhcGkiOmZhbHNlLCJyaXMiOnRydWV9fQ.KK3zG4dMIhTIaE5SeCbej1OAFhZifyBswMPyYFAVRrM"
 
 
 def generate_unique_id():
@@ -103,11 +114,12 @@ class TestBasicConnectivity(unittest.TestCase):
     def test_12_expected_score(self):
         "test_12_expected_score"
         self.inq.params["UDF[~K!_SCOR]"] = '42'
+        #~ pprint(self.inq.params)
         res = self.client.process(params=self.inq.params)
         self.assertIsNotNone(res)
         rr = Response(res)
         self.assertEqual("42", rr.params['SCOR'])
-
+    
     def test_13_expected_decision(self):
         "test_13_expected_decision"
         self.inq.params["UDF[~K!_AUTO]"] = 'R'
@@ -167,4 +179,6 @@ class TestBasicConnectivity(unittest.TestCase):
 
 
 if __name__ == "__main__":
-    unittest.main()
+    unittest.main(
+    #~ defaultTest="TestBasicConnectivity.test_12_expected_score"
+    )
