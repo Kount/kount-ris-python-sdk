@@ -1,3 +1,5 @@
+Welcome to the kount-ris-python-sdk wiki!
+
 # Kount Python RIS SDK #
 
 Contains the Kount Python SDK, tests, and build/package routines.
@@ -18,6 +20,11 @@ or
         * requests
         * simplejson
 
+install all dependencies from [requirements.txt](https://github.com/Kount/kount-ris-python-sdk/blob/master/kount/requirements.py)
+ with
+
+`pip install - r requirements.txt`
+
 How to build the SDK and run integration tests in root directory?
 
 
@@ -35,5 +42,5 @@ How to build the SDK and run integration tests in root directory?
     Repo owner or admin
     Other community or team contact
 
-A project that exists as an aid to the `Python Packaging User Guide [pip - link](<https://kount_ris_sdk.python.org>)
+**TODO** _A project that exists as an aid to the `Python Packaging User Guide [pip - link](<https://kount_ris_sdk.python.org>)_
 
