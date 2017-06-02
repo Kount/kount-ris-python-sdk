@@ -106,7 +106,6 @@ class TestBasicConnectivity(unittest.TestCase):
         self.inq = default_inquiry(self.session_id,
                                    merchant_id_999667,
                                    email_client, ptok=PTOK)
-        self.inq.params["MERC"] = merchant_id_999667
         self.client = Client(url_api_beta, kount_api_key999667)
         self.xml_2_dict, self.req, self.notreq = xml_to_dict(
             xml_filename_path)
@@ -114,7 +113,6 @@ class TestBasicConnectivity(unittest.TestCase):
     def test_12_expected_score(self):
         "test_12_expected_score"
         self.inq.params["UDF[~K!_SCOR]"] = '42'
-        #~ pprint(self.inq.params)
         res = self.client.process(params=self.inq.params)
         self.assertIsNotNone(res)
         rr = Response(res)
@@ -179,6 +177,4 @@ class TestBasicConnectivity(unittest.TestCase):
 
 
 if __name__ == "__main__":
-    unittest.main(
-    #~ defaultTest="TestBasicConnectivity.test_12_expected_score"
-    )
+    unittest.main()

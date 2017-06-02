@@ -10,7 +10,6 @@ from __future__ import (
 import logging
 import os
 import requests
-from simplejson.scanner import JSONDecodeError
 from .settings import resource_folder, xml_filename
 from .ris_validator import RisValidator
 from .util.xmlparser import xml_to_dict
@@ -46,7 +45,9 @@ class Client:
         logger.debug("url - %s, len_key - %s", url, len(key))
 
     def process(self, params):
-        "validate data and request post"
+        """validate data and request post
+        https://pypi.python.org/pypi/requests - 0.13.3
+        Use simplejson if available."""
         try:
             assert params['FRMT'] == 'JSON'
         except KeyError:
@@ -67,8 +68,8 @@ class Client:
             req_json = request.json()
             logger.debug("process json: %s", req_json)
             return req_json
-        except JSONDecodeError as jde:
-            logger.debug("JSONDecodeError - %s", jde)
+        except ValueError as jde:
+            logger.debug("ValueError - %s", jde)
             try:
                 text_to_json = {
                     c.split('=')[0]:

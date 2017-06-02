@@ -82,11 +82,16 @@ class RisValidator(object):
                         param_len, param)
                     errors.append(required_err)
                     logger.debug(required_err)
-            if regex and isinstance(param, str) and \
-                    isinstance(params[param], str):
-                if not re.match(regex, params[param]):
+            try:
+                param_str = str(param)
+                params_param_str =str(params[param])
+            except UnicodeEncodeError as e:
+                param_str = str(param.encode('utf8'))
+                params_param_str =str(params[param].encode('utf8'))
+            if regex and param_str and params_param_str:
+                if not re.match(regex, params_param_str):
                     required_err = "Regex %s invalid for %s" % (
-                        p_xml['reg_ex'], param)
+                        p_xml['reg_ex'], param_str)
                     errors.append(required_err)
                     logger.debug("required_err %s", required_err)
             if mode is not None and mode_dict is not None:

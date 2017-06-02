@@ -5,7 +5,7 @@
 
 requests==2.11.1
 
-simplejson==3.10.0
+#~ simplejson==3.10.0
 
 #~ uncomment this to install Sphinx to generate the documentation
 #~ Sphinx==1.6.2

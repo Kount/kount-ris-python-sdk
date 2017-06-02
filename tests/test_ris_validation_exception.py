@@ -24,10 +24,14 @@ class TestValidationError(unittest.TestCase):
         vale = ValidationError(field=incorrect, length=lengthr)
         with self.assertRaises(ValidationError):
             raise vale
+        self.assertIn("LENGTH", vale.error)
+        value_keys = list(vale.__dict__.keys())
+        value_keys.sort()
+        self.assertEqual(value_keys, ['error', 'message'])
         self.assertEqual(
-            str(vale),
-            "('LENGTH', 'Field [%s] has length [%s] which is longer "
-            "than the maximum of [%s]')" % (incorrect, len(incorrect), lengthr))
+            str(vale.message),
+            "Field [%s] has length [%s] which is longer "
+            "than the maximum of [%s]" % (incorrect, len(incorrect), lengthr))
 
     def test_mode(self):
         "test_mode"
@@ -36,9 +40,13 @@ class TestValidationError(unittest.TestCase):
         vale = ValidationError(field=incorrect, mode=mode)
         with self.assertRaises(ValidationError):
             raise vale
+        self.assertIn("REQUIRED", vale.error)
+        value_keys = list(vale.__dict__.keys())
+        value_keys.sort()
+        self.assertEqual(value_keys, ['error', 'message'])
         self.assertEqual(
-            str(vale),
-            "('REQUIRED', 'Required field [%s] missing for mode [%s]')" % (
+            str(vale.message),
+            "Required field [%s] missing for mode [%s]" % (
                 incorrect, mode.upper()))
 
     def test_correct_type(self):
@@ -101,10 +109,14 @@ class TestValidationError(unittest.TestCase):
         vale = ValidationError(field=field, value=value, pattern=pattern)
         with self.assertRaises(ValidationError):
             raise vale
+        value_keys = list(vale.__dict__.keys())
+        value_keys.sort()
+        self.assertEqual(value_keys, ['error', 'message'])
+        self.assertIn("REGEX", vale.error)
         self.assertEqual(
-            str(vale),
-            "('REGEX', 'Field [%s] has value [%s] which which does not"
-            " match the pattern [%s]')" % (field, value, pattern))
+            str(vale.message),
+            "Field [%s] has value [%s] which which does not"
+            " match the pattern [%s]" % (field, value, pattern))
 
 
 if __name__ == "__main__":

@@ -28,7 +28,8 @@ class ValidationErrorType(Exception):
         Args: value - Value of the error type - REGEX, LENGTH, REQUIRED.
     """
     def __init__(self, message=""):
-        if isinstance(message, str) or not message:
+        unicode_str = str(message)
+        if isinstance(message, str) or unicode_str or not message:
             if message not in [
                     VALIDATIONERROR.LENGTH_ERR,
                     VALIDATIONERROR.REGEX_ERR, VALIDATIONERROR.REQUIRED_ERR]:
