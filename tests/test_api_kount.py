@@ -22,14 +22,7 @@ __status__ = "Development"
 
 KOUNT_API_KEY = "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiI5OTk2NjYiLCJhdWQiOiJLb3VudC4xIiwiaWF0IjoxNDk0NTM0Nzk5LCJzY3AiOnsia2EiOm51bGwsImtjIjpudWxsLCJhcGkiOmZhbHNlLCJyaXMiOnRydWV9fQ.eMmumYFpIF-d1up_mfxA5_VXBI41NSrNVe9CyhBUGck"
 URL_API = "https://risk.beta.kount.net"
-#~ url_api = "https://risk.test.kount.net"
 RAISE_ERRORS = False
-RESOURCE_FOLDER = "resources"
-XML_FILENAME = 'validate.xml'
-
-XML_FILE = os.path.join('..', '..',
-                        RESOURCE_FOLDER, XML_FILENAME)
-
 LOGGER = logging.getLogger('kount')
 
 expected1 = {
@@ -156,7 +149,6 @@ class TestAPIRIS(unittest.TestCase):
     def setUp(self):
         "for testing - self.maxDiff = None"
         self.maxDiff = None
-        #~ self.kount_api_key = KOUNT_API_KEY
         self.url = URL_API
         self.data = None
         self.headers_api = {'X-Kount-Api-Key': KOUNT_API_KEY}
@@ -196,12 +188,9 @@ class TestAPIRIS(unittest.TestCase):
         self.assertEqual(added, set())
         self.assertEqual(removed, set())
         expected = {'CARDS': ('196', '1'),
-                    #~ 'GEOX': ('CN', 'US'),
                     'RULE_ID_0': ('6822', '1024842'),
-                    #~ 'REGN': ('CN_02', None),
                     'TRAN': ('P04S03M57HSP', 'PTPN0Z04P8Y6'),
                     'SCOR': ('99', '29'),
-                    #~ 'NETW': ('A', 'N'),
                     'EMAILS': ('20', '1')}.keys()
         self.assertEqual(sorted(modified.keys()), sorted(expected))
 

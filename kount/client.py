@@ -8,11 +8,9 @@
 from __future__ import (
     absolute_import, unicode_literals, division, print_function)
 import logging
-import os
 import requests
-from .settings import RESOURCE_FOLDER, XML_FILENAME
 from .ris_validator import RisValidator
-from .util.xmlparser import xml_to_dict
+from .util.xml_dict import XML_DICT, REQUIRED, NOTREQUIRED
 
 
 __author__ = "Yordanka Spahieva"
@@ -21,9 +19,6 @@ __maintainer__ = "Yordanka Spahieva"
 __email__ = "yordanka.spahieva@sirma.bg"
 __status__ = "Development"
 
-
-XML_FILE = os.path.join(os.path.dirname(__file__), '..',
-                        RESOURCE_FOLDER, XML_FILENAME)
 
 logger = logging.getLogger('kount.client')
 
@@ -38,8 +33,9 @@ class Client:
         self.timeout = timeout
         self.kount_api_key = key
         self.headers_api = {'X-Kount-Api-Key': self.kount_api_key}
-        self.xml_2_dict, self.required, self.notrequired = xml_to_dict(
-            XML_FILE)
+        self.xml_2_dict = XML_DICT
+        self.required = REQUIRED
+        self.notrequired = NOTREQUIRED
         self.raise_errors = raise_errors
         self.validator = RisValidator(raise_errors=self.raise_errors)
         logger.debug("url - %s, len_key - %s", url, len(key))

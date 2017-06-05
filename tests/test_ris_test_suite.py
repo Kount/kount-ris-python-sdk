@@ -1,32 +1,30 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
-# This file is part of the Kount python sdk project https://github.com/Kount/kount-ris-python-sdk/)
+# This file is part of the Kount python sdk project
+# https://github.com/Kount/kount-ris-python-sdk/)
 # Copyright (C) 2017 Kount Inc. All Rights Reserved.
 """Test Cases from sdk documentation"""
 from __future__ import (
     absolute_import, unicode_literals, division, print_function)
 import unittest
-import os
+from test_basic_connectivity import generate_unique_id, default_inquiry
+from kount.client import Client
 from kount.response import Response
 from kount.request import (ASTAT, BCRSTAT, INQUIRYMODE,
                            MERCHANTACKNOWLEDGMENT)
 from kount.request import Update, UPDATEMODE
 from kount.util.khash import Khash
 from kount.util.cartitem import CartItem
-from kount.util.xmlparser import xml_to_dict
 from kount.util.ris_validation_exception import RisValidationException
-from kount.client import Client
-from kount.settings import RESOURCE_FOLDER, XML_FILENAME, SDK_VERSION
-from test_basic_connectivity import generate_unique_id, default_inquiry
+from kount.util.xml_dict import XML_DICT, REQUIRED, NOTREQUIRED
+from kount.settings import SDK_VERSION
+
 
 __author__ = "Yordanka Spahieva"
 __version__ = "1.0.0"
 __maintainer__ = "Yordanka Spahieva"
 __email__ = "yordanka.spahieva@sirma.bg"
 __status__ = "Development"
-
-XML_FILENAME_PATH = os.path.join(os.path.dirname(__file__), "..",
-                                 RESOURCE_FOLDER, XML_FILENAME)
 
 URL_API = "https://risk.beta.kount.net"
 RIS_ENDPOINT_BETA = URL_API
@@ -59,9 +57,9 @@ class TestRisTestSuite(unittest.TestCase):
                                    merchant_id=MERCHANT_ID,
                                    email_client=EMAIL_CLIENT,
                                    ptok=PTOK)
-        self.xml_2_dict, self.required_field_names,\
-            self.notrequired_field_names = \
-            xml_to_dict(XML_FILENAME_PATH)
+        self.xml_2_dict = XML_DICT
+        self.required = REQUIRED
+        self.notrequired = NOTREQUIRED
 
     def test_1_ris_q_1_item_required_field_1_rule_review(self):
         "test_1_ris_q_1_item_required_field_1_rule_review"
@@ -354,6 +352,4 @@ class TestRisTestSuite(unittest.TestCase):
 
 
 if __name__ == "__main__":
-    unittest.main(
-        #~ defaultTest="TestRisTestSuite.test_10_mode_x_after_mode_q"
-    )
+    unittest.main()

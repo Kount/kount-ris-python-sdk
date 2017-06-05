@@ -10,7 +10,6 @@ Test Basic Connectivity
 from __future__ import (
     absolute_import, unicode_literals, division, print_function)
 import unittest
-import os
 import uuid
 from kount.response import Response
 
@@ -20,10 +19,9 @@ from kount.inquiry import Inquiry
 from kount.util.payment import CardPayment
 from kount.util.cartitem import CartItem
 from kount.util.address import Address
-from kount.util.xmlparser import xml_to_dict
-
 from kount.client import Client
-from kount.settings import RESOURCE_FOLDER, XML_FILENAME, SDK_VERSION
+from kount.util.xml_dict import XML_DICT, REQUIRED, NOTREQUIRED
+from kount.settings import SDK_VERSION
 
 __author__ = "Yordanka Spahieva"
 __version__ = "1.0.0"
@@ -31,9 +29,6 @@ __maintainer__ = "Yordanka Spahieva"
 __email__ = "yordanka.spahieva@sirma.bg"
 __status__ = "Development"
 
-XML_FILENAME_PATH = os.path.join(os.path.dirname(__file__), '..',
-                                 RESOURCE_FOLDER, XML_FILENAME)
-print("XML_FILENAME_PATH===", XML_FILENAME_PATH)
 
 BILLING_ADDRESS = Address("1234 North B2A1 Tree Lane South",
                           "", "Albuquerque", "NM", "87101", "US")
@@ -102,8 +97,9 @@ class TestBasicConnectivity(unittest.TestCase):
                                    MERCHANT_ID_999667,
                                    email_client, ptok=PTOK)
         self.client = Client(URL_API_BETA, KOUNT_API_KEY999667)
-        self.xml_2_dict, self.req, self.notreq = xml_to_dict(
-            XML_FILENAME_PATH)
+        self.xml_2_dict = XML_DICT
+        self.required = REQUIRED
+        self.notrequired = NOTREQUIRED
 
     def test_12_expected_score(self):
         "test_12_expected_score"
@@ -112,7 +108,7 @@ class TestBasicConnectivity(unittest.TestCase):
         self.assertIsNotNone(res)
         rr = Response(res)
         self.assertEqual("42", rr.params['SCOR'])
-    
+
     def test_13_expected_decision(self):
         "test_13_expected_decision"
         self.inq.params["UDF[~K!_AUTO]"] = 'R'

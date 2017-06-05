@@ -7,7 +7,7 @@
 
 from __future__ import (
     absolute_import, unicode_literals, division, print_function)
-from kount.settings import error_messages
+from kount.settings import ERROR_MESSAGES
 
 __author__ = "Yordanka Spahieva"
 __version__ = "1.0.0"
@@ -42,7 +42,7 @@ class RisResponseException(RisException):
     """Response exception
         kwargs -
             exception_code - Ris exception code
-            """
+    """
     def __init__(self, exception_code):
-        self.exception_code = error_messages[exception_code]
+        self.exception_code = ERROR_MESSAGES[exception_code]
         super(RisResponseException, self).__init__(self.exception_code)

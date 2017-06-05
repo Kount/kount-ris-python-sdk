@@ -1,6 +1,7 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
-# This file is part of the Kount python sdk project https://github.com/Kount/kount-ris-python-sdk/)
+# This file is part of the Kount python sdk project
+# https://github.com/Kount/kount-ris-python-sdk/)
 # Copyright (C) 2017 Kount Inc. All Rights Reserved.
 """generated from xmlparser.py, must be updated if
 changed xml_filename = 'validate.xml' from settings.py"""
@@ -14,7 +15,7 @@ __email__ = "yordanka.spahieva@sirma.bg"
 __status__ = "Development"
 
 
-xml_dict = {
+XML_DICT = {
     'ANID': {'max_length': '64', 'mode': ['P'], 'required': True},
     'AUTH': {'reg_ex': '^[AD]$'},
     'AVST': {'reg_ex': '^[MNX]?$'},
@@ -92,3 +93,14 @@ xml_dict = {
     'UNIQ': {'max_length': '32'},
     'VERS': {'reg_ex': '^\\d{4}$', 'required': True}
     }
+
+REQUIRED = ['VERS', 'MODE', 'MERC', 'SESS', 'CURR', 'TOTL', 'CUSTOMER_ID',
+            'PTYP', 'IPAD', 'MACK', 'TRAN', 'PROD_TYPE', 'PROD_ITEM',
+            'PROD_QUANT', 'PROD_PRICE', 'SITE', 'ANID']
+
+NOTREQUIRED = ['ORDR', 'CASH', 'EMAL', 'GENDER', 'DOB', 'NAME',
+               'B2A1', 'B2A2', 'BPREMISE', 'BSTREET', 'B2CI', 'B2ST',
+               'B2CC', 'B2PN', 'S2NM', 'S2EM', 'S2A1', 'S2A2', 'SPREMISE',
+               'SSTREET', 'S2CI', 'S2ST', 'S2CC', 'S2PN', 'LAST4', 'UNIQ',
+               'EPOC', 'UAGT', 'CAT1', 'CAT2', 'SHTP', 'AUTH', 'AVSZ',
+               'AVST', 'CVVR', 'RFCB', 'PROD_DESC', 'B2PC', 'S2PC', 'FRMT']

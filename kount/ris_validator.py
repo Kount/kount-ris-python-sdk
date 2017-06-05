@@ -8,16 +8,12 @@
 from __future__ import (
     absolute_import, unicode_literals, division, print_function)
 import re
-import os
 import logging
 from .util.cartitem import CartItem
 from .util.ris_validation_exception import RisValidationException
 from .util.validation_error import ValidationError
-from .util.xmlparser import xml_to_dict
-from .settings import RESOURCE_FOLDER, XML_FILENAME
+from .util.xml_dict import XML_DICT, REQUIRED, NOTREQUIRED
 
-XML_FILENAME_PATH = os.path.join(
-    os.path.dirname(__file__), '..', RESOURCE_FOLDER, XML_FILENAME)
 logger = logging.getLogger('kount.request')
 
 __author__ = "Yordanka Spahieva"
@@ -35,9 +31,9 @@ class RisValidator(object):
     def __init__(self, raise_errors=False):
         """parse against xml file provided is sdk"""
         self.errors = []
-        self.xml_2_dict, self.required_field_names,\
-            self.notrequired_field_names =\
-            xml_to_dict(XML_FILENAME_PATH)
+        self.xml_2_dict = XML_DICT
+        self.required = REQUIRED
+        self.notrequired = NOTREQUIRED
         self.raise_errors = raise_errors
 
     def ris_validator(self, params, xml_2_dict):

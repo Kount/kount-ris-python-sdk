@@ -1,6 +1,7 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
-# This file is part of the Kount python sdk project https://github.com/Kount/kount-ris-python-sdk/)
+# This file is part of the Kount python sdk project
+# https://github.com/Kount/kount-ris-python-sdk/)
 # Copyright (C) 2017 Kount Inc. All Rights Reserved.
 "settings"
 from __future__ import (
@@ -18,7 +19,7 @@ XML_FILENAME = 'validate.xml'
 XML_DICT = 'xml_dict.py'
 SDK_VERSION = "0695"
 
-error_messages = {
+ERROR_MESSAGES = {
     201: 'Missing version',
     202: 'Missing mode',
     203: 'Missing merchant ID',
