@@ -15,7 +15,7 @@ import uuid
 from kount.response import Response
 
 from kount.request import (ASTAT, BCRSTAT, INQUIRYMODE,
-                     CURRENCYTYPE, MERCHANTACKNOWLEDGMENT)
+                           CURRENCYTYPE, MERCHANTACKNOWLEDGMENT)
 from kount.inquiry import Inquiry
 from kount.util.payment import CardPayment
 from kount.util.cartitem import CartItem
@@ -23,9 +23,7 @@ from kount.util.address import Address
 from kount.util.xmlparser import xml_to_dict
 
 from kount.client import Client
-from kount.settings import resource_folder, xml_filename, sdk_version
-#~ from pprint import pprint
-
+from kount.settings import RESOURCE_FOLDER, XML_FILENAME, SDK_VERSION
 
 __author__ = "Yordanka Spahieva"
 __version__ = "1.0.0"
@@ -33,24 +31,21 @@ __maintainer__ = "Yordanka Spahieva"
 __email__ = "yordanka.spahieva@sirma.bg"
 __status__ = "Development"
 
-xml_filename_path = os.path.join(os.path.dirname(__file__), '..',
-                                 resource_folder, xml_filename)
+XML_FILENAME_PATH = os.path.join(os.path.dirname(__file__), '..',
+                                 RESOURCE_FOLDER, XML_FILENAME)
+print("XML_FILENAME_PATH===", XML_FILENAME_PATH)
 
 BILLING_ADDRESS = Address("1234 North B2A1 Tree Lane South",
                           "", "Albuquerque", "NM", "87101", "US")
 SHIPPING_ADDRESS = Address("567 West S2A1 Court North", "",
                            "Gnome", "AK", "99762", "US")
-url_api = "https://risk.beta.kount.net"
-url_api_beta = url_api
-
-#~ raise_errors - if  True - raise errors instead of logging in debugger
-raise_errors = False
-
-merchant_id = '999666'
-merchant_id_999667 = '999667'
+URL_API = "https://risk.beta.kount.net"
+URL_API_BETA = URL_API
+MERCHANT_ID = '999666'
+MERCHANT_ID_999667 = '999667'
 PTOK = "0007380568572514"
-kount_api_key = "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiI5OTk2NjYiLCJhdWQiOiJLb3VudC4xIiwiaWF0IjoxNDk0NTM0Nzk5LCJzY3AiOnsia2EiOm51bGwsImtjIjpudWxsLCJhcGkiOmZhbHNlLCJyaXMiOnRydWV9fQ.eMmumYFpIF-d1up_mfxA5_VXBI41NSrNVe9CyhBUGck"
-kount_api_key999667 = "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiI5OTk2NjciLCJhdWQiOiJLb3VudC4xIiwiaWF0IjoxNDk0NTM1OTE2LCJzY3AiOnsia2EiOm51bGwsImtjIjpudWxsLCJhcGkiOmZhbHNlLCJyaXMiOnRydWV9fQ.KK3zG4dMIhTIaE5SeCbej1OAFhZifyBswMPyYFAVRrM"
+KOUNT_API_KEY = "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiI5OTk2NjYiLCJhdWQiOiJLb3VudC4xIiwiaWF0IjoxNDk0NTM0Nzk5LCJzY3AiOnsia2EiOm51bGwsImtjIjpudWxsLCJhcGkiOmZhbHNlLCJyaXMiOnRydWV9fQ.eMmumYFpIF-d1up_mfxA5_VXBI41NSrNVe9CyhBUGck"
+KOUNT_API_KEY999667 = "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiI5OTk2NjciLCJhdWQiOiJLb3VudC4xIiwiaWF0IjoxNDk0NTM1OTE2LCJzY3AiOnsia2EiOm51bGwsImtjIjpudWxsLCJhcGkiOmZhbHNlLCJyaXMiOnRydWV9fQ.KK3zG4dMIhTIaE5SeCbej1OAFhZifyBswMPyYFAVRrM"
 
 
 def generate_unique_id():
@@ -81,7 +76,7 @@ def default_inquiry(session_id, merchant_id, email_client, ptok):
                               '2', '68990'))
     result.shopping_cart(cart_item)
     result.version()
-    result.version_set(sdk_version)  #0695
+    result.version_set(SDK_VERSION)  #0695
     result.merchant_set(merchant_id) # 999666
     payment = CardPayment(ptok)
     result.payment_set(payment) #PTOK
@@ -104,11 +99,11 @@ class TestBasicConnectivity(unittest.TestCase):
         self.session_id = generate_unique_id()[:32]
         email_client = 'predictive@kount.com'
         self.inq = default_inquiry(self.session_id,
-                                   merchant_id_999667,
+                                   MERCHANT_ID_999667,
                                    email_client, ptok=PTOK)
-        self.client = Client(url_api_beta, kount_api_key999667)
+        self.client = Client(URL_API_BETA, KOUNT_API_KEY999667)
         self.xml_2_dict, self.req, self.notreq = xml_to_dict(
-            xml_filename_path)
+            XML_FILENAME_PATH)
 
     def test_12_expected_score(self):
         "test_12_expected_score"

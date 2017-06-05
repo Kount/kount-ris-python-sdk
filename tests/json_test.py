@@ -1,6 +1,7 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
-# This file is part of the Kount python sdk project https://github.com/Kount/kount-ris-python-sdk/)
+# This file is part of the Kount python sdk project
+# https://github.com/Kount/kount-ris-python-sdk/)
 # Copyright (C) 2017 Kount Inc. All Rights Reserved.
 "example data from https://kopana.atlassian.net/wiki/display/KS/Testing"
 from __future__ import (
@@ -74,7 +75,7 @@ example_data_products = {
     'CASH': '4444',
     'CURR': 'USD',
     'CVVR': 'M',
-    'EMAL': 'ccurly.riscaller15@kountqa.com ',
+    'EMAL': 'curly.riscaller15@kountqa.com',
     'FRMT': 'JSON', # set if not via sdk
     'IPAD': '129.173.116.98',
     'MACK': 'Y',

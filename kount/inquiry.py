@@ -1,6 +1,7 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
-# This file is part of the Kount python sdk project https://github.com/Kount/kount-ris-python-sdk/)
+# This file is part of the Kount python sdk project
+# https://github.com/Kount/kount-ris-python-sdk/)
 # Copyright (C) 2017 Kount Inc. All Rights Reserved
 "RIS initial inquiry class"
 from __future__ import (
@@ -12,7 +13,7 @@ from .request import (Request, CURRENCYTYPE, INQUIRYMODE,
                       GENDER, ADDRESS, SHIPPINGTYPESTAT)
 from .util.cartitem import CartItem
 from .util.address import Address
-from .settings import sdk_version
+from .settings import SDK_VERSION
 
 __author__ = "Yordanka Spahieva"
 __version__ = "1.0.0"
@@ -46,7 +47,7 @@ class Inquiry(Request):
     def version(self):
         "SDK_Type-RIS_VERSION-SDK_BUILD_DATETIMESTAMP"
         datestr = datetime.now().strftime('%Y%m%d%H%M')
-        vers = "Sdk-Ris-Python-%s-%s" % (sdk_version, datestr)
+        vers = "Sdk-Ris-Python-%s-%s" % (SDK_VERSION, datestr)
         assert len(vers) == 32
         self.params["SDK_VERSION"] = vers
         logger.debug('SDK_VERSION = %s', vers)
@@ -150,7 +151,6 @@ class Inquiry(Request):
         """Set the shipping address.
             Arg: address - The shipping address, type Address
         """
-        #~ self._address(ADDRESS.SHIPPING, address)
         self._address(ADDRESS.SHIPPING.value, address)
         logger.debug("S2A1 = %s, S2A2 = %s, S2CI = %s, S2ST = %s, "
                      "S2PC = %s, S2CC = %s, SPREMISE = %s, SSTREET = %s",

@@ -9,15 +9,14 @@ import unittest
 import os
 from kount.response import Response
 from kount.request import (ASTAT, BCRSTAT, INQUIRYMODE,
-                     MERCHANTACKNOWLEDGMENT)
+                           MERCHANTACKNOWLEDGMENT)
 from kount.request import Update, UPDATEMODE
 from kount.util.khash import Khash
 from kount.util.cartitem import CartItem
 from kount.util.xmlparser import xml_to_dict
 from kount.util.ris_validation_exception import RisValidationException
-
 from kount.client import Client
-from kount.settings import resource_folder, xml_filename, sdk_version
+from kount.settings import RESOURCE_FOLDER, XML_FILENAME, SDK_VERSION
 from test_basic_connectivity import generate_unique_id, default_inquiry
 
 __author__ = "Yordanka Spahieva"
@@ -26,44 +25,43 @@ __maintainer__ = "Yordanka Spahieva"
 __email__ = "yordanka.spahieva@sirma.bg"
 __status__ = "Development"
 
-xml_filename_path = os.path.join(os.path.dirname(__file__), "..",
-                                 resource_folder, xml_filename)
+XML_FILENAME_PATH = os.path.join(os.path.dirname(__file__), "..",
+                                 RESOURCE_FOLDER, XML_FILENAME)
 
-url_api = "https://risk.beta.kount.net"
-RIS_ENDPOINT_BETA = url_api
+URL_API = "https://risk.beta.kount.net"
+RIS_ENDPOINT_BETA = URL_API
 
+# request timeout in seconds
+TIMEOUT = 5
 
-#~ request timeout in seconds
-timeout = 5
-
-#~ raise_errors - if  True - raise errors instead of logging in debugger
-raise_errors = False
+# raise_errors - if  True - raise errors instead of logging in debugger
+RAISE_ERRORS = False
 
 MERCHANT_ID = '999666'
-merchant_id_999667 = '999667'
 PTOK = "0007380568572514"
 EMAIL_CLIENT = "sdkTest@kountsdktestdomain.com"
-kount_api_key = "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiI5OTk2NjYiLCJhdWQiOiJLb3VudC4xIiwiaWF0IjoxNDk0NTM0Nzk5LCJzY3AiOnsia2EiOm51bGwsImtjIjpudWxsLCJhcGkiOmZhbHNlLCJyaXMiOnRydWV9fQ.eMmumYFpIF-d1up_mfxA5_VXBI41NSrNVe9CyhBUGck"
-kount_api_key999667 = "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiI5OTk2NjciLCJhdWQiOiJLb3VudC4xIiwiaWF0IjoxNDk0NTM1OTE2LCJzY3AiOnsia2EiOm51bGwsImtjIjpudWxsLCJhcGkiOmZhbHNlLCJyaXMiOnRydWV9fQ.KK3zG4dMIhTIaE5SeCbej1OAFhZifyBswMPyYFAVRrM"
+KOUNT_API_KEY = "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiI5OTk2NjYiLCJhdWQiOiJLb3VudC4xIiwiaWF0IjoxNDk0NTM0Nzk5LCJzY3AiOnsia2EiOm51bGwsImtjIjpudWxsLCJhcGkiOmZhbHNlLCJyaXMiOnRydWV9fQ.eMmumYFpIF-d1up_mfxA5_VXBI41NSrNVe9CyhBUGck"
 
 
 class TestRisTestSuite(unittest.TestCase):
     """Ris Test Suite
         default logging errors instead fo raising
         to raise errors - put raise_errors=True in Client:
-        Client(url=url_api, key=kount_api_key, raise_errors=True)
+        Client(url=URL_API, key=KOUNT_API_KEY,
+               timeout=TIMEOUT, RAISE_ERRORS=True)
     """
     def setUp(self):
         self.maxDiff = None
         self.session_id = generate_unique_id()[:32]
-        self.client = Client(RIS_ENDPOINT_BETA, kount_api_key, timeout=5, raise_errors=False)
+        self.client = Client(RIS_ENDPOINT_BETA, KOUNT_API_KEY,
+                             timeout=TIMEOUT, raise_errors=RAISE_ERRORS)
         self.inq = default_inquiry(session_id=self.session_id,
                                    merchant_id=MERCHANT_ID,
                                    email_client=EMAIL_CLIENT,
                                    ptok=PTOK)
         self.xml_2_dict, self.required_field_names,\
             self.notrequired_field_names = \
-            xml_to_dict(xml_filename_path)
+            xml_to_dict(XML_FILENAME_PATH)
 
     def test_1_ris_q_1_item_required_field_1_rule_review(self):
         "test_1_ris_q_1_item_required_field_1_rule_review"
@@ -222,7 +220,7 @@ class TestRisTestSuite(unittest.TestCase):
         self.inq.request_mode(INQUIRYMODE.JUSTTHRESHOLDS)
         self.inq.total_set(1000)
         self.inq.kount_central_customer_id("KCentralCustomerDeclineMe")
-        if not raise_errors:
+        if not RAISE_ERRORS:
             res = self.client.process(params=self.inq.params)
             self.assertIsNotNone(res)
             rr = Response(res)
@@ -245,7 +243,7 @@ class TestRisTestSuite(unittest.TestCase):
         order_id = rr.params['ORDR']
         update1 = Update()
         update1.set_mode(UPDATEMODE.NO_RESPONSE)
-        update1.version_set(sdk_version)
+        update1.version_set(SDK_VERSION)
         update1.set_transaction_id(transaction_id)
         update1.merchant_set(MERCHANT_ID)
         update1.session_set(session_id)
@@ -280,7 +278,7 @@ class TestRisTestSuite(unittest.TestCase):
         order_id = rr.params['ORDR']
         update1 = Update()
         update1.set_mode(UPDATEMODE.WITH_RESPONSE)
-        update1.version_set(sdk_version)
+        update1.version_set(SDK_VERSION)
         update1.set_transaction_id(transaction_id)
         update1.merchant_set(MERCHANT_ID)
         update1.session_set(session_id)

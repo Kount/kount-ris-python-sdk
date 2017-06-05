@@ -1,6 +1,7 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
-# This file is part of the Kount python sdk project https://github.com/Kount/kount-ris-python-sdk/)
+# This file is part of the Kount python sdk project
+# https://github.com/Kount/kount-ris-python-sdk/)
 # Copyright (C) 2017 Kount Inc. All Rights Reserved.
 "Test XML to python dict"
 from __future__ import (
@@ -8,7 +9,7 @@ from __future__ import (
 import unittest
 import os
 from kount.util.xmlparser import xml_to_dict
-from kount.settings import resource_folder, xml_filename
+from kount.settings import RESOURCE_FOLDER, XML_FILENAME
 
 __author__ = "Yordanka Spahieva"
 __version__ = "1.0.0"
@@ -17,8 +18,8 @@ __email__ = "yordanka.spahieva@sirma.bg"
 __status__ = "Development"
 
 
-xml_filename_path = os.path.join(os.path.dirname(__file__), '..',
-                                 resource_folder, xml_filename)
+XML_FILENAME_PATH = os.path.join(os.path.dirname(__file__), '..',
+                                 RESOURCE_FOLDER, XML_FILENAME)
 
 
 class TestXMLtoDict(unittest.TestCase):
@@ -26,7 +27,7 @@ class TestXMLtoDict(unittest.TestCase):
     def test_xml_to_dict(self):
         "xml_to_dict"
         self.maxDiff = None
-        actual = xml_to_dict(xml_filename_path)
+        actual = xml_to_dict(XML_FILENAME_PATH)
         expected = {
             'ANID': {'max_length': '64', 'mode': ['P'], 'required': True},
             'AUTH': {'reg_ex': '^[AD]$'},

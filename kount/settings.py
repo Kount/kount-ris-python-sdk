@@ -12,11 +12,11 @@ __maintainer__ = "Yordanka Spahieva"
 __email__ = "yordanka.spahieva@sirma.bg"
 __status__ = "Development"
 
-python_version = "3.6.1"
-resource_folder = "resources"
-xml_filename = 'validate.xml'
-xml_dict = 'xml_dict.py'
-sdk_version = "0695"
+PYTHON_VERSION = "3.6.1"
+RESOURCE_FOLDER = "resources"
+XML_FILENAME = 'validate.xml'
+XML_DICT = 'xml_dict.py'
+SDK_VERSION = "0695"
 
 error_messages = {
     201: 'Missing version',

@@ -1,7 +1,8 @@
 #!/usr/bin/env python
 "Test Ris Validator"
 # -*- coding: utf-8 -*-
-# This file is part of the Kount python sdk project https://github.com/Kount/kount-ris-python-sdk/)
+# This file is part of the Kount python sdk project
+# https://github.com/Kount/kount-ris-python-sdk/)
 # Copyright (C) 2017 Kount Inc. All Rights Reserved.
 from __future__ import (
     absolute_import, unicode_literals, division, print_function)

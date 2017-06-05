@@ -1,6 +1,7 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
-# This file is part of the Kount python sdk project https://github.com/Kount/kount-ris-python-sdk/)
+# This file is part of the Kount python sdk project
+# https://github.com/Kount/kount-ris-python-sdk/)
 # Copyright (C) 2017 Kount Inc. All Rights Reserved.
 """TestValidationError"""
 from __future__ import (
@@ -26,8 +27,8 @@ class TestValidationError(unittest.TestCase):
             raise vale
         self.assertIn('LENGTH', str(vale))
         self.assertIn("Field [%s] has length [%s] which is longer "
-            "than the maximum of [%s]')" %
-            (incorrect, len(incorrect), lengthr), str(vale))
+                      "than the maximum of [%s]')" %
+                      (incorrect, len(incorrect), lengthr), str(vale))
 
     def test_mode(self):
         "test_mode"
@@ -37,8 +38,8 @@ class TestValidationError(unittest.TestCase):
         with self.assertRaises(ValidationError):
             raise vale
         self.assertIn('REQUIRED', str(vale))
-        self.assertIn("Required field [%s] missing for mode [%s]')" % (
-                             incorrect, mode.upper()), str(vale))
+        self.assertIn("Required field [%s] missing for mode [%s]')" %
+                      (incorrect, mode.upper()), str(vale))
 
     def test_correct_type(self):
         "test_correct_type"
@@ -102,7 +103,8 @@ class TestValidationError(unittest.TestCase):
             raise vale
         self.assertIn('REGEX', str(vale))
         self.assertIn("Field [%s] has value [%s] which which does not"
-            " match the pattern [%s]')" % (field, value, pattern), str(vale))
+                      " match the pattern [%s]')" % (field, value, pattern),
+                      str(vale))
 
 
 if __name__ == "__main__":

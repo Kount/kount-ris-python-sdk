@@ -8,9 +8,9 @@
 import unittest
 
 from kount.util.payment import (BillMeLaterPayment, CardPayment, CheckPayment,
-                          GiftCardPayment, GooglePayment,
-                          GreenDotMoneyPakPayment, NoPayment,
-                          Payment, PaypalPayment)
+                                GiftCardPayment, GooglePayment,
+                                GreenDotMoneyPakPayment, NoPayment,
+                                Payment, PaypalPayment)
 
 
 __author__ = "Yordanka Spahieva"

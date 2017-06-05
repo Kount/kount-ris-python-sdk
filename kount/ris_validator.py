@@ -14,10 +14,10 @@ from .util.cartitem import CartItem
 from .util.ris_validation_exception import RisValidationException
 from .util.validation_error import ValidationError
 from .util.xmlparser import xml_to_dict
-from .settings import resource_folder, xml_filename
+from .settings import RESOURCE_FOLDER, XML_FILENAME
 
-xml_filename_path = os.path.join(
-    os.path.dirname(__file__), '..', resource_folder, xml_filename)
+XML_FILENAME_PATH = os.path.join(
+    os.path.dirname(__file__), '..', RESOURCE_FOLDER, XML_FILENAME)
 logger = logging.getLogger('kount.request')
 
 __author__ = "Yordanka Spahieva"
@@ -37,7 +37,7 @@ class RisValidator(object):
         self.errors = []
         self.xml_2_dict, self.required_field_names,\
             self.notrequired_field_names =\
-            xml_to_dict(xml_filename_path)
+            xml_to_dict(XML_FILENAME_PATH)
         self.raise_errors = raise_errors
 
     def ris_validator(self, params, xml_2_dict):
@@ -84,10 +84,10 @@ class RisValidator(object):
                     logger.debug(required_err)
             try:
                 param_str = str(param)
-                params_param_str =str(params[param])
-            except UnicodeEncodeError as e:
+                params_param_str = str(params[param])
+            except UnicodeEncodeError:
                 param_str = str(param.encode('utf8'))
-                params_param_str =str(params[param].encode('utf8'))
+                params_param_str = str(params[param].encode('utf8'))
             if regex and param_str and params_param_str:
                 if not re.match(regex, params_param_str):
                     required_err = "Regex %s invalid for %s" % (

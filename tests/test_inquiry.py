@@ -1,15 +1,13 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
-# This file is part of the Kount python sdk project https://github.com/Kount/kount-ris-python-sdk/)
+# This file is part of the Kount python sdk project
+# https://github.com/Kount/kount-ris-python-sdk/)
 # Copyright (C) 2017 Kount Inc. All Rights Reserved.
 """Test Cases for Inquiry class"""
 from __future__ import (
     absolute_import, unicode_literals, division, print_function)
 import unittest
-MERCHANT_ID = '999666'
-merchant_id_999667 = '999667'
-PTOK = "0007380568572514"
-from kount.settings import sdk_version
+from kount.settings import SDK_VERSION
 from test_basic_connectivity import generate_unique_id, default_inquiry
 
 __author__ = "Yordanka Spahieva"
@@ -20,6 +18,8 @@ __status__ = "Development"
 
 
 EMAIL_CLIENT = "sdkTest@kountsdktestdomain.com"
+MERCHANT_ID = '999666'
+PTOK = "0007380568572514"
 
 
 class TestInquiry(unittest.TestCase):
@@ -78,12 +78,12 @@ class TestInquiry(unittest.TestCase):
             'S2PN': '555-777-1212',
             'S2ST': 'AK',
             'SDK': 'CUST',
-            'SDK_VERSION': 'Sdk-Ris-Python-%s' % sdk_version,
+            'SDK_VERSION': 'Sdk-Ris-Python-%s' % SDK_VERSION,
             'SITE': 'DEFAULT',
             'SPREMISE': '',
             'SSTREET': '',
             'TOTL': '123456',
-            'VERS': sdk_version,
+            'VERS': SDK_VERSION,
             }
         actual = result.params
         self.assertIn(expected['SDK_VERSION'], actual['SDK_VERSION'])

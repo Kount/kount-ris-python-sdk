@@ -15,7 +15,7 @@ from .util.payment import (
     NoPayment, Payment, PaypalPayment)
 from .util.khash import Khash
 from .util.ris_validation_exception import RisException
-from .settings import sdk_version
+from .settings import SDK_VERSION
 
 __author__ = "Yordanka Spahieva"
 __version__ = "1.0.0"
@@ -125,7 +125,7 @@ class Request(object):
     def __init__(self):
         "Map containing data that will be sent to RIS."
         self.params = {}
-        self.params['VERS'] = sdk_version
+        self.params['VERS'] = SDK_VERSION
         self.khash_payment_encoding(True)
         self.params["SDK"] = "python"
         self.payment = None
@@ -252,7 +252,7 @@ class Request(object):
                 raise nfe
             except Exception as nsae:
                 logger.debug("Unable to create payment token hash. Caught %s"
-                              " KHASH payment encoding disabled", str(nsae))
+                             " KHASH payment encoding disabled", str(nsae))
                 #Default to plain text payment tokens
                 self.params["PENC"] = ""
         self.params["PTOK"] = payment.payment_token

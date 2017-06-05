@@ -9,7 +9,6 @@ from __future__ import (
 import logging
 import unittest
 import os
-import kount
 
 from json_test import example_data_products
 from kount.client import Client
@@ -21,17 +20,77 @@ __maintainer__ = "Yordanka Spahieva"
 __email__ = "yordanka.spahieva@sirma.bg"
 __status__ = "Development"
 
-kount_api_key = "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiI5OTk2NjYiLCJhdWQiOiJLb3VudC4xIiwiaWF0IjoxNDk0NTM0Nzk5LCJzY3AiOnsia2EiOm51bGwsImtjIjpudWxsLCJhcGkiOmZhbHNlLCJyaXMiOnRydWV9fQ.eMmumYFpIF-d1up_mfxA5_VXBI41NSrNVe9CyhBUGck"
-url_api = "https://risk.beta.kount.net"
+KOUNT_API_KEY = "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiI5OTk2NjYiLCJhdWQiOiJLb3VudC4xIiwiaWF0IjoxNDk0NTM0Nzk5LCJzY3AiOnsia2EiOm51bGwsImtjIjpudWxsLCJhcGkiOmZhbHNlLCJyaXMiOnRydWV9fQ.eMmumYFpIF-d1up_mfxA5_VXBI41NSrNVe9CyhBUGck"
+URL_API = "https://risk.beta.kount.net"
 #~ url_api = "https://risk.test.kount.net"
-raise_errors = False
-resource_folder = "resources"
-xml_filename = 'validate.xml'
+RAISE_ERRORS = False
+RESOURCE_FOLDER = "resources"
+XML_FILENAME = 'validate.xml'
 
 XML_FILE = os.path.join('..', '..',
-                        resource_folder, xml_filename)
+                        RESOURCE_FOLDER, XML_FILENAME)
 
 LOGGER = logging.getLogger('kount')
+
+expected1 = {
+    'AUTO': 'R',
+    'BRND': None,
+    'BROWSER': None,
+    'CARDS': '11',
+    'COOKIES': None,
+    'COUNTERS_TRIGGERED': 0,
+    'COUNTRY': None,
+    'DDFS': None,
+    'DEVICES': '1',
+    'DEVICE_LAYERS': '....',
+    'DSR': None,
+    'EMAILS': '9',
+    'FINGERPRINT': None,
+    'FLASH': None,
+    'GEOX': 'CA',
+    'HTTP_COUNTRY': None,
+    'IP_CITY': None,
+    'IP_COUNTRY': None,
+    'IP_IPAD': None,
+    'IP_LAT': None,
+    'IP_LON': None,
+    'IP_ORG': None,
+    'IP_REGION': None,
+    'JAVASCRIPT': None,
+    'KAPT': 'N',
+    'LANGUAGE': None,
+    'LOCALTIME': ' ',
+    'MERC': '999666',
+    'MOBILE_DEVICE': None,
+    'MOBILE_FORWARDER': None,
+    'MOBILE_TYPE': None,
+    'MODE': 'Q',
+    'NETW': 'N',
+    'ORDR': 'F8E874A38B7B',
+    'OS': None,
+    'PC_REMOTE': None,
+    'PIP_CITY': None,
+    'PIP_COUNTRY': None,
+    'PIP_IPAD': None,
+    'PIP_LAT': None,
+    'PIP_LON': None,
+    'PIP_ORG': None,
+    'PIP_REGION': None,
+    'PROXY': None,
+    'REASON_CODE': None,
+    'REGION': None,
+    'REGN': 'CA_NS',
+    'RULES_TRIGGERED': 1,
+    'RULE_DESCRIPTION_0': 'Review if order total > $1000 USD',
+    'SCOR': '99',
+    'SESS': 'F8E874A38B7B4B6DBB71492A584A969D',
+    'SITE': 'DEFAULT',
+    'TIMEZONE': None,
+    'UAS': None,
+    'VERS': '0695',
+    'VOICE_DEVICE': None,
+    'WARNING_COUNT': 0}
+
 
 
 def dict_compare(dict1, dict2):
@@ -97,15 +156,15 @@ class TestAPIRIS(unittest.TestCase):
     def setUp(self):
         "for testing - self.maxDiff = None"
         self.maxDiff = None
-        self.kount_api_key = kount_api_key
-        self.url = url_api
+        #~ self.kount_api_key = KOUNT_API_KEY
+        self.url = URL_API
         self.data = None
-        self.headers_api = {'X-Kount-Api-Key': self.kount_api_key}
+        self.headers_api = {'X-Kount-Api-Key': KOUNT_API_KEY}
 
     def test_api_kount(self):
         "expected modified 'TRAN'"
         self.data = CURLED
-        actual = Client(url=url_api, key=kount_api_key).process(
+        actual = Client(url=URL_API, key=KOUNT_API_KEY).process(
             params=self.data)
         expected = {
             "VERS": "0695", "MODE": "Q", "TRAN": "PTPN0Z04P8Y6",
@@ -149,43 +208,21 @@ class TestAPIRIS(unittest.TestCase):
     def test_api_kount_2_items(self):
         "expected modified 'TRAN'"
         self.data = example_data_products.copy()
-        expected = {
-            'BROWSER': None, 'IP_LON': None, 'DEVICES': '1', 'SITE': 'DEFAULT',
-            'VERS': '0695', 'SESS': 'F8E874A38B7B4B6DBB71492A584A969D',
-            'JAVASCRIPT': None, 'LOCALTIME': ' ', 'REGN': 'CA_NS',
-            'DDFS': None, 'FLASH': None, 'FINGERPRINT': None, 'MERC': '999666',
-            'REGION': None, 'BRND': None, 'TIMEZONE': None, 'PIP_COUNTRY': None,
-            'MOBILE_DEVICE': None, 'PIP_LAT': None, 'EMAILS': '1',
-            'IP_LAT': None, 'IP_CITY': None, 'ORDR': 'F8E874A38B7B',
-            'COOKIES': None, 'AUTO': 'R', 'MOBILE_TYPE': None,
-            'IP_REGION': None,
-            'COUNTERS_TRIGGERED': 0, 'PIP_REGION': None, 'PROXY': None,
-            'IP_ORG': None, 'WARNING_COUNT': 0, 'NETW': 'N',
-            'PIP_ORG': None,
-            'PC_REMOTE': None, 'REASON_CODE': None, 'PIP_CITY': None,
-            'VOICE_DEVICE': None, 'UAS': None, 'KAPT': 'N', 'MODE': 'Q',
-            'MOBILE_FORWARDER': None, 'DSR': None, 'HTTP_COUNTRY': None,
-            'IP_COUNTRY': None, 'SCOR': '34', 'LANGUAGE': None, 'PIP_LON': None,
-            'COUNTRY': None, 'GEOX': 'CA', 'RULES_TRIGGERED': 1, 'OS': None,
-            'CARDS': '1', 'DEVICE_LAYERS': '....',
-            'IP_IPAD': None,
-            'RULE_DESCRIPTION_0': 'Review if order total > $1000 USD',
-            'PIP_IPAD': None}
-        actual = Client(url=url_api, key=kount_api_key).process(
+        actual = Client(url=URL_API, key=KOUNT_API_KEY).process(
             params=self.data)
         del (actual['TRAN'], actual['RULE_ID_0'],
              actual['VELO'], actual['VMAX'])
-        self.assertEqual(actual, expected)
+        self.assertEqual(actual, expected1)
 
     def test_last_2_items_bad_email(self):
         "last_2_items_bad_email"
         self.data = example_data_products.copy()
         bad = CURLED['EMAL'].replace('@', "%40")
         self.data["EMAL"] = bad
-        if raise_errors:
+        if RAISE_ERRORS:
             self.assertRaises(
                 RisValidationException,
-                Client(url=url_api, key=kount_api_key).process,
+                Client(url=URL_API, key=KOUNT_API_KEY).process,
                 self.data)
         else:
             expected = {
@@ -194,7 +231,7 @@ class TestAPIRIS(unittest.TestCase):
                 " Field: [EMAL], Value: [%s]" % (bad, bad),
                 'ERRO': 321, 'ERROR_COUNT': 1,
                 'WARNING_COUNT': 0, 'MODE': 'E'}
-            actual = Client(url=url_api, key=kount_api_key).process(
+            actual = Client(url=URL_API, key=KOUNT_API_KEY).process(
                 params=self.data)
             self.assertEqual(actual, expected)
 
@@ -203,75 +240,17 @@ class TestAPIRIS(unittest.TestCase):
         bad = example_data_products["S2EM"].replace('@', "%40")
         self.data = example_data_products.copy()
         self.data["S2EM"] = bad
-        expected = {
-            'AUTO': 'R',
-            'BRND': None,
-            'BROWSER': None,
-            'CARDS': '1',
-            'COOKIES': None,
-            'COUNTERS_TRIGGERED': 0,
-            'COUNTRY': None,
-            'DDFS': None,
-            'DEVICES': '1',
-            'DEVICE_LAYERS': '....',
-            'DSR': None,
-            'EMAILS': '1',
-            'FINGERPRINT': None,
-            'FLASH': None,
-            'GEOX': 'CA',
-            'HTTP_COUNTRY': None,
-            'IP_CITY': None,
-            'IP_COUNTRY': None,
-            'IP_IPAD': None,
-            'IP_LAT': None,
-            'IP_LON': None,
-            'IP_ORG': None,
-            'IP_REGION': None,
-            'JAVASCRIPT': None,
-            'KAPT': 'N',
-            'LANGUAGE': None,
-            'LOCALTIME': ' ',
-            'MERC': '999666',
-            'MOBILE_DEVICE': None,
-            'MOBILE_FORWARDER': None,
-            'MOBILE_TYPE': None,
-            'MODE': 'Q',
-            'NETW': 'N',
-            'ORDR': 'F8E874A38B7B',
-            'OS': None,
-            'PC_REMOTE': None,
-            'PIP_CITY': None,
-            'PIP_COUNTRY': None,
-            'PIP_IPAD': None,
-            'PIP_LAT': None,
-            'PIP_LON': None,
-            'PIP_ORG': None,
-            'PIP_REGION': None,
-            'PROXY': None,
-            'REASON_CODE': None,
-            'REGION': None,
-            'REGN': 'CA_NS',
-            'RULES_TRIGGERED': 1,
-            'RULE_DESCRIPTION_0': 'Review if order total > $1000 USD',
-            'SCOR': '34',
-            'SESS': 'F8E874A38B7B4B6DBB71492A584A969D',
-            'SITE': 'DEFAULT',
-            'TIMEZONE': None,
-            'UAS': None,
-            'VERS': '0695',
-            'VOICE_DEVICE': None,
-            'WARNING_COUNT': 0}
-        if raise_errors:
+        if RAISE_ERRORS:
             self.assertRaises(
                 RisValidationException,
-                Client(url=url_api, key=kount_api_key).process,
+                Client(url=URL_API, key=KOUNT_API_KEY).process,
                 self.data)
         else:
-            actual = Client(url=url_api, key=kount_api_key).process(
+            actual = Client(url=URL_API, key=KOUNT_API_KEY).process(
                 params=self.data)
             del (actual['TRAN'], actual['RULE_ID_0'],
                  actual['VELO'], actual['VMAX'])
-            self.assertEqual(actual, expected)
+            self.assertEqual(actual, expected1)
 
     def test_two_items_none_email(self):
         "email = None"
@@ -283,7 +262,7 @@ class TestAPIRIS(unittest.TestCase):
             'ERROR_0': "221 MISSING_EMAL Cause: "
                        "[Non-empty value was required in this case], "
                        "Field: [EMAL], Value: []"}
-        actual = Client(url=url_api, key=kount_api_key).process(
+        actual = Client(url=URL_API, key=KOUNT_API_KEY).process(
             params=self.data)
         self.assertEqual(actual, expected)
 
@@ -297,7 +276,7 @@ class TestAPIRIS(unittest.TestCase):
             'ERROR_0': "221 MISSING_EMAL Cause: "
                        "[Non-empty value was required in this case], "
                        "Field: [EMAL], Value: []",}
-        actual = Client(url=url_api, key=kount_api_key).process(
+        actual = Client(url=URL_API, key=KOUNT_API_KEY).process(
             params=self.data)
         self.assertEqual(actual, expected)
 
@@ -306,7 +285,7 @@ class TestAPIRIS(unittest.TestCase):
         "empty data"
         self.data = {'FRMT': 'JSON'}
         expected = {"MODE": "E", "ERRO": "201"}
-        actual = Client(url=url_api, key=kount_api_key).process(
+        actual = Client(url=URL_API, key=KOUNT_API_KEY).process(
             params=self.data)
         self.assertEqual(actual, expected)
 

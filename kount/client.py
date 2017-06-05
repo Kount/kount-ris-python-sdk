@@ -10,7 +10,7 @@ from __future__ import (
 import logging
 import os
 import requests
-from .settings import resource_folder, xml_filename
+from .settings import RESOURCE_FOLDER, XML_FILENAME
 from .ris_validator import RisValidator
 from .util.xmlparser import xml_to_dict
 
@@ -22,8 +22,8 @@ __email__ = "yordanka.spahieva@sirma.bg"
 __status__ = "Development"
 
 
-XML_FILE = os.path.join(os.path.dirname(__file__),  '..',
-                        resource_folder, xml_filename)
+XML_FILE = os.path.join(os.path.dirname(__file__), '..',
+                        RESOURCE_FOLDER, XML_FILENAME)
 
 logger = logging.getLogger('kount.client')
 
@@ -41,7 +41,7 @@ class Client:
         self.xml_2_dict, self.required, self.notrequired = xml_to_dict(
             XML_FILE)
         self.raise_errors = raise_errors
-        self.validator = RisValidator(raise_errors=raise_errors)
+        self.validator = RisValidator(raise_errors=self.raise_errors)
         logger.debug("url - %s, len_key - %s", url, len(key))
 
     def process(self, params):
