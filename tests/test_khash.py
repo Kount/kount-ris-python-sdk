@@ -25,8 +25,8 @@ class TestKhash(unittest.TestCase):
         self.expected = ['WMS5YA6FUZA1KC', '2NOQRXNKTTFL11', 'FEXQI1QS6TH2O5']
         self.merchant_id = '666666'
 
-    @unittest.skipIf("Kount" in Khash.salt, "replace fake salt in class Khash"
-                     " - khash.py with salt from Kount")
+    #~ @unittest.skipIf("Kount" in Khash.salt, "replace fake salt in class Khash"
+                     #~ " - khash.py with salt from Kount")
     def test_token_valid(self):
         "valid token"
         self.assertEqual("BADTOKGM3BD98ZY871QB",
@@ -40,8 +40,8 @@ class TestKhash(unittest.TestCase):
             self.assertEqual(card_solted, expected)
             self.assertTrue(self.k.khashed(card_solted))
 
-    @unittest.skipIf("Kount" in Khash.salt, "replace fake salt in class Khash"
-                     " - khash.py with salt from Kount")
+    #~ @unittest.skipIf("Kount" in Khash.salt, "replace fake salt in class Khash"
+                     #~ " - khash.py with salt from Kount")
     def test_token_invalid(self):
         "invalid token"
         with self.assertRaises(ValueError):
@@ -62,8 +62,8 @@ class TestKhash(unittest.TestCase):
         with self.assertRaises(ValueError):
             card_solted = self.k.hash_payment_token(token="John")
 
-    @unittest.skipIf("Kount" in Khash.salt, "replace fake salt in class Khash"
-                     " - khash.py with salt from Kount")
+    #~ @unittest.skipIf("Kount" in Khash.salt, "replace fake salt in class Khash"
+                     #~ " - khash.py with salt from Kount")
     def test_hash_gift_card(self):
         "gift card"
         for i in range(len(self.list_for_hash)):
@@ -73,8 +73,8 @@ class TestKhash(unittest.TestCase):
             self.assertEqual(card_solted, expected)
             self.assertTrue(self.k.khashed(card_solted))
 
-    @unittest.skipIf("Kount" in Khash.salt, "replace fake salt in class Khash"
-                     " - khash.py with salt from Kount")
+    #~ @unittest.skipIf("Kount" in Khash.salt, "replace fake salt in class Khash"
+                     #~ " - khash.py with salt from Kount")
     def test_hash_gift_card_int_merchantid(self):
         "test_hash_gift_card_int_merchantid"
         for i in range(len(self.list_for_hash)):

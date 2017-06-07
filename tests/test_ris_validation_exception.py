@@ -67,7 +67,7 @@ class TestValidationError(unittest.TestCase):
             raise vale
         self.assertEqual(
             str(vale),
-            "Expected value of the error type LENGTH, REGEX, REQUIRED, "\
+            "Expected value of the error type LENGTH, REGEX, REQUIRED, "
             "found [%s]" % incorrect)
 
     def test_empty_field(self):
@@ -78,7 +78,7 @@ class TestValidationError(unittest.TestCase):
             raise vale
         self.assertEqual(
             str(vale),
-            "Expected value of the error type LENGTH, REGEX, REQUIRED, "\
+            "Expected value of the error type LENGTH, REGEX, REQUIRED, "
             "found [%s]" % incorrect)
 
     def test_no_field(self):
