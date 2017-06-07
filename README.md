@@ -18,7 +18,7 @@ or
    1. Clone the repository
    2. Dependencies
         * requests
-        * simplejson
+        * enum
 
 install all dependencies from [requirements.txt](https://github.com/Kount/kount-ris-python-sdk/blob/master/kount/requirements.py)
  with
