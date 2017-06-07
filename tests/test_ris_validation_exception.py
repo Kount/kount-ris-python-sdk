@@ -116,9 +116,11 @@ class TestValidationError(unittest.TestCase):
         self.assertIn("REGEX", vale.error)
         self.assertEqual(
             str(vale.message),
-            "Field [%s] has value [%s] which which does not"
+            "Field [%s] has value [%s] which does not"
             " match the pattern [%s]" % (field, value, pattern))
 
 
 if __name__ == "__main__":
-    unittest.main()
+    unittest.main(
+        #~ defaultTest="TestValidationError.test_pattern"
+        )

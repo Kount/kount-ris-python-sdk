@@ -44,11 +44,11 @@ class ValidationErrorType(Exception):
 class ValidationError(ValidationErrorType):
     """Get the string representation of the error.
         Keyword arguments:
-            field -- the name of the bad field
-            mode -- the RIS mode the field is associated with
-            value -- field value
-            pattern -- the regular expression violated
-            length -- the maximum allowable length
+            field - the name of the bad field
+            mode - the RIS mode the field is associated with
+            value - field value
+            pattern - the regular expression violated
+            length - the maximum allowable length
         raise  ValidationError
     """
     def __init__(self, field="", mode="", value="", pattern="", length=0):
@@ -59,11 +59,11 @@ class ValidationError(ValidationErrorType):
             self.error = VALIDATIONERROR.LENGTH_ERR.value
             validation_error = True
         if pattern:
-            self.message = "Field [%s] has value [%s] which which does not "\
+            self.message = "Field [%s] has value [%s] which does not "\
                            "match the pattern [%s]" % (field, value, pattern)
             self.error = VALIDATIONERROR.REGEX_ERR.value
             validation_error = True
-        if mode:
+        if mode != "" and mode is not None:
             self.message = "Required field [%s] missing for mode [%s]" % (
                 field, mode.upper())
             self.error = VALIDATIONERROR.REQUIRED_ERR.value

@@ -18,8 +18,8 @@ __status__ = "Development"
 
 class RisException(Exception):
     """RIS exeption class:
-            message - exception message
-            cause - exception cause"""
+        message - exception message
+        cause - exception cause"""
 
 
 class RisValidationException(RisException):

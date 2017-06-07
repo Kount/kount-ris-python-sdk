@@ -20,7 +20,7 @@ class TestValidationError(unittest.TestCase):
     "TestValidationError"
     def test_max_length(self):
         "test_max_length"
-        incorrect = "a"*10
+        incorrect = "a" * 10
         lengthr = 2
         vale = ValidationError(field=incorrect, length=lengthr)
         with self.assertRaises(ValidationError):
@@ -102,7 +102,7 @@ class TestValidationError(unittest.TestCase):
         with self.assertRaises(ValidationError):
             raise vale
         self.assertIn('REGEX', str(vale))
-        self.assertIn("Field [%s] has value [%s] which which does not"
+        self.assertIn("Field [%s] has value [%s] which does not"
                       " match the pattern [%s]')" % (field, value, pattern),
                       str(vale))
 

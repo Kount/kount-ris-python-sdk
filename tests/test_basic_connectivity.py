@@ -12,13 +12,14 @@ from __future__ import (
 import unittest
 import uuid
 from kount.response import Response
-
+from kount.settings import RAISE_ERRORS
 from kount.request import (ASTAT, BCRSTAT, INQUIRYMODE,
                            CURRENCYTYPE, MERCHANTACKNOWLEDGMENT)
 from kount.inquiry import Inquiry
 from kount.util.payment import CardPayment
 from kount.util.cartitem import CartItem
 from kount.util.address import Address
+from kount.util.ris_validation_exception import RisValidationException
 from kount.client import Client
 from kount.util.xml_dict import XML_DICT, REQUIRED, NOTREQUIRED
 from kount.settings import SDK_VERSION
@@ -104,49 +105,72 @@ class TestBasicConnectivity(unittest.TestCase):
     def test_12_expected_score(self):
         "test_12_expected_score"
         self.inq.params["UDF[~K!_SCOR]"] = '42'
-        res = self.client.process(params=self.inq.params)
-        self.assertIsNotNone(res)
-        rr = Response(res)
-        self.assertEqual("42", rr.params['SCOR'])
+        if RAISE_ERRORS:
+            self.assertRaises(
+                RisValidationException,
+                Client(url=URL_API, key=KOUNT_API_KEY).process, self.inq.params)
+        else:
+            res = self.client.process(params=self.inq.params)
+            self.assertIsNotNone(res)
+            rr = Response(res)
+            self.assertEqual("42", rr.params['SCOR'])
 
     def test_13_expected_decision(self):
         "test_13_expected_decision"
         self.inq.params["UDF[~K!_AUTO]"] = 'R'
-        res = self.client.process(params=self.inq.params)
-        self.assertIsNotNone(res)
-        self.assertEqual("R", res["AUTO"])
+        if RAISE_ERRORS:
+            self.assertRaises(
+                RisValidationException,
+                Client(url=URL_API, key=KOUNT_API_KEY).process, self.inq.params)
+        else:
+            res = self.client.process(params=self.inq.params)
+            self.assertIsNotNone(res)
+            self.assertEqual("R", res["AUTO"])
 
     def test_16_expected_geox(self):
         "test_16_expected_geox"
         self.inq.params["UDF[~K!_SCOR]"] = '42'
         self.inq.params["UDF[~K!_AUTO]"] = 'D'
         self.inq.params["UDF[~K!_GEOX]"] = 'NG'
-        res = self.client.process(params=self.inq.params)
-        self.assertIsNotNone(res)
-        rr = Response(res)
-        self.assertEqual("D", res["AUTO"])
-        self.assertEqual("NG", res["GEOX"])
-        self.assertEqual("42", rr.params['SCOR'])
+        if RAISE_ERRORS:
+            self.assertRaises(
+                RisValidationException,
+                Client(url=URL_API, key=KOUNT_API_KEY).process, self.inq.params)
+        else:
+            res = self.client.process(params=self.inq.params)
+            self.assertIsNotNone(res)
+            rr = Response(res)
+            self.assertEqual("D", res["AUTO"])
+            self.assertEqual("NG", res["GEOX"])
+            self.assertEqual("42", rr.params['SCOR'])
 
     def test_cyrillic(self):
         "test_cyrillic"
+        self.maxDiff = None
         bad = u'Сирма :ы№'
         self.inq.params["S2NM"] = bad
         self.inq.params["EMAL"] = bad
-        res = self.client.process(params=self.inq.params)
-        self.assertIsNotNone(res)
-        actual = u"321 BAD_EMAL Cause: [[%s is an invalid email address]"\
-                 ", Field: [EMAL], Value: [%s]" % (bad, bad)
-        self.assertEqual({
-            u'ERRO': 321,
-            u'ERROR_0': actual,
-            u'ERROR_COUNT': 1, u'MODE': u'E', u'WARNING_COUNT': 0}, res)
+        if RAISE_ERRORS:
+            self.assertRaises(
+                RisValidationException,
+                Client(url=URL_API, key=KOUNT_API_KEY).process, self.inq.params)
+        else:
+            self.assertFalse(RAISE_ERRORS)
+            res = self.client.process(params=self.inq.params)
+            self.assertIsNotNone(res)
+            actual = u"321 BAD_EMAL Cause: [[%s is an invalid email address]"\
+                     ", Field: [EMAL], Value: [%s]" % (bad, bad)
+            self.assertEqual({
+                u'ERRO': 321,
+                u'ERROR_0': actual,
+                u'ERROR_COUNT': 1, u'MODE': u'E', u'WARNING_COUNT': 0}, res)
 
     def test_long(self):
         "test_long request"
         self.maxDiff = None
-        bad = 'Сирма :ы№'
-        self.inq.params["S2NM"] = bad * 999
+        bad_list = [
+            'Сирма :ы№',
+            'abcqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqq 12345']
         expected = """Neither JSON nor String """\
             """<!DOCTYPE HTML PUBLIC "-//IETF//DTD HTML 2.0//EN">\n"""\
             "<html><head>\n"\
@@ -160,12 +184,22 @@ class TestBasicConnectivity(unittest.TestCase):
             "</body></html>\n"\
             "MODE=E\n"\
             "ERRO=201"
-        try:
-            self.assertRaises(ValueError, self.client.process, self.inq.params)
-            self.client.process(params=self.inq.params)
-        except ValueError as vale:
-            self.assertEqual(expected, vale.__str__())
+        if RAISE_ERRORS:
+            self.assertRaises(
+                RisValidationException,
+                Client(url=URL_API, key=KOUNT_API_KEY).process, self.inq.params)
+        else:
+            self.assertFalse(RAISE_ERRORS)
+            for bad in bad_list:
+                self.inq.params["S2NM"] = bad * 999
+                try:
+                    self.assertRaises(ValueError, self.client.process, self.inq.params)
+                    self.client.process(params=self.inq.params)
+                except ValueError as vale:
+                    self.assertEqual(expected, vale.__str__())
 
 
 if __name__ == "__main__":
-    unittest.main()
+    unittest.main(
+        #~ defaultTest="TestBasicConnectivity.test_long"
+        )

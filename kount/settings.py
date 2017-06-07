@@ -18,6 +18,9 @@ RESOURCE_FOLDER = "resources"
 XML_FILENAME = 'validate.xml'
 XML_DICT = 'xml_dict.py'
 SDK_VERSION = "0695"
+#~ RAISE_ERRORS = False
+RAISE_ERRORS = True
+
 
 ERROR_MESSAGES = {
     201: 'Missing version',

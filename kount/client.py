@@ -11,6 +11,8 @@ import logging
 import requests
 from .ris_validator import RisValidator
 from .util.xml_dict import XML_DICT, REQUIRED, NOTREQUIRED
+from .util.ris_validation_exception import RisValidationException
+from .settings import RAISE_ERRORS
 
 
 __author__ = "Yordanka Spahieva"
@@ -28,7 +30,7 @@ class Client:
     raise_errors - False - log them only
                    True - raise them before request.post
     """
-    def __init__(self, url, key, timeout=5, raise_errors=False):
+    def __init__(self, url, key, timeout=5, raise_errors=RAISE_ERRORS):
         self.url = url
         self.timeout = timeout
         self.kount_api_key = key
@@ -45,6 +47,24 @@ class Client:
         https://pypi.python.org/pypi/requests - 0.13.3
         Use simplejson if available."""
         try:
+            params['MODE']
+        except KeyError:
+            message = "Required field ['MODE'] is missing."
+            logger.debug(message)
+            if self.raise_errors:
+                raise RisValidationException(message, errors=['MODE'],
+                                             cause="MODE is None")
+        try:
+            self.headers_api["X-Kount-Merc-Id"] = params['MERC']
+        except KeyError:
+            message = "Required field 'MERC' is missing. \
+                       Header's param 'X-Kount-Merc-Id' is set to None."
+            logger.debug(message)
+            self.headers_api["X-Kount-Merc-Id"] = None
+            if self.raise_errors:
+                raise RisValidationException(
+                    message, errors=['MERC'], cause="X-Kount-Merc-Id is None")
+        try:
             assert params['FRMT'] == 'JSON'
         except KeyError:
             params['FRMT'] = 'JSON'
@@ -52,8 +72,12 @@ class Client:
             params=params,
             xml_2_dict=self.validator.xml_2_dict,
             )
-        logger.debug("validation errors= %s, missing_in_xml = %s, "
-                     "empty = %s", invalid, missing_in_xml, empty)
+        message = "validation errors= %s, missing_in_xml = %s, empty = %s" % (
+            invalid, missing_in_xml, empty)
+        logger.debug(message)
+        if self.raise_errors:
+            raise RisValidationException(
+                message, errors=invalid, cause="empty = %s" % empty)
         request = requests.post(self.url,
                                 headers=self.headers_api,
                                 data=params,
