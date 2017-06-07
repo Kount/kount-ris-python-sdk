@@ -18,12 +18,15 @@ or
    1. Clone the repository
    2. Dependencies
         * requests
+        only for python 2.7.13 /uncomment them in requirements.txt/:
         * enum
+        * pathlib
+      
 
 install all dependencies from [requirements.txt](https://github.com/Kount/kount-ris-python-sdk/blob/master/kount/requirements.py)
  with
 
-`pip install - r requirements.txt`
+`pip install -r requirements.txt`
 
 How to build the SDK and run integration tests in root directory?
 
