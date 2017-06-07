@@ -18,7 +18,10 @@ or
    1. Clone the repository
    2. Dependencies
         * requests
-        only for python 2.7.13 /uncomment them in requirements.txt/:
+        
+        // only for python 2.7.13 /uncomment them in requirements.txt/:
+        
+        
         * enum
         * pathlib
       
