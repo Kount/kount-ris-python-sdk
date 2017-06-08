@@ -65,7 +65,7 @@ class Khash(object):
             mesg = "Configured SALT phrase is incorrect."
             logger.error(mesg)
             raise ValueError(mesg)
-        logger.error("Configured SALT phrase is correct.")
+        logger.info("Configured SALT phrase is correct.")
 
     @classmethod
     def hash_payment_token(cls, token):
