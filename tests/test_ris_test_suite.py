@@ -16,7 +16,7 @@ from kount.request import Update, UPDATEMODE
 from kount.util.khash import Khash
 from kount.util.cartitem import CartItem
 from kount.util.ris_validation_exception import RisValidationException
-from kount.settings import SDK_VERSION, SALT
+from kount.settings import SDK_VERSION, SALT, TIMEOUT
 
 
 __author__ = "Yordanka Spahieva"
@@ -27,9 +27,6 @@ __status__ = "Development"
 
 URL_API = "https://risk.beta.kount.net"
 RIS_ENDPOINT_BETA = URL_API
-
-# request timeout in seconds
-TIMEOUT = 5
 
 # raise_errors - if  True - raise errors instead of logging in debugger
 RAISE_ERRORS = False
@@ -46,8 +43,9 @@ class TestRisTestSuite(unittest.TestCase):
         Client(url=URL_API, key=KOUNT_API_KEY,
                timeout=TIMEOUT, RAISE_ERRORS=True)
     """
+    maxDiff = None
+
     def setUp(self):
-        self.maxDiff = None
         self.session_id = generate_unique_id()[:32]
         self.client = Client(RIS_ENDPOINT_BETA, KOUNT_API_KEY, SALT,
                              timeout=TIMEOUT, raise_errors=RAISE_ERRORS)
@@ -124,7 +122,6 @@ class TestRisTestSuite(unittest.TestCase):
     def test_4_ris_q_hard_error_expected(self):
         """test_4_ris_q hard_error_expected,
         overwrite the PTOK value to induce an error in the RIS"""
-        self.maxDiff = None
         self.inq.params["PENC"] = "KHASH"
         self.inq.params["PTOK"] = "BADPTOK"
         res = self.client.process(params=self.inq.params)
@@ -160,7 +157,6 @@ class TestRisTestSuite(unittest.TestCase):
 
     def test_6_ris_q_hard_soft_errors_expected(self):
         "test_6_ris_q_hard_soft_errors_expected"
-        self.maxDiff = None
         self.inq.params["PENC"] = "KHASH"
         self.inq.params["PTOK"] = "BADPTOK"
         label = "UDF_DOESNOTEXIST"
@@ -209,7 +205,6 @@ class TestRisTestSuite(unittest.TestCase):
 
     def test_8_ris_j_1_kount_central_rule_decline(self):
         "test_8_ris_j_1_kount_central_rule_decline"
-        self.maxDiff = None
         self.inq.request_mode(INQUIRYMODE.JUSTTHRESHOLDS)
         self.inq.total_set(1000)
         self.inq.kount_central_customer_id("KCentralCustomerDeclineMe")

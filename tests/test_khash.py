@@ -60,9 +60,15 @@ class TestKhash(unittest.TestCase):
             card_solted = self.k.hash_payment_token(token=0)
         card_solted = self.k.hash_payment_token(token="Beatles")
         self.assertEqual(card_solted, "Beatle5STRFTYPXBR14E")
-        self.assertEqual(self.k.khashed(card_solted), None)
+        self.assertTrue(self.k.khashed(card_solted))
+        bad = "John"
+        try:
+            self.k.hash_payment_token(token=bad)
+        except ValueError as vale:
+            self.assertEqual("incorrect arg: [%s]" % bad, str(vale))
         with self.assertRaises(ValueError):
-            card_solted = self.k.hash_payment_token(token="John")
+            self.assertTrue(self.k.hash_payment_token(token=bad))
+
 
     #~ @unittest.skipIf("Kount" in Khash.salt, "replace fake salt in class Khash"
                      #~ " - khash.py with salt from Kount")

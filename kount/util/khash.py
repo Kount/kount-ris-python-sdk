@@ -9,6 +9,7 @@ from __future__ import (
     absolute_import, unicode_literals, division, print_function)
 import hashlib
 import re
+import logging
 from string import digits, ascii_uppercase
 from kount.settings import RAISE_ERRORS
 
@@ -18,6 +19,7 @@ __maintainer__ = "Yordanka Spahieva"
 __email__ = "yordanka.spahieva@sirma.bg"
 __status__ = "Development"
 
+logger = logging.getLogger('kount.khash')
 
 def validator(*args):
     """check is list with arguments is valid -
@@ -54,11 +56,16 @@ class Khash(object):
 
     @classmethod
     def set_salt(cls, salt):
+        """
+        initialize the SALT phrase used in hashing operations.
+        Khash.set_salt(salt)"""
         cls.salt = salt
         card_solted = cls.hash_payment_token(token="666666669")
         if card_solted != "6666662I8EDD7LNC77GP" and RAISE_ERRORS:
-            raise ValueError("Configured SALT phrase is incorrect")
-        #~ logger
+            mesg = "Configured SALT phrase is incorrect."
+            logger.error(mesg)
+            raise ValueError(mesg)
+        logger.error("Configured SALT phrase is correct.")
 
     @classmethod
     def hash_payment_token(cls, token):
@@ -118,7 +125,5 @@ class Khash(object):
         """ Arg: val - String, Token that may or may not be khashed
          return: Boolean, True if token is already khashed
         """
-        regex = r"^[0-9]{6}[0-9A-Z]{14}$"
-        #regex = r"^[0-9a-zA-Z]{6}[0-9A-Z]{14}$"
+        regex = r"^[0-9a-zA-Z]{6}[0-9A-Z]{14}$"
         return re.match(regex, val)
-

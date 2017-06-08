@@ -12,6 +12,7 @@ import requests
 from .ris_validator import RisValidator
 from .util.khash import Khash
 from .util.ris_validation_exception import RisValidationException
+from .settings import TIMEOUT
 
 
 __author__ = "Yordanka Spahieva"
@@ -29,7 +30,7 @@ class Client:
     raise_errors - False - log them only
                    True - raise them before request.post
     """
-    def __init__(self, url, key, salt, timeout=5, raise_errors=True):
+    def __init__(self, url, key, salt, timeout=TIMEOUT, raise_errors=True):
         self.url = url
         self._kount_api_key = key
         Khash.set_salt(salt)

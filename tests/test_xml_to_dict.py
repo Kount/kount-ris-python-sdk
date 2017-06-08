@@ -24,9 +24,10 @@ XML_FILENAME_PATH = os.path.join(os.path.dirname(__file__), '..',
 
 class TestXMLtoDict(unittest.TestCase):
     "parse xml from sdk to python dict"
+    maxDiff = None
+
     def test_xml_to_dict(self):
         "xml_to_dict"
-        self.maxDiff = None
         actual = xml_to_dict(XML_FILENAME_PATH)
         expected = {
             'ANID': {'max_length': '64', 'mode': ['P'], 'required': True},

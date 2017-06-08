@@ -24,13 +24,14 @@ PTOK = "0007380568572514"
 
 class TestInquiry(unittest.TestCase):
     "Inquiry class tests"
+    maxDiff = None
+
     def setUp(self):
         session_id = generate_unique_id()
         self.result = default_inquiry(
             session_id=str(session_id),
             merchant_id=MERCHANT_ID,
             email_client=EMAIL_CLIENT, ptok=PTOK)
-        self.maxDiff = None
 
     def test_utilities(self):
         "test_utilities"

@@ -143,18 +143,17 @@ CURLED = {
 
 class TestAPIRIS(unittest.TestCase):
     "implemented curl from https://kopana.atlassian.net/wiki/display/KS/Testing"
+    maxDiff = None
+
     def setUp(self):
-        "for testing - self.maxDiff = None"
-        self.maxDiff = None
         self.url = URL_API
-        #~ self.data = None
 
     def test_api_kount(self):
         "expected modified 'TRAN'"
         data = CURLED
         self.assertIn('MODE', CURLED)
-        actual = Client(URL_API, KOUNT_API_KEY, SALT, raise_errors=True).process(
-            params=data)
+        actual = Client(URL_API, KOUNT_API_KEY, SALT,
+                        raise_errors=True).process(params=data)
         expected = {
             "VERS": "0695", "MODE": "Q", "TRAN": "PTPN0Z04P8Y6",
             "MERC": "999666", "SESS": "088E9F4961354D4F90041988B8D5C66B",
@@ -195,8 +194,8 @@ class TestAPIRIS(unittest.TestCase):
         "expected modified 'TRAN'"
         data = example_data_products.copy()
         self.assertIn('MODE', data)
-        actual = Client(URL_API, KOUNT_API_KEY, SALT, raise_errors=True).process(
-            params=data)
+        actual = Client(URL_API, KOUNT_API_KEY, SALT,
+                        raise_errors=True).process(params=data)
         del (actual['TRAN'], actual['RULE_ID_0'],
              actual['VELO'], actual['VMAX'])
         self.assertEqual(actual, expected1)
@@ -209,15 +208,16 @@ class TestAPIRIS(unittest.TestCase):
         data["EMAL"] = bad
         self.assertRaises(
             RisValidationException,
-            Client(URL_API, KOUNT_API_KEY, SALT, raise_errors=True).process, data)
+            Client(URL_API, KOUNT_API_KEY, SALT,
+                   raise_errors=True).process, data)
         expected = {
             'ERROR_0':
             "321 BAD_EMAL Cause: [[%s is an invalid email address],"
             " Field: [EMAL], Value: [%s]" % (bad, bad),
             'ERRO': 321, 'ERROR_COUNT': 1,
             'WARNING_COUNT': 0, 'MODE': 'E'}
-        actual = Client(URL_API, KOUNT_API_KEY, SALT, raise_errors=False).process(
-            params=data)
+        actual = Client(URL_API, KOUNT_API_KEY, SALT,
+                        raise_errors=False).process(params=data)
         self.assertEqual(actual, expected)
 
     def test_2_items_bad_s2em(self):
@@ -227,9 +227,10 @@ class TestAPIRIS(unittest.TestCase):
         data["S2EM"] = bad
         self.assertRaises(
             RisValidationException,
-            Client(URL_API, KOUNT_API_KEY, SALT, raise_errors=True).process, data)
-        actual = Client(URL_API, KOUNT_API_KEY, SALT, raise_errors=False).process(
-            params=data)
+            Client(URL_API, KOUNT_API_KEY, SALT,
+                   raise_errors=True).process, data)
+        actual = Client(URL_API, KOUNT_API_KEY, SALT,
+                        raise_errors=False).process(params=data)
         del (actual['TRAN'], actual['RULE_ID_0'],
              actual['VELO'], actual['VMAX'])
         self.assertEqual(actual, expected1)
@@ -245,8 +246,8 @@ class TestAPIRIS(unittest.TestCase):
             'ERROR_0': "221 MISSING_EMAL Cause: "
                        "[Non-empty value was required in this case], "
                        "Field: [EMAL], Value: []"}
-        actual = Client(URL_API, KOUNT_API_KEY, SALT, raise_errors=True).process(
-            params=data)
+        actual = Client(URL_API, KOUNT_API_KEY, SALT,
+                        raise_errors=True).process(params=data)
         self.assertEqual(actual, expected)
 
     def test_two_items_missing_email(self):
@@ -260,20 +261,21 @@ class TestAPIRIS(unittest.TestCase):
             'ERROR_0': "221 MISSING_EMAL Cause: "
                        "[Non-empty value was required in this case], "
                        "Field: [EMAL], Value: []",}
-        actual = Client(URL_API, KOUNT_API_KEY, SALT, raise_errors=False).process(
-            params=data)
+        actual = Client(URL_API, KOUNT_API_KEY, SALT,
+                        raise_errors=False).process(params=data)
         self.assertEqual(actual, expected)
 
     def test_api_kount_empty_data(self):
         "empty data"
         data = {'FRMT': 'JSON'}
         expected = {"MODE": "E", "ERRO": "201"}
-        actual = Client(URL_API, KOUNT_API_KEY, SALT, raise_errors=False).process(
-            params=data)
+        actual = Client(URL_API, KOUNT_API_KEY, SALT,
+                        raise_errors=False).process(params=data)
         self.assertEqual(actual, expected)
         self.assertRaises(
             RisValidationException,
-            Client(URL_API, KOUNT_API_KEY, SALT, raise_errors=True).process, data)
+            Client(URL_API, KOUNT_API_KEY, SALT,
+                   raise_errors=True).process, data)
 
 
 if __name__ == "__main__":

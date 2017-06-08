@@ -90,6 +90,7 @@ def default_inquiry(session_id, merchant_id, email_client, ptok):
 class TestBasicConnectivity(unittest.TestCase):
     "Test Basic Connectivity"
     maxDiff = None
+
     def setUp(self):
         self.session_id = generate_unique_id()[:32]
         self.email_client = 'predictive@kount.com'
@@ -101,8 +102,7 @@ class TestBasicConnectivity(unittest.TestCase):
         "test_12_expected_score"
         self.inq.params["UDF[~K!_SCOR]"] = '42'
         res = Client(URL_API_BETA, KOUNT_API_KEY7,
-                     SALT, raise_errors=True).process(
-            params=self.inq.params)
+                     SALT, raise_errors=True).process(params=self.inq.params)
         self.assertIsNotNone(res)
         rr = Response(res)
         self.assertEqual("42", rr.params['SCOR'])
@@ -110,8 +110,7 @@ class TestBasicConnectivity(unittest.TestCase):
     def test_13_expected_decision(self):
         "test_13_expected_decision"
         self.inq.params["UDF[~K!_AUTO]"] = 'R'
-        res = Client(URL_API, KOUNT_API_KEY7, SALT,
-                     raise_errors=True).process(
+        res = Client(URL_API, KOUNT_API_KEY7, SALT, raise_errors=True).process(
             params=self.inq.params)
         self.assertIsNotNone(res)
         self.assertEqual("R", res["AUTO"])
@@ -121,17 +120,16 @@ class TestBasicConnectivity(unittest.TestCase):
         self.inq.params["UDF[~K!_SCOR]"] = '42'
         self.inq.params["UDF[~K!_AUTO]"] = 'D'
         self.inq.params["UDF[~K!_GEOX]"] = 'NG'
-        res = Client(URL_API, KOUNT_API_KEY7, SALT, raise_errors=True).process(params=self.inq.params)
+        res = Client(URL_API, KOUNT_API_KEY7, SALT,
+                     raise_errors=True).process(params=self.inq.params)
         self.assertIsNotNone(res)
         rr = Response(res)
-        print(res)
         self.assertEqual("D", res["AUTO"])
         self.assertEqual("NG", res["GEOX"])
         self.assertEqual("42", rr.params['SCOR'])
 
     def test_cyrillic(self):
         "test_cyrillic"
-        self.maxDiff = None
         bad = u'Сирма :ы№'
         self.inq.params["S2NM"] = bad
         self.inq.params["EMAL"] = bad
@@ -140,8 +138,7 @@ class TestBasicConnectivity(unittest.TestCase):
             Client(URL_API, KOUNT_API_KEY7, SALT,
                    raise_errors=True).process, self.inq.params)
         res = Client(URL_API, KOUNT_API_KEY7,
-                     SALT, raise_errors=False).process(
-            params=self.inq.params)
+                     SALT, raise_errors=False).process(params=self.inq.params)
         self.assertIsNotNone(res)
         actual = u"321 BAD_EMAL Cause: [[%s is an invalid email address]"\
                  ", Field: [EMAL], Value: [%s]" % (bad, bad)
@@ -152,7 +149,6 @@ class TestBasicConnectivity(unittest.TestCase):
 
     def test_long(self):
         "test_long request"
-        self.maxDiff = None
         bad_list = [
             'Сирма :ы№',
             'abcqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqq 12345']
@@ -187,6 +183,4 @@ class TestBasicConnectivity(unittest.TestCase):
 
 
 if __name__ == "__main__":
-    unittest.main(
-        #~ defaultTest="TestBasicConnectivity.test_long"
-        )
+    unittest.main()

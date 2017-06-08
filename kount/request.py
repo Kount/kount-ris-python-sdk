@@ -132,7 +132,9 @@ class Request(object):
         self.close_on_finish = None
         card_solted = Khash.hash_payment_token(token="666666669")
         if card_solted != "6666662I8EDD7LNC77GP" and RAISE_ERRORS:
-            raise ValueError("Configured SALT phrase is incorrect")
+            mesg = "Configured SALT phrase is incorrect"
+            logger.error(mesg)
+            raise ValueError(mesg)
 
     def khash_payment_encoding(self, enabled=True):
         """Set KHASH payment encoding.
@@ -142,6 +144,7 @@ class Request(object):
             self.params["PENC"] = "KHASH"
         else:
             self.params["PENC"] = "MASK"
+        logger.debug("PENC = %s", self.params["PENC"])
 
     def params_set(self, key, value):
         """Set a parm for the request.
@@ -150,36 +153,42 @@ class Request(object):
            value - The value for the parm
         """
         self.params[key] = value
+        logger.debug("%s = %s", key, value)
 
     def version_set(self, version):
         """Set the version number.
         Args: version - The SDK version
         """
         self.params["VERS"] = version
+        logger.debug("VERS = %s", version)
 
     def session_set(self, session_id):
         """Set the session id. Must be unique over a 30-day span
         Args: session_id -  Id of the current session
         """
         self.params["SESS"] = session_id
+        logger.debug("SESS = %s", session_id)
 
     def merchant_set(self, merchant_id):
         """Set the merchant id.
         Args: merchant_id - Merchant ID
         """
         self.params["MERC"] = merchant_id
+        logger.debug("MERC = %s", merchant_id)
 
     def kount_central_customer_id(self, customer_id):
         """Set the Kount Central Customer ID.
         Args: customer_id - KC Customer ID
         """
         self.params["CUSTOMER_ID"] = customer_id
+        logger.debug("CUSTOMER_ID = %s", customer_id)
 
     def order_number(self, order_number):
         """Set the order number.
         Args: order_number - Merchant unique order number
         """
         self.params["ORDR"] = order_number
+        logger.debug("ORDR = %s", order_number)
 
     def merchant_acknowledgment_set(self, ma_type):
         """Set the merchant acknowledgment.
@@ -190,6 +199,7 @@ class Request(object):
         Args: ma_type - merchant acknowledgment type
         """
         self.params["MACK"] = ma_type
+        logger.debug("MACK = %s", ma_type)
 
     def authorization_status(self, auth_status):
         """Set the Authorization Status.
@@ -202,6 +212,7 @@ class Request(object):
         Args: auth_status - Auth status by issuer
         """
         self.params["AUTH"] = auth_status
+        logger.debug("AUTH = %s", auth_status)
 
     def avs_zip_reply(self, avs_zip_reply):
         """Set the Bankcard AVS zip code reply.
@@ -211,6 +222,7 @@ class Request(object):
         Args: avs_zip_reply - Bankcard AVS zip code reply
         """
         self.params["AVSZ"] = avs_zip_reply
+        logger.debug("AVSZ = %s", avs_zip_reply)
 
     def avs_address_reply(self, avs_address_reply):
         """Set the Bankcard AVS street addres reply.
@@ -219,6 +231,7 @@ class Request(object):
         Args: avs_address_reply - Bankcard AVS street address reply
         """
         self.params["AVST"] = avs_address_reply
+        logger.debug("AVST = %s", avs_address_reply)
 
     def avs_cvv_reply(self, cvv_reply):
         """Set the Bankcard CVV/CVC/CVV2 reply.
@@ -227,6 +240,7 @@ class Request(object):
         Args: cvv_reply -  Bankcard CVV/CVC/CVV2 reply
         """
         self.params["CVVR"] = cvv_reply
+        logger.debug("CVVR = %s", cvv_reply)
 
     def payment_set(self, payment):
         """ Set a payment.
@@ -248,6 +262,8 @@ class Request(object):
                         payment.payment_token)
                 payment.khashed = True
                 self.params["PENC"] = "MASK"
+                logger.debug("payment.khashed=%s, 'PENC'=%s",
+                    payment.khashed, self.params["PENC"])
             except ValueError as nfe:
                 logger.debug("Error converting Merchant ID to integer"
                              " value. Set a valid Merchant ID. %s",
@@ -343,7 +359,7 @@ class Request(object):
         """Check if KHASH payment encoding has been set.
            return boolean TRUE when set.
         """
-        encoded = "PENC" in self.params and self.params["PENC"] == "KHASH"
+        encoded = "PENC" in self.params and self.params["PENC"]=="KHASH"
         logger.debug("is_set_khash_payment_encoding = %s", encoded)
         return encoded
 
@@ -358,8 +374,8 @@ class Request(object):
 
 class UPDATEMODE(object):
     "UPDATEMODE - U, X"
-    NO_RESPONSE = 'U'
-    WITH_RESPONSE = 'X'
+    NO_RESPONSE='U'
+    WITH_RESPONSE='X'
 
 
 class Update(Request):
