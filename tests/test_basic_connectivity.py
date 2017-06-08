@@ -12,7 +12,6 @@ from __future__ import (
 import unittest
 import uuid
 from kount.response import Response
-from kount.settings import RAISE_ERRORS, SALT
 from kount.request import (ASTAT, BCRSTAT, INQUIRYMODE,
                            CURRENCYTYPE, MERCHANTACKNOWLEDGMENT)
 from kount.inquiry import Inquiry
@@ -21,7 +20,7 @@ from kount.util.cartitem import CartItem
 from kount.util.address import Address
 from kount.util.ris_validation_exception import RisValidationException
 from kount.client import Client
-from kount.settings import SDK_VERSION
+from kount.settings import SDK_VERSION, RAISE_ERRORS
 
 __author__ = "Yordanka Spahieva"
 __version__ = "1.0.0"
@@ -102,7 +101,7 @@ class TestBasicConnectivity(unittest.TestCase):
         "test_12_expected_score"
         self.inq.params["UDF[~K!_SCOR]"] = '42'
         res = Client(URL_API_BETA, KOUNT_API_KEY7,
-                     SALT, raise_errors=True).process(params=self.inq.params)
+                     raise_errors=RAISE_ERRORS).process(params=self.inq.params)
         self.assertIsNotNone(res)
         rr = Response(res)
         self.assertEqual("42", rr.params['SCOR'])
@@ -110,7 +109,7 @@ class TestBasicConnectivity(unittest.TestCase):
     def test_13_expected_decision(self):
         "test_13_expected_decision"
         self.inq.params["UDF[~K!_AUTO]"] = 'R'
-        res = Client(URL_API, KOUNT_API_KEY7, SALT, raise_errors=True).process(
+        res = Client(URL_API, KOUNT_API_KEY7, raise_errors=RAISE_ERRORS).process(
             params=self.inq.params)
         self.assertIsNotNone(res)
         self.assertEqual("R", res["AUTO"])
@@ -120,8 +119,8 @@ class TestBasicConnectivity(unittest.TestCase):
         self.inq.params["UDF[~K!_SCOR]"] = '42'
         self.inq.params["UDF[~K!_AUTO]"] = 'D'
         self.inq.params["UDF[~K!_GEOX]"] = 'NG'
-        res = Client(URL_API, KOUNT_API_KEY7, SALT,
-                     raise_errors=True).process(params=self.inq.params)
+        res = Client(URL_API, KOUNT_API_KEY7,
+                     raise_errors=RAISE_ERRORS).process(params=self.inq.params)
         self.assertIsNotNone(res)
         rr = Response(res)
         self.assertEqual("D", res["AUTO"])
@@ -134,11 +133,11 @@ class TestBasicConnectivity(unittest.TestCase):
         self.inq.params["S2NM"] = bad
         self.inq.params["EMAL"] = bad
         self.assertRaises(
-            RisValidationException,
-            Client(URL_API, KOUNT_API_KEY7, SALT,
+            ValueError,
+            Client(URL_API, KOUNT_API_KEY7,
                    raise_errors=True).process, self.inq.params)
         res = Client(URL_API, KOUNT_API_KEY7,
-                     SALT, raise_errors=False).process(params=self.inq.params)
+                     raise_errors=False).process(params=self.inq.params)
         self.assertIsNotNone(res)
         actual = u"321 BAD_EMAL Cause: [[%s is an invalid email address]"\
                  ", Field: [EMAL], Value: [%s]" % (bad, bad)
@@ -170,17 +169,19 @@ class TestBasicConnectivity(unittest.TestCase):
         for bad in bad_list:
             inq.params["S2NM"] = bad * 999
             self.assertRaises(
-                RisValidationException,
+                ValueError,
                 Client(URL_API,
-                       KOUNT_API_KEY6, SALT,
+                       KOUNT_API_KEY6,
                        raise_errors=True).process, inq.params)
             try:
                 Client(
-                    URL_API, KOUNT_API_KEY6, SALT,
+                    URL_API, KOUNT_API_KEY6,
                     raise_errors=False).process(params=inq.params)
             except ValueError as vale:
                 self.assertEqual(expected, str(vale))
 
 
 if __name__ == "__main__":
-    unittest.main()
+    unittest.main(
+        #~ defaultTest="TestBasicConnectivity.test_12_expected_score"
+                  )

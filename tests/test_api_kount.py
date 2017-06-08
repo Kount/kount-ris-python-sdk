@@ -11,7 +11,6 @@ import unittest
 from json_test import example_data_products
 from kount.client import Client
 from kount.util.ris_validation_exception import RisValidationException
-from kount.settings import SALT
 
 __author__ = "Yordanka Spahieva"
 __version__ = "1.0.0"
@@ -152,8 +151,8 @@ class TestAPIRIS(unittest.TestCase):
         "expected modified 'TRAN'"
         data = CURLED
         self.assertIn('MODE', CURLED)
-        actual = Client(URL_API, KOUNT_API_KEY, SALT,
-                        raise_errors=True).process(params=data)
+        actual = Client(URL_API, KOUNT_API_KEY,
+                        raise_errors=RAISE_ERRORS).process(params=data)
         expected = {
             "VERS": "0695", "MODE": "Q", "TRAN": "PTPN0Z04P8Y6",
             "MERC": "999666", "SESS": "088E9F4961354D4F90041988B8D5C66B",
@@ -194,7 +193,7 @@ class TestAPIRIS(unittest.TestCase):
         "expected modified 'TRAN'"
         data = example_data_products.copy()
         self.assertIn('MODE', data)
-        actual = Client(URL_API, KOUNT_API_KEY, SALT,
+        actual = Client(URL_API, KOUNT_API_KEY,
                         raise_errors=True).process(params=data)
         del (actual['TRAN'], actual['RULE_ID_0'],
              actual['VELO'], actual['VMAX'])
@@ -208,7 +207,7 @@ class TestAPIRIS(unittest.TestCase):
         data["EMAL"] = bad
         self.assertRaises(
             RisValidationException,
-            Client(URL_API, KOUNT_API_KEY, SALT,
+            Client(URL_API, KOUNT_API_KEY,
                    raise_errors=True).process, data)
         expected = {
             'ERROR_0':
@@ -216,7 +215,7 @@ class TestAPIRIS(unittest.TestCase):
             " Field: [EMAL], Value: [%s]" % (bad, bad),
             'ERRO': 321, 'ERROR_COUNT': 1,
             'WARNING_COUNT': 0, 'MODE': 'E'}
-        actual = Client(URL_API, KOUNT_API_KEY, SALT,
+        actual = Client(URL_API, KOUNT_API_KEY,
                         raise_errors=False).process(params=data)
         self.assertEqual(actual, expected)
 
@@ -227,9 +226,9 @@ class TestAPIRIS(unittest.TestCase):
         data["S2EM"] = bad
         self.assertRaises(
             RisValidationException,
-            Client(URL_API, KOUNT_API_KEY, SALT,
+            Client(URL_API, KOUNT_API_KEY,
                    raise_errors=True).process, data)
-        actual = Client(URL_API, KOUNT_API_KEY, SALT,
+        actual = Client(URL_API, KOUNT_API_KEY,
                         raise_errors=False).process(params=data)
         del (actual['TRAN'], actual['RULE_ID_0'],
              actual['VELO'], actual['VMAX'])
@@ -246,7 +245,7 @@ class TestAPIRIS(unittest.TestCase):
             'ERROR_0': "221 MISSING_EMAL Cause: "
                        "[Non-empty value was required in this case], "
                        "Field: [EMAL], Value: []"}
-        actual = Client(URL_API, KOUNT_API_KEY, SALT,
+        actual = Client(URL_API, KOUNT_API_KEY,
                         raise_errors=True).process(params=data)
         self.assertEqual(actual, expected)
 
@@ -261,7 +260,7 @@ class TestAPIRIS(unittest.TestCase):
             'ERROR_0': "221 MISSING_EMAL Cause: "
                        "[Non-empty value was required in this case], "
                        "Field: [EMAL], Value: []",}
-        actual = Client(URL_API, KOUNT_API_KEY, SALT,
+        actual = Client(URL_API, KOUNT_API_KEY,
                         raise_errors=False).process(params=data)
         self.assertEqual(actual, expected)
 
@@ -269,12 +268,12 @@ class TestAPIRIS(unittest.TestCase):
         "empty data"
         data = {'FRMT': 'JSON'}
         expected = {"MODE": "E", "ERRO": "201"}
-        actual = Client(URL_API, KOUNT_API_KEY, SALT,
+        actual = Client(URL_API, KOUNT_API_KEY,
                         raise_errors=False).process(params=data)
         self.assertEqual(actual, expected)
         self.assertRaises(
             RisValidationException,
-            Client(URL_API, KOUNT_API_KEY, SALT,
+            Client(URL_API, KOUNT_API_KEY,
                    raise_errors=True).process, data)
 
 

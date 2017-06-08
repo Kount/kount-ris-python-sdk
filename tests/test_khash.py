@@ -8,7 +8,7 @@ from __future__ import (
     absolute_import, unicode_literals, division, print_function)
 import unittest
 from kount.util.khash import Khash
-from kount.settings import SALT
+from kount.settings import RAISE_ERRORS
 
 __author__ = "Yordanka Spahieva"
 __version__ = "1.0.0"
@@ -21,7 +21,6 @@ class TestKhash(unittest.TestCase):
     "Khash class test cases"
     def setUp(self):
         self.k = Khash
-        self.k.set_salt(SALT)
         self.list_for_hash = ["4111111111111111", '5199185454061655',
                               4259344583883]
         self.expected = ['WMS5YA6FUZA1KC', '2NOQRXNKTTFL11', 'FEXQI1QS6TH2O5']

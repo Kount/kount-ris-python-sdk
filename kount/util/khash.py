@@ -11,7 +11,7 @@ import hashlib
 import re
 import logging
 from string import digits, ascii_uppercase
-from kount.settings import RAISE_ERRORS
+from kount.settings import RAISE_ERRORS, SALT
 
 __author__ = "Yordanka Spahieva"
 __version__ = "1.0.0"
@@ -52,7 +52,8 @@ class Khash(object):
     Uninstantiable class constructor.
     Class for creating Kount RIS KHASH encoding payment tokens.
     """
-    salt = 'very secret salt provided by Kount'
+    #~ salt = 'very secret salt provided by Kount'
+    salt = SALT
 
     @classmethod
     def set_salt(cls, salt):

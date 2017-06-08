@@ -16,7 +16,7 @@ from kount.request import Update, UPDATEMODE
 from kount.util.khash import Khash
 from kount.util.cartitem import CartItem
 from kount.util.ris_validation_exception import RisValidationException
-from kount.settings import SDK_VERSION, SALT, TIMEOUT
+from kount.settings import SDK_VERSION, TIMEOUT
 
 
 __author__ = "Yordanka Spahieva"
@@ -47,8 +47,8 @@ class TestRisTestSuite(unittest.TestCase):
 
     def setUp(self):
         self.session_id = generate_unique_id()[:32]
-        self.client = Client(RIS_ENDPOINT_BETA, KOUNT_API_KEY, SALT,
-                             timeout=TIMEOUT, raise_errors=RAISE_ERRORS)
+        self.client = Client(RIS_ENDPOINT_BETA, KOUNT_API_KEY,
+                             TIMEOUT, RAISE_ERRORS)
         self.inq = default_inquiry(session_id=self.session_id,
                                    merchant_id=MERCHANT_ID,
                                    email_client=EMAIL_CLIENT,

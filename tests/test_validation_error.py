@@ -8,7 +8,6 @@ from __future__ import (
     absolute_import, unicode_literals, division, print_function)
 import unittest
 from kount.util.validation_error import ValidationError, ValidationErrorType
-from kount.settings import SALT
 
 __author__ = "Yordanka Spahieva"
 __version__ = "1.0.0"

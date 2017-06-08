@@ -12,7 +12,7 @@ import requests
 from .ris_validator import RisValidator
 from .util.khash import Khash
 from .util.ris_validation_exception import RisValidationException
-from .settings import TIMEOUT
+from .settings import TIMEOUT, SDK_VERSION, RAISE_ERRORS
 
 
 __author__ = "Yordanka Spahieva"
@@ -30,13 +30,18 @@ class Client:
     raise_errors - False - log them only
                    True - raise them before request.post
     """
-    def __init__(self, url, key, salt, timeout=TIMEOUT, raise_errors=True):
+    def __init__(self, url, key, timeout=TIMEOUT, raise_errors=RAISE_ERRORS):
         self.url = url
         self._kount_api_key = key
-        Khash.set_salt(salt)
-        self.timeout = timeout
         self.raise_errors = raise_errors
-        self.validator = RisValidator(raise_errors=self.raise_errors)
+        card_solted = Khash.hash_payment_token(token="666666669")
+        if card_solted != "6666662I8EDD7LNC77GP" and raise_errors:
+            mesg = "Configured SALT phrase is incorrect"
+            logger.error(mesg)
+            raise ValueError(mesg)
+        self.timeout = timeout
+
+        self.validator = RisValidator(raise_errors=raise_errors)
         logger.debug("url - %s, len_key - %s", url, len(key))
 
     def process(self, params):
