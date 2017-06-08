@@ -10,9 +10,8 @@ from __future__ import (
 import logging
 import requests
 from .ris_validator import RisValidator
-from .util.xml_dict import XML_DICT, REQUIRED, NOTREQUIRED
+from .util.khash import Khash
 from .util.ris_validation_exception import RisValidationException
-from .settings import RAISE_ERRORS
 
 
 __author__ = "Yordanka Spahieva"
@@ -30,14 +29,11 @@ class Client:
     raise_errors - False - log them only
                    True - raise them before request.post
     """
-    def __init__(self, url, key, timeout=5, raise_errors=RAISE_ERRORS):
+    def __init__(self, url, key, salt, timeout=5, raise_errors=True):
         self.url = url
+        self._kount_api_key = key
+        Khash.set_salt(salt)
         self.timeout = timeout
-        self.kount_api_key = key
-        self.headers_api = {'X-Kount-Api-Key': self.kount_api_key}
-        self.xml_2_dict = XML_DICT
-        self.required = REQUIRED
-        self.notrequired = NOTREQUIRED
         self.raise_errors = raise_errors
         self.validator = RisValidator(raise_errors=self.raise_errors)
         logger.debug("url - %s, len_key - %s", url, len(key))
@@ -46,57 +42,46 @@ class Client:
         """validate data and request post
         https://pypi.python.org/pypi/requests - 0.13.3
         Use simplejson if available."""
-        try:
-            params['MODE']
-        except KeyError:
-            message = "Required field ['MODE'] is missing."
-            logger.debug(message)
-            if self.raise_errors:
-                raise RisValidationException(message, errors=['MODE'],
-                                             cause="MODE is None")
-        try:
-            self.headers_api["X-Kount-Merc-Id"] = params['MERC']
-        except KeyError:
-            message = "Required field 'MERC' is missing. \
-                       Header's param 'X-Kount-Merc-Id' is set to None."
-            logger.debug(message)
-            self.headers_api["X-Kount-Merc-Id"] = None
+        invalid, missing_in_xml, empty = self.validator.ris_validator(params=params)
+        if invalid:
+            message = "validation errors = %s, missing_in_xml = %s, empty = %s" % (
+                invalid, missing_in_xml, empty)
+            logger.error(message)
             if self.raise_errors:
                 raise RisValidationException(
-                    message, errors=['MERC'], cause="X-Kount-Merc-Id is None")
+                    message, errors=invalid, cause="empty = %s" % empty)
+        headers_api = {'X-Kount-Api-Key': self._kount_api_key}
         try:
-            assert params['FRMT'] == 'JSON'
+            headers_api["X-Kount-Merc-Id"] = params['MERC']
         except KeyError:
-            params['FRMT'] = 'JSON'
-        invalid, missing_in_xml, empty = self.validator.ris_validator(
-            params=params,
-            xml_2_dict=self.validator.xml_2_dict,
-            )
-        message = "validation errors= %s, missing_in_xml = %s, empty = %s" % (
-            invalid, missing_in_xml, empty)
-        logger.debug(message)
-        if self.raise_errors:
-            raise RisValidationException(
-                message, errors=invalid, cause="empty = %s" % empty)
+            message = "Required field 'MERC' is missing. \
+                       Header's param 'X-Kount-Merc-Id' is not set."
+            logger.debug(message)
+            if self.raise_errors:
+                raise RisValidationException(
+                    message, errors=['MERC'], cause="MERC is missing")
+        params['FRMT'] = 'JSON'
+        logger.debug("url %s, headers %s, params %s", self.url,
+                     headers_api, params)
         request = requests.post(self.url,
-                                headers=self.headers_api,
+                                headers=headers_api,
                                 data=params,
                                 timeout=self.timeout)
-        logger.debug("url %s, headers %s, params %s", self.url,
-                     self.headers_api, params)
         try:
             req_json = request.json()
-            logger.debug("process json: %s", req_json)
-            return req_json
         except ValueError as jde:
-            logger.debug("ValueError - %s", jde)
+            logger.error("ValueError - %s", jde)
             try:
-                text_to_json = {
-                    c.split('=')[0]:
-                    c.split('=')[1] for c in request.text.split('\n')}
+                text_to_json = parse_k_v(request.text)
                 logger.debug("process text: %s", text_to_json)
                 return text_to_json
-            except IndexError:
+            except ValueError:
                 error = "Neither JSON nor String %s" % request.text
                 logger.debug(error)
                 raise ValueError(error)
+        else:
+            logger.debug("process json: %s", req_json)
+            return req_json            
+
+def parse_k_v(text):
+    return dict(c.split('=', 1) for c in text.split('\n'))

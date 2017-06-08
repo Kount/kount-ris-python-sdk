@@ -16,8 +16,7 @@ from kount.request import Update, UPDATEMODE
 from kount.util.khash import Khash
 from kount.util.cartitem import CartItem
 from kount.util.ris_validation_exception import RisValidationException
-from kount.util.xml_dict import XML_DICT, REQUIRED, NOTREQUIRED
-from kount.settings import SDK_VERSION
+from kount.settings import SDK_VERSION, SALT
 
 
 __author__ = "Yordanka Spahieva"
@@ -40,7 +39,6 @@ PTOK = "0007380568572514"
 EMAIL_CLIENT = "sdkTest@kountsdktestdomain.com"
 KOUNT_API_KEY = "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiI5OTk2NjYiLCJhdWQiOiJLb3VudC4xIiwiaWF0IjoxNDk0NTM0Nzk5LCJzY3AiOnsia2EiOm51bGwsImtjIjpudWxsLCJhcGkiOmZhbHNlLCJyaXMiOnRydWV9fQ.eMmumYFpIF-d1up_mfxA5_VXBI41NSrNVe9CyhBUGck"
 
-
 class TestRisTestSuite(unittest.TestCase):
     """Ris Test Suite
         default logging errors instead fo raising
@@ -51,15 +49,12 @@ class TestRisTestSuite(unittest.TestCase):
     def setUp(self):
         self.maxDiff = None
         self.session_id = generate_unique_id()[:32]
-        self.client = Client(RIS_ENDPOINT_BETA, KOUNT_API_KEY,
+        self.client = Client(RIS_ENDPOINT_BETA, KOUNT_API_KEY, SALT,
                              timeout=TIMEOUT, raise_errors=RAISE_ERRORS)
         self.inq = default_inquiry(session_id=self.session_id,
                                    merchant_id=MERCHANT_ID,
                                    email_client=EMAIL_CLIENT,
                                    ptok=PTOK)
-        self.xml_2_dict = XML_DICT
-        self.required = REQUIRED
-        self.notrequired = NOTREQUIRED
 
     def test_1_ris_q_1_item_required_field_1_rule_review(self):
         "test_1_ris_q_1_item_required_field_1_rule_review"

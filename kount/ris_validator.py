@@ -36,7 +36,7 @@ class RisValidator(object):
         self.notrequired = NOTREQUIRED
         self.raise_errors = raise_errors
 
-    def ris_validator(self, params, xml_2_dict):
+    def ris_validator(self, params):
         """Client side validate the data to be passed to RIS.
         kwargs
             params - Map of data parameters from request,
@@ -52,7 +52,7 @@ class RisValidator(object):
             if params[param] is None or isinstance(params[param], bool):
                 continue
             try:
-                p_xml = xml_2_dict[param.split("[")[0]]
+                p_xml = self.xml_2_dict[param.split("[")[0]]
             except KeyError:
                 missing_in_xml.append(param)
                 logger.debug("missing_in_xml = %s", param)

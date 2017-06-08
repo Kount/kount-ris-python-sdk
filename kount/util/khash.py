@@ -10,6 +10,7 @@ from __future__ import (
 import hashlib
 import re
 from string import digits, ascii_uppercase
+from kount.settings import RAISE_ERRORS
 
 __author__ = "Yordanka Spahieva"
 __version__ = "1.0.0"
@@ -50,6 +51,14 @@ class Khash(object):
     Class for creating Kount RIS KHASH encoding payment tokens.
     """
     salt = 'very secret salt provided by Kount'
+
+    @classmethod
+    def set_salt(cls, salt):
+        cls.salt = salt
+        card_solted = cls.hash_payment_token(token="666666669")
+        if card_solted != "6666662I8EDD7LNC77GP" and RAISE_ERRORS:
+            raise ValueError("Configured SALT phrase is incorrect")
+        #~ logger
 
     @classmethod
     def hash_payment_token(cls, token):
@@ -112,3 +121,4 @@ class Khash(object):
         regex = r"^[0-9]{6}[0-9A-Z]{14}$"
         #regex = r"^[0-9a-zA-Z]{6}[0-9A-Z]{14}$"
         return re.match(regex, val)
+

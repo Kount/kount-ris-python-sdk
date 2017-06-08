@@ -12,7 +12,7 @@ from __future__ import (
 import unittest
 import uuid
 from kount.response import Response
-from kount.settings import RAISE_ERRORS
+from kount.settings import RAISE_ERRORS, SALT
 from kount.request import (ASTAT, BCRSTAT, INQUIRYMODE,
                            CURRENCYTYPE, MERCHANTACKNOWLEDGMENT)
 from kount.inquiry import Inquiry
@@ -21,7 +21,6 @@ from kount.util.cartitem import CartItem
 from kount.util.address import Address
 from kount.util.ris_validation_exception import RisValidationException
 from kount.client import Client
-from kount.util.xml_dict import XML_DICT, REQUIRED, NOTREQUIRED
 from kount.settings import SDK_VERSION
 
 __author__ = "Yordanka Spahieva"
@@ -37,11 +36,11 @@ SHIPPING_ADDRESS = Address("567 West S2A1 Court North", "",
                            "Gnome", "AK", "99762", "US")
 URL_API = "https://risk.beta.kount.net"
 URL_API_BETA = URL_API
-MERCHANT_ID = '999666'
-MERCHANT_ID_999667 = '999667'
+MERCHANT_ID6 = '999666'
+MERCHANT_ID7 = '999667'
 PTOK = "0007380568572514"
-KOUNT_API_KEY = "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiI5OTk2NjYiLCJhdWQiOiJLb3VudC4xIiwiaWF0IjoxNDk0NTM0Nzk5LCJzY3AiOnsia2EiOm51bGwsImtjIjpudWxsLCJhcGkiOmZhbHNlLCJyaXMiOnRydWV9fQ.eMmumYFpIF-d1up_mfxA5_VXBI41NSrNVe9CyhBUGck"
-KOUNT_API_KEY999667 = "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiI5OTk2NjciLCJhdWQiOiJLb3VudC4xIiwiaWF0IjoxNDk0NTM1OTE2LCJzY3AiOnsia2EiOm51bGwsImtjIjpudWxsLCJhcGkiOmZhbHNlLCJyaXMiOnRydWV9fQ.KK3zG4dMIhTIaE5SeCbej1OAFhZifyBswMPyYFAVRrM"
+KOUNT_API_KEY6 = "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiI5OTk2NjYiLCJhdWQiOiJLb3VudC4xIiwiaWF0IjoxNDk0NTM0Nzk5LCJzY3AiOnsia2EiOm51bGwsImtjIjpudWxsLCJhcGkiOmZhbHNlLCJyaXMiOnRydWV9fQ.eMmumYFpIF-d1up_mfxA5_VXBI41NSrNVe9CyhBUGck"
+KOUNT_API_KEY7 = "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiI5OTk2NjciLCJhdWQiOiJLb3VudC4xIiwiaWF0IjoxNDk0NTM1OTE2LCJzY3AiOnsia2EiOm51bGwsImtjIjpudWxsLCJhcGkiOmZhbHNlLCJyaXMiOnRydWV9fQ.KK3zG4dMIhTIaE5SeCbej1OAFhZifyBswMPyYFAVRrM"
 
 
 def generate_unique_id():
@@ -73,7 +72,7 @@ def default_inquiry(session_id, merchant_id, email_client, ptok):
     result.shopping_cart(cart_item)
     result.version()
     result.version_set(SDK_VERSION)  #0695
-    result.merchant_set(merchant_id) # 999666
+    result.merchant_set(merchant_id)
     payment = CardPayment(ptok)
     result.payment_set(payment) #PTOK
     result.session_set(session_id) #SESS
@@ -90,59 +89,45 @@ def default_inquiry(session_id, merchant_id, email_client, ptok):
 
 class TestBasicConnectivity(unittest.TestCase):
     "Test Basic Connectivity"
+    maxDiff = None
     def setUp(self):
-        self.maxDiff = None
         self.session_id = generate_unique_id()[:32]
-        email_client = 'predictive@kount.com'
+        self.email_client = 'predictive@kount.com'
         self.inq = default_inquiry(self.session_id,
-                                   MERCHANT_ID_999667,
-                                   email_client, ptok=PTOK)
-        self.client = Client(URL_API_BETA, KOUNT_API_KEY999667)
-        self.xml_2_dict = XML_DICT
-        self.required = REQUIRED
-        self.notrequired = NOTREQUIRED
+                                   MERCHANT_ID7,
+                                   self.email_client, ptok=PTOK)
 
     def test_12_expected_score(self):
         "test_12_expected_score"
         self.inq.params["UDF[~K!_SCOR]"] = '42'
-        if RAISE_ERRORS:
-            self.assertRaises(
-                RisValidationException,
-                Client(url=URL_API, key=KOUNT_API_KEY).process, self.inq.params)
-        else:
-            res = self.client.process(params=self.inq.params)
-            self.assertIsNotNone(res)
-            rr = Response(res)
-            self.assertEqual("42", rr.params['SCOR'])
+        res = Client(URL_API_BETA, KOUNT_API_KEY7,
+                     SALT, raise_errors=True).process(
+            params=self.inq.params)
+        self.assertIsNotNone(res)
+        rr = Response(res)
+        self.assertEqual("42", rr.params['SCOR'])
 
     def test_13_expected_decision(self):
         "test_13_expected_decision"
         self.inq.params["UDF[~K!_AUTO]"] = 'R'
-        if RAISE_ERRORS:
-            self.assertRaises(
-                RisValidationException,
-                Client(url=URL_API, key=KOUNT_API_KEY).process, self.inq.params)
-        else:
-            res = self.client.process(params=self.inq.params)
-            self.assertIsNotNone(res)
-            self.assertEqual("R", res["AUTO"])
+        res = Client(URL_API, KOUNT_API_KEY7, SALT,
+                     raise_errors=True).process(
+            params=self.inq.params)
+        self.assertIsNotNone(res)
+        self.assertEqual("R", res["AUTO"])
 
     def test_16_expected_geox(self):
         "test_16_expected_geox"
         self.inq.params["UDF[~K!_SCOR]"] = '42'
         self.inq.params["UDF[~K!_AUTO]"] = 'D'
         self.inq.params["UDF[~K!_GEOX]"] = 'NG'
-        if RAISE_ERRORS:
-            self.assertRaises(
-                RisValidationException,
-                Client(url=URL_API, key=KOUNT_API_KEY).process, self.inq.params)
-        else:
-            res = self.client.process(params=self.inq.params)
-            self.assertIsNotNone(res)
-            rr = Response(res)
-            self.assertEqual("D", res["AUTO"])
-            self.assertEqual("NG", res["GEOX"])
-            self.assertEqual("42", rr.params['SCOR'])
+        res = Client(URL_API, KOUNT_API_KEY7, SALT, raise_errors=True).process(params=self.inq.params)
+        self.assertIsNotNone(res)
+        rr = Response(res)
+        print(res)
+        self.assertEqual("D", res["AUTO"])
+        self.assertEqual("NG", res["GEOX"])
+        self.assertEqual("42", rr.params['SCOR'])
 
     def test_cyrillic(self):
         "test_cyrillic"
@@ -150,20 +135,20 @@ class TestBasicConnectivity(unittest.TestCase):
         bad = u'Сирма :ы№'
         self.inq.params["S2NM"] = bad
         self.inq.params["EMAL"] = bad
-        if RAISE_ERRORS:
-            self.assertRaises(
-                RisValidationException,
-                Client(url=URL_API, key=KOUNT_API_KEY).process, self.inq.params)
-        else:
-            self.assertFalse(RAISE_ERRORS)
-            res = self.client.process(params=self.inq.params)
-            self.assertIsNotNone(res)
-            actual = u"321 BAD_EMAL Cause: [[%s is an invalid email address]"\
-                     ", Field: [EMAL], Value: [%s]" % (bad, bad)
-            self.assertEqual({
-                u'ERRO': 321,
-                u'ERROR_0': actual,
-                u'ERROR_COUNT': 1, u'MODE': u'E', u'WARNING_COUNT': 0}, res)
+        self.assertRaises(
+            RisValidationException,
+            Client(URL_API, KOUNT_API_KEY7, SALT,
+                   raise_errors=True).process, self.inq.params)
+        res = Client(URL_API, KOUNT_API_KEY7,
+                     SALT, raise_errors=False).process(
+            params=self.inq.params)
+        self.assertIsNotNone(res)
+        actual = u"321 BAD_EMAL Cause: [[%s is an invalid email address]"\
+                 ", Field: [EMAL], Value: [%s]" % (bad, bad)
+        self.assertEqual({
+            u'ERRO': 321,
+            u'ERROR_0': actual,
+            u'ERROR_COUNT': 1, u'MODE': u'E', u'WARNING_COUNT': 0}, res)
 
     def test_long(self):
         "test_long request"
@@ -184,19 +169,21 @@ class TestBasicConnectivity(unittest.TestCase):
             "</body></html>\n"\
             "MODE=E\n"\
             "ERRO=201"
-        if RAISE_ERRORS:
+        inq = default_inquiry(self.session_id, MERCHANT_ID7,
+                              self.email_client, ptok=PTOK)
+        for bad in bad_list:
+            inq.params["S2NM"] = bad * 999
             self.assertRaises(
                 RisValidationException,
-                Client(url=URL_API, key=KOUNT_API_KEY).process, self.inq.params)
-        else:
-            self.assertFalse(RAISE_ERRORS)
-            for bad in bad_list:
-                self.inq.params["S2NM"] = bad * 999
-                try:
-                    self.assertRaises(ValueError, self.client.process, self.inq.params)
-                    self.client.process(params=self.inq.params)
-                except ValueError as vale:
-                    self.assertEqual(expected, vale.__str__())
+                Client(URL_API,
+                       KOUNT_API_KEY6, SALT,
+                       raise_errors=True).process, inq.params)
+            try:
+                Client(
+                    URL_API, KOUNT_API_KEY6, SALT,
+                    raise_errors=False).process(params=inq.params)
+            except ValueError as vale:
+                self.assertEqual(expected, str(vale))
 
 
 if __name__ == "__main__":

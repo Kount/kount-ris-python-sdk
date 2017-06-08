@@ -6,6 +6,7 @@
 "settings"
 from __future__ import (
     absolute_import, unicode_literals, division, print_function)
+from .local_settings import *
 
 __author__ = "Yordanka Spahieva"
 __version__ = "1.0.0"
@@ -18,8 +19,8 @@ RESOURCE_FOLDER = "resources"
 XML_FILENAME = 'validate.xml'
 XML_DICT = 'xml_dict.py'
 SDK_VERSION = "0695"
-#~ RAISE_ERRORS = False
-RAISE_ERRORS = True
+RAISE_ERRORS = False
+#~ RAISE_ERRORS = True
 
 
 ERROR_MESSAGES = {
