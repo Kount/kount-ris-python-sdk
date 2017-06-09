@@ -8,14 +8,13 @@
 from __future__ import (
     absolute_import, unicode_literals, division, print_function)
 import logging
-from enum import Enum
 from .util.payment import (
     BillMeLaterPayment, CardPayment, CheckPayment,
     GiftCardPayment, GooglePayment, GreenDotMoneyPakPayment,
     NoPayment, Payment, PaypalPayment)
 from .util.khash import Khash
 from .util.ris_validation_exception import RisException
-from .settings import SDK_VERSION
+from .settings import SDK_VERSION, RAISE_ERRORS
 
 __author__ = "Yordanka Spahieva"
 __version__ = "1.0.0"
@@ -24,7 +23,7 @@ __email__ = "yordanka.spahieva@sirma.bg"
 __status__ = "Development"
 
 
-class ASTAT(Enum):
+class ASTAT(object):
     "Authorization status"
     Approve = 'A'
     Decline = 'D'
@@ -35,26 +34,26 @@ class ASTAT(Enum):
     Elevated = 'C'
 
 
-class BCRSTAT(Enum):
+class BCRSTAT(object):
     "Bankcard Reply"
     MATCH = 'M'
     NO_MATCH = 'N'
     UNAVAILABLE = 'X'
 
 
-class GENDER(Enum):
+class GENDER(object):
     "gender"
     MALE = 'M'
     FEMALE = 'F'
 
 
-class ADDRESS(Enum):
+class ADDRESS(object):
     'address type'
     BILLING = 'B'
     SHIPPING = 'S'
 
 
-class SHIPPINGTYPESTAT(Enum):
+class SHIPPINGTYPESTAT(object):
     """
     "SD". Same day shipping type.
     "ND". Next day shipping type.
@@ -67,7 +66,7 @@ class SHIPPINGTYPESTAT(Enum):
     STANDARD = "ST"
 
 
-class REFUNDCBSTAT(Enum):
+class REFUNDCBSTAT(object):
     """Refund charge back status.
     R - The transaction was a refund.
     C - The transaction was a chargeback.
@@ -76,7 +75,7 @@ class REFUNDCBSTAT(Enum):
     CHARGEBACK = 'C'
 
 
-class MERCHANTACKNOWLEDGMENT(Enum):
+class MERCHANTACKNOWLEDGMENT(object):
     """merchant acknowledgment
     "Y". The product expects to ship.
     "N". The product does not expect to ship.
@@ -85,7 +84,7 @@ class MERCHANTACKNOWLEDGMENT(Enum):
     TRUE = 'Y'
 
 
-class CURRENCYTYPE(Enum):
+class CURRENCYTYPE(object):
     """Currency type object
     "USD". United States Dollars
     "EUR". European currency unit
@@ -103,8 +102,9 @@ class CURRENCYTYPE(Enum):
     HKD = 'HKD'
     NZD = 'NZD'
 
+assert CURRENCYTYPE.USD == 'USD'
 
-class INQUIRYMODE(Enum):
+class INQUIRYMODE(object):
     """
     "Q". Default inquiry mode, internet order type.
     "P". Phone order type.
@@ -130,6 +130,11 @@ class Request(object):
         self.params["SDK"] = "python"
         self.payment = None
         self.close_on_finish = None
+        card_solted = Khash.hash_payment_token(token="666666669")
+        if card_solted != "6666662I8EDD7LNC77GP" and RAISE_ERRORS:
+            mesg = "Configured SALT phrase is incorrect"
+            logger.error(mesg)
+            raise ValueError(mesg)
 
     def khash_payment_encoding(self, enabled=True):
         """Set KHASH payment encoding.
@@ -139,6 +144,7 @@ class Request(object):
             self.params["PENC"] = "KHASH"
         else:
             self.params["PENC"] = "MASK"
+        logger.debug("PENC = %s", self.params["PENC"])
 
     def params_set(self, key, value):
         """Set a parm for the request.
@@ -147,36 +153,42 @@ class Request(object):
            value - The value for the parm
         """
         self.params[key] = value
+        logger.debug("%s = %s", key, value)
 
     def version_set(self, version):
         """Set the version number.
         Args: version - The SDK version
         """
         self.params["VERS"] = version
+        logger.debug("VERS = %s", version)
 
     def session_set(self, session_id):
         """Set the session id. Must be unique over a 30-day span
         Args: session_id -  Id of the current session
         """
         self.params["SESS"] = session_id
+        logger.debug("SESS = %s", session_id)
 
     def merchant_set(self, merchant_id):
         """Set the merchant id.
         Args: merchant_id - Merchant ID
         """
         self.params["MERC"] = merchant_id
+        logger.debug("MERC = %s", merchant_id)
 
     def kount_central_customer_id(self, customer_id):
         """Set the Kount Central Customer ID.
         Args: customer_id - KC Customer ID
         """
         self.params["CUSTOMER_ID"] = customer_id
+        logger.debug("CUSTOMER_ID = %s", customer_id)
 
     def order_number(self, order_number):
         """Set the order number.
         Args: order_number - Merchant unique order number
         """
         self.params["ORDR"] = order_number
+        logger.debug("ORDR = %s", order_number)
 
     def merchant_acknowledgment_set(self, ma_type):
         """Set the merchant acknowledgment.
@@ -186,7 +198,8 @@ class Request(object):
         collected to strengthen the score.
         Args: ma_type - merchant acknowledgment type
         """
-        self.params["MACK"] = ma_type.value
+        self.params["MACK"] = ma_type
+        logger.debug("MACK = %s", ma_type)
 
     def authorization_status(self, auth_status):
         """Set the Authorization Status.
@@ -198,7 +211,8 @@ class Request(object):
         decrement the velocity of the persona.
         Args: auth_status - Auth status by issuer
         """
-        self.params["AUTH"] = auth_status.value
+        self.params["AUTH"] = auth_status
+        logger.debug("AUTH = %s", auth_status)
 
     def avs_zip_reply(self, avs_zip_reply):
         """Set the Bankcard AVS zip code reply.
@@ -207,7 +221,8 @@ class Request(object):
         processor. Acceptable values are BCRSTAT.
         Args: avs_zip_reply - Bankcard AVS zip code reply
         """
-        self.params["AVSZ"] = avs_zip_reply.value
+        self.params["AVSZ"] = avs_zip_reply
+        logger.debug("AVSZ = %s", avs_zip_reply)
 
     def avs_address_reply(self, avs_address_reply):
         """Set the Bankcard AVS street addres reply.
@@ -215,7 +230,8 @@ class Request(object):
         returned to merchant from processor. Acceptable values are BCRSTAT.
         Args: avs_address_reply - Bankcard AVS street address reply
         """
-        self.params["AVST"] = avs_address_reply.value
+        self.params["AVST"] = avs_address_reply
+        logger.debug("AVST = %s", avs_address_reply)
 
     def avs_cvv_reply(self, cvv_reply):
         """Set the Bankcard CVV/CVC/CVV2 reply.
@@ -223,7 +239,8 @@ class Request(object):
         Acceptable values are BCRSTAT
         Args: cvv_reply -  Bankcard CVV/CVC/CVV2 reply
         """
-        self.params["CVVR"] = cvv_reply.value
+        self.params["CVVR"] = cvv_reply
+        logger.debug("CVVR = %s", cvv_reply)
 
     def payment_set(self, payment):
         """ Set a payment.
@@ -245,6 +262,8 @@ class Request(object):
                         payment.payment_token)
                 payment.khashed = True
                 self.params["PENC"] = "MASK"
+                logger.debug("payment.khashed=%s, 'PENC'=%s",
+                    payment.khashed, self.params["PENC"])
             except ValueError as nfe:
                 logger.debug("Error converting Merchant ID to integer"
                              " value. Set a valid Merchant ID. %s",
@@ -340,7 +359,7 @@ class Request(object):
         """Check if KHASH payment encoding has been set.
            return boolean TRUE when set.
         """
-        encoded = "PENC" in self.params and self.params["PENC"] == "KHASH"
+        encoded = "PENC" in self.params and self.params["PENC"]=="KHASH"
         logger.debug("is_set_khash_payment_encoding = %s", encoded)
         return encoded
 
@@ -353,10 +372,10 @@ class Request(object):
         logger.debug("close_on_finish = %s", close_on_finish)
 
 
-class UPDATEMODE(Enum):
+class UPDATEMODE(object):
     "UPDATEMODE - U, X"
-    NO_RESPONSE = 'U'
-    WITH_RESPONSE = 'X'
+    NO_RESPONSE='U'
+    WITH_RESPONSE='X'
 
 
 class Update(Request):
@@ -374,8 +393,8 @@ class Update(Request):
         raise RisException when mode is None"""
         if mode is None:
             raise RisException("Mode can not be None")
-        if mode.value in 'UX':
-            self.params["MODE"] = mode.value
+        if mode in 'UX':
+            self.params["MODE"] = mode
 
     def set_transaction_id(self, transaction_id):
         """Set the transaction id.

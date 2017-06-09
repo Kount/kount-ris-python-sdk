@@ -7,6 +7,7 @@
 from __future__ import (
     absolute_import, unicode_literals, division, print_function)
 import unittest
+import inittest
 from kount.util.khash import Khash
 
 __author__ = "Yordanka Spahieva"
@@ -25,8 +26,6 @@ class TestKhash(unittest.TestCase):
         self.expected = ['WMS5YA6FUZA1KC', '2NOQRXNKTTFL11', 'FEXQI1QS6TH2O5']
         self.merchant_id = '666666'
 
-    #~ @unittest.skipIf("Kount" in Khash.salt, "replace fake salt in class Khash"
-                     #~ " - khash.py with salt from Kount")
     def test_token_valid(self):
         "valid token"
         self.assertEqual("BADTOKGM3BD98ZY871QB",
@@ -40,8 +39,6 @@ class TestKhash(unittest.TestCase):
             self.assertEqual(card_solted, expected)
             self.assertTrue(self.k.khashed(card_solted))
 
-    #~ @unittest.skipIf("Kount" in Khash.salt, "replace fake salt in class Khash"
-                     #~ " - khash.py with salt from Kount")
     def test_token_invalid(self):
         "invalid token"
         with self.assertRaises(ValueError):
@@ -58,12 +55,15 @@ class TestKhash(unittest.TestCase):
             card_solted = self.k.hash_payment_token(token=0)
         card_solted = self.k.hash_payment_token(token="Beatles")
         self.assertEqual(card_solted, "Beatle5STRFTYPXBR14E")
-        self.assertEqual(self.k.khashed(card_solted), None)
+        self.assertTrue(self.k.khashed(card_solted))
+        bad = "John"
+        try:
+            self.k.hash_payment_token(token=bad)
+        except ValueError as vale:
+            self.assertEqual("incorrect arg: [%s]" % bad, str(vale))
         with self.assertRaises(ValueError):
-            card_solted = self.k.hash_payment_token(token="John")
+            self.assertTrue(self.k.hash_payment_token(token=bad))
 
-    #~ @unittest.skipIf("Kount" in Khash.salt, "replace fake salt in class Khash"
-                     #~ " - khash.py with salt from Kount")
     def test_hash_gift_card(self):
         "gift card"
         for i in range(len(self.list_for_hash)):
@@ -73,8 +73,6 @@ class TestKhash(unittest.TestCase):
             self.assertEqual(card_solted, expected)
             self.assertTrue(self.k.khashed(card_solted))
 
-    #~ @unittest.skipIf("Kount" in Khash.salt, "replace fake salt in class Khash"
-                     #~ " - khash.py with salt from Kount")
     def test_hash_gift_card_int_merchantid(self):
         "test_hash_gift_card_int_merchantid"
         for i in range(len(self.list_for_hash)):

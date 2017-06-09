@@ -27,8 +27,7 @@ class TestRisValidator(unittest.TestCase):
     def test_examle_data_array(self):
         "test_examle_data_array - PROD_TYPE[0]"
         invalid, missing_in_xml, empty = self.validator.ris_validator(
-            params=example_data_products,
-            xml_2_dict=self.validator.xml_2_dict)
+            params=example_data_products)
         self.assertEqual(invalid, [])
         missing_in_xml.sort()
         self.assertIn('PTOK', missing_in_xml)
@@ -37,8 +36,7 @@ class TestRisValidator(unittest.TestCase):
     def test_examle_data(self):
         "example data PROD_TYPE[]"
         invalid, missing_in_xml, empty = self.validator.ris_validator(
-            params=example_data,
-            xml_2_dict=self.validator.xml_2_dict)
+            params=example_data)
         self.assertEqual(invalid, [])
         missing_in_xml.sort()
         self.assertEqual(missing_in_xml, ['PTOK'])
@@ -50,14 +48,9 @@ class TestRisValidator(unittest.TestCase):
         bad = example['S2EM'].replace('@', '%40')
         example['S2EM'] = bad
         with self.assertRaises(RisValidationException):
-            self.validator.ris_validator(
-                params=example,
-                xml_2_dict=self.validator.xml_2_dict,
-                )
+            self.validator.ris_validator(params=example)
         try:
-            self.validator.ris_validator(
-                params=example,
-                xml_2_dict=self.validator.xml_2_dict)
+            self.validator.ris_validator(params=example)
         except RisValidationException as vale:
             self.assertIn("Regex", str(vale))
 

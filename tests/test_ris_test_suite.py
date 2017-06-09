@@ -16,8 +16,8 @@ from kount.request import Update, UPDATEMODE
 from kount.util.khash import Khash
 from kount.util.cartitem import CartItem
 from kount.util.ris_validation_exception import RisValidationException
-from kount.util.xml_dict import XML_DICT, REQUIRED, NOTREQUIRED
-from kount.settings import SDK_VERSION
+from kount.settings import SDK_VERSION, TIMEOUT
+import inittest
 
 
 __author__ = "Yordanka Spahieva"
@@ -29,9 +29,6 @@ __status__ = "Development"
 URL_API = "https://risk.beta.kount.net"
 RIS_ENDPOINT_BETA = URL_API
 
-# request timeout in seconds
-TIMEOUT = 5
-
 # raise_errors - if  True - raise errors instead of logging in debugger
 RAISE_ERRORS = False
 
@@ -40,7 +37,6 @@ PTOK = "0007380568572514"
 EMAIL_CLIENT = "sdkTest@kountsdktestdomain.com"
 KOUNT_API_KEY = "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiI5OTk2NjYiLCJhdWQiOiJLb3VudC4xIiwiaWF0IjoxNDk0NTM0Nzk5LCJzY3AiOnsia2EiOm51bGwsImtjIjpudWxsLCJhcGkiOmZhbHNlLCJyaXMiOnRydWV9fQ.eMmumYFpIF-d1up_mfxA5_VXBI41NSrNVe9CyhBUGck"
 
-
 class TestRisTestSuite(unittest.TestCase):
     """Ris Test Suite
         default logging errors instead fo raising
@@ -48,18 +44,16 @@ class TestRisTestSuite(unittest.TestCase):
         Client(url=URL_API, key=KOUNT_API_KEY,
                timeout=TIMEOUT, RAISE_ERRORS=True)
     """
+    maxDiff = None
+
     def setUp(self):
-        self.maxDiff = None
         self.session_id = generate_unique_id()[:32]
         self.client = Client(RIS_ENDPOINT_BETA, KOUNT_API_KEY,
-                             timeout=TIMEOUT, raise_errors=RAISE_ERRORS)
+                             TIMEOUT, RAISE_ERRORS)
         self.inq = default_inquiry(session_id=self.session_id,
                                    merchant_id=MERCHANT_ID,
                                    email_client=EMAIL_CLIENT,
                                    ptok=PTOK)
-        self.xml_2_dict = XML_DICT
-        self.required = REQUIRED
-        self.notrequired = NOTREQUIRED
 
     def test_1_ris_q_1_item_required_field_1_rule_review(self):
         "test_1_ris_q_1_item_required_field_1_rule_review"
@@ -129,7 +123,6 @@ class TestRisTestSuite(unittest.TestCase):
     def test_4_ris_q_hard_error_expected(self):
         """test_4_ris_q hard_error_expected,
         overwrite the PTOK value to induce an error in the RIS"""
-        self.maxDiff = None
         self.inq.params["PENC"] = "KHASH"
         self.inq.params["PTOK"] = "BADPTOK"
         res = self.client.process(params=self.inq.params)
@@ -165,7 +158,6 @@ class TestRisTestSuite(unittest.TestCase):
 
     def test_6_ris_q_hard_soft_errors_expected(self):
         "test_6_ris_q_hard_soft_errors_expected"
-        self.maxDiff = None
         self.inq.params["PENC"] = "KHASH"
         self.inq.params["PTOK"] = "BADPTOK"
         label = "UDF_DOESNOTEXIST"
@@ -214,7 +206,6 @@ class TestRisTestSuite(unittest.TestCase):
 
     def test_8_ris_j_1_kount_central_rule_decline(self):
         "test_8_ris_j_1_kount_central_rule_decline"
-        self.maxDiff = None
         self.inq.request_mode(INQUIRYMODE.JUSTTHRESHOLDS)
         self.inq.total_set(1000)
         self.inq.kount_central_customer_id("KCentralCustomerDeclineMe")
@@ -352,4 +343,4 @@ class TestRisTestSuite(unittest.TestCase):
 
 
 if __name__ == "__main__":
-    unittest.main()
+    unittest.main(verbosity=2)

@@ -24,9 +24,10 @@ XML_FILENAME_PATH = os.path.join(os.path.dirname(__file__), '..',
 
 class TestXmlParser(unittest.TestCase):
     "Test Xml Parser"
+    maxDiff = None
+
     def test_xml_to_dict(self):
         "test_xml_to_dict"
-        self.maxDiff = None
         valid_data_dict, required_field_names, \
             notrequired_field_names = xml_to_dict(XML_FILENAME_PATH)
         expected_required_fields = REQUIRED
