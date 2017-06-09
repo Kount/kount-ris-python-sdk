@@ -17,6 +17,7 @@ from kount.util.khash import Khash
 from kount.util.cartitem import CartItem
 from kount.util.ris_validation_exception import RisValidationException
 from kount.settings import SDK_VERSION, TIMEOUT
+import inittest
 
 
 __author__ = "Yordanka Spahieva"
@@ -342,4 +343,4 @@ class TestRisTestSuite(unittest.TestCase):
 
 
 if __name__ == "__main__":
-    unittest.main()
+    unittest.main(verbosity=2)

@@ -11,7 +11,7 @@ import hashlib
 import re
 import logging
 from string import digits, ascii_uppercase
-from kount.settings import RAISE_ERRORS, SALT
+from kount.settings import SALT
 
 __author__ = "Yordanka Spahieva"
 __version__ = "1.0.0"
@@ -52,17 +52,16 @@ class Khash(object):
     Uninstantiable class constructor.
     Class for creating Kount RIS KHASH encoding payment tokens.
     """
-    #~ salt = 'very secret salt provided by Kount'
-    salt = SALT
+    iv = SALT
 
     @classmethod
-    def set_salt(cls, salt):
+    def set_iv(cls, iv):
         """
         initialize the SALT phrase used in hashing operations.
         Khash.set_salt(salt)"""
-        cls.salt = salt
+        cls.salt = iv
         card_solted = cls.hash_payment_token(token="666666669")
-        if card_solted != "6666662I8EDD7LNC77GP" and RAISE_ERRORS:
+        if card_solted != "6666662I8EDD7LNC77GP":
             mesg = "Configured SALT phrase is incorrect."
             logger.error(mesg)
             raise ValueError(mesg)
@@ -111,9 +110,8 @@ class Khash(object):
             length = len(legal_chars)
             hashed = []
             plain_text_bytes = plain_text.encode('utf-8') #Python 3.x
-            salt_bytes = cls.salt.encode('utf-8')
             sha1 = hashlib.sha1(plain_text_bytes + ".".encode('utf-8') +
-                                salt_bytes).hexdigest()
+                                cls.iv.encode('utf-8')).hexdigest()
             for i in range(0, loop_max, 2):
                 hashed.append(legal_chars[int(sha1[i: i+hex_chunk], 16)
                                           % length])

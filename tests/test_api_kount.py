@@ -11,6 +11,8 @@ import unittest
 from json_test import example_data_products
 from kount.client import Client
 from kount.util.ris_validation_exception import RisValidationException
+from kount.settings import RAISE_ERRORS
+import inittest
 
 __author__ = "Yordanka Spahieva"
 __version__ = "1.0.0"

@@ -6,7 +6,7 @@
 "settings"
 from __future__ import (
     absolute_import, unicode_literals, division, print_function)
-import os
+
 
 __author__ = "Yordanka Spahieva"
 __version__ = "1.0.0"
@@ -20,11 +20,12 @@ XML_FILENAME = 'validate.xml'
 XML_DICT = 'xml_dict.py'
 SDK_VERSION = "0695"
 
-#~ raise errors or log them
-RAISE_ERRORS = False
-#~ RAISE_ERRORS = True
+#~ raise errors or log them, excl. "ValueError: Configured SALT phrase is incorrect."
+#~ RAISE_ERRORS = False
+RAISE_ERRORS = True
 
- #~ uncomment this if you'd like to get the SALT from the environment
+#~ uncomment this if you'd like to get the SALT from the environment
+#~ import os
 #~ try:
     #~ SALT = os.environ['K_SALT']
 #~ except KeyError:
@@ -36,6 +37,7 @@ try:
     from .local_settings import *
 except ImportError:
     SALT = "fake salt"
+
 
 # request's timeout
 TIMEOUT = 5
