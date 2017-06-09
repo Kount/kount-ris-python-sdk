@@ -12,6 +12,7 @@ import re
 import logging
 from string import digits, ascii_uppercase
 from kount.settings import SALT
+from resources.correct_salt_cryp import correct_salt_cryp
 
 __author__ = "Yordanka Spahieva"
 __version__ = "1.0.0"
@@ -60,8 +61,8 @@ class Khash(object):
         initialize the SALT phrase used in hashing operations.
         Khash.set_salt(salt)"""
         cls.salt = iv
-        card_solted = cls.hash_payment_token(token="666666669")
-        if card_solted != "6666662I8EDD7LNC77GP":
+        current_crypted = hashlib.sha256(iv.encode('utf-8')).hexdigest()
+        if current_crypted != correct_salt_cryp:
             mesg = "Configured SALT phrase is incorrect."
             logger.error(mesg)
             raise ValueError(mesg)
