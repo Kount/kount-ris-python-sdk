@@ -20,13 +20,20 @@ __status__ = "Development"
 XML_FILENAME_PATH = os.path.join(os.path.dirname(__file__), '..',
                                  RESOURCE_FOLDER, XML_FILENAME)
 
+def dict_contains_subset(A, B):
+    """extract Dict A From B
+    DeprecationWarning: assertDictContainsSubset is deprecated for python 3.5
+    self.assertDictContainsSubset(expected, actual[0])"""
+    return dict([(k, B[k]) for k in A.keys() if k in B.keys()])
+
 
 class TestXMLtoDict(unittest.TestCase):
     "parse xml from sdk to python dict"
     maxDiff = None
 
     def test_xml_to_dict(self):
-        "xml_to_dict"
+        """ assert the new rules are added in XML_FILENAME,
+        skip this test if the existed rules are changed"""
         actual = xml_to_dict(XML_FILENAME_PATH)
         expected = {
             'ANID': {'max_length': '64', 'mode': ['P'], 'required': True},
@@ -109,8 +116,8 @@ class TestXMLtoDict(unittest.TestCase):
             'UAGT': {'max_length': '1024'},
             'UNIQ': {'max_length': '32'},
             'VERS': {'reg_ex': '^\\d{4}$', 'required': True}}
-        self.assertEqual(len(actual[0]), len(expected))
-        self.assertEqual(actual[0], expected)
+        self.assertLessEqual(len(expected), len(actual[0]))
+        self.assertEqual(expected, dict_contains_subset(expected, actual[0]))
 
 
 if __name__ == "__main__":

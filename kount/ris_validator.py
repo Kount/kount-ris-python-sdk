@@ -10,7 +10,7 @@ import re
 import logging
 from .util.cartitem import CartItem
 from .util.validation_error import ValidationError
-from .util.xml_dict import XML_DICT, REQUIRED, NOTREQUIRED
+from .util.xml_rules import XML_DICT, REQUIRED, NOTREQUIRED
 
 logger = logging.getLogger('kount.request')
 

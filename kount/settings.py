@@ -16,7 +16,7 @@ __status__ = "Development"
 PYTHON_VERSION = "3.6.1"
 RESOURCE_FOLDER = "resources"
 XML_FILENAME = 'validate.xml'
-XML_DICT = 'xml_dict.py'
+XML_DICT = 'xml_rules.py'
 SDK_VERSION = "0695"
 
 #~ raise errors or log them, excl. "ValueError: Configured SALT phrase is incorrect."

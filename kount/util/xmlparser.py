@@ -1,8 +1,8 @@
 ﻿#!/usr/bin/env python
 # -*- coding: utf-8 -*-
 """parse Kount's validation xml to python dict and use
-this dict in the package to avoid parsing. New XML_DICT must be generated
-if the xml file 'validate.xml' is changed."""
+this dict in the package to avoid parsing. New XML_DICT will be
+generated automatically if the xml file 'validate.xml' is changed."""
 # This file is part of the Kount python sdk project
 # https://github.com/Kount/kount-ris-python-sdk/)
 # Copyright (C) 2017 Kount Inc. All Rights Reserved.

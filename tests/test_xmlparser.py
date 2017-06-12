@@ -9,7 +9,7 @@ import unittest
 import os
 from kount.settings import RESOURCE_FOLDER, XML_FILENAME
 from kount.util.xmlparser import xml_to_dict
-from kount.util.xml_dict import XML_DICT, REQUIRED, NOTREQUIRED
+from kount.util.xml_rules import XML_DICT, REQUIRED, NOTREQUIRED
 
 __author__ = "Yordanka Spahieva"
 __version__ = "1.0.0"
