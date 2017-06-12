@@ -32,13 +32,8 @@ class Client:
         self.url = url
         self._kount_api_key = key
         self.raise_errors = raise_errors
-        card_solted = Khash.hash_payment_token(token="666666669")
-        if card_solted != "6666662I8EDD7LNC77GP" and raise_errors:
-            mesg = "Configured SALT phrase is incorrect"
-            logger.error(mesg)
-            raise ValueError(mesg)
+        Khash.verify()
         self.timeout = timeout
-
         self.validator = RisValidator(raise_errors=raise_errors)
         logger.debug("url - %s, len_key - %s", url, len(key))
 
@@ -85,7 +80,7 @@ class Client:
                 raise ValueError(error)
         else:
             logger.debug("process json: %s", req_json)
-            return req_json            
+            return req_json
 
 def parse_k_v(text):
     return dict(c.split('=', 1) for c in text.split('\n'))

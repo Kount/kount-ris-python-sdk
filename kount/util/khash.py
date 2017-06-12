@@ -55,17 +55,22 @@ class Khash(object):
     iv = SALT
 
     @classmethod
-    def set_iv(cls, iv):
-        """
-        initialize the SALT phrase used in hashing operations.
-        Khash.set_salt(salt)"""
-        cls.salt = iv
-        current_crypted = hashlib.sha256(iv.encode('utf-8')).hexdigest()
+    def verify(cls):
+        current_crypted = hashlib.sha256(cls.salt.encode('utf-8')).hexdigest()
         if current_crypted != correct_salt_cryp:
             mesg = "Configured SALT phrase is incorrect."
             logger.error(mesg)
             raise ValueError(mesg)
         logger.info("Configured SALT phrase is correct.")
+        return True
+
+    @classmethod
+    def set_iv(cls, iv):
+        """
+        initialize the SALT phrase used in hashing operations.
+        Khash.set_salt(salt)"""
+        cls.salt = iv
+        cls.verify()
 
     @classmethod
     def hash_payment_token(cls, token):
