@@ -7,8 +7,7 @@ generate_unique_id
 default_inquiry
 Test Basic Connectivity
 """
-from __future__ import (
-    absolute_import, unicode_literals, division, print_function)
+from __future__ import absolute_import, unicode_literals, division, print_function
 import unittest
 from kount.response import Response
 from kount.util.ris_validation_exception import RisValidationException

@@ -4,8 +4,7 @@
 # https://github.com/Kount/kount-ris-python-sdk/)
 # Copyright (C) 2017 Kount Inc. All Rights Reserved.
 """Test Cases for Inquiry class"""
-from __future__ import (
-    absolute_import, unicode_literals, division, print_function)
+from __future__ import absolute_import, unicode_literals, division, print_function
 import unittest
 import uuid
 from kount.request import (ASTAT, BCRSTAT, INQUIRYMODE,

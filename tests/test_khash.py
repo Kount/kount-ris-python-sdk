@@ -4,8 +4,7 @@
 # https://github.com/Kount/kount-ris-python-sdk/)
 # Copyright (C) 2017 Kount Inc. All Rights Reserved.
 "TestKhash"
-from __future__ import (
-    absolute_import, unicode_literals, division, print_function)
+from __future__ import absolute_import, unicode_literals, division, print_function
 import unittest
 import inittest
 from kount.util.khash import Khash

@@ -5,8 +5,7 @@
 # Copyright (C) 2017 Kount Inc. All Rights Reserved.
 "RIS Request superclass for Inquiry and Update"
 
-from __future__ import (
-    absolute_import, unicode_literals, division, print_function)
+from __future__ import absolute_import, unicode_literals, division, print_function
 import logging
 from .util.payment import (
     BillMeLaterPayment, CardPayment, CheckPayment,

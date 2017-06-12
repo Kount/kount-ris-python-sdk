@@ -5,8 +5,7 @@
 # Copyright (C) 2017 Kount Inc. All Rights Reserved.
 "class Client"
 
-from __future__ import (
-    absolute_import, unicode_literals, division, print_function)
+from __future__ import absolute_import, unicode_literals, division, print_function
 import logging
 import requests
 from .ris_validator import RisValidator

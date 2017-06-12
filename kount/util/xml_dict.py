@@ -5,8 +5,7 @@
 # Copyright (C) 2017 Kount Inc. All Rights Reserved.
 """generated from xmlparser.py, must be updated if
 changed xml_filename = 'validate.xml' from settings.py"""
-from __future__ import (
-    absolute_import, unicode_literals, division, print_function)
+from __future__ import absolute_import, unicode_literals, division, print_function
 
 __author__ = "Yordanka Spahieva"
 __version__ = "1.0.0"
