@@ -8,7 +8,7 @@ from __future__ import absolute_import, unicode_literals, division, print_functi
 import unittest
 from json_test import example_data, example_data_products
 from kount.ris_validator import RisValidator
-from kount.util.ris_validation_exception import RisValidationException
+from kount.ris_validator import RisValidationException
 
 
 __author__ = "Yordanka Spahieva"

@@ -23,20 +23,22 @@ SDK_VERSION = "0695"
 #~ RAISE_ERRORS = False
 RAISE_ERRORS = True
 
+
+# request's timeout
+TIMEOUT = 5
+
+SALT = "fake salt"
+
 #~ uncomment this if you'd like to get the SALT from the environment
 #~ import os
 #~ try:
     #~ SALT = os.environ['K_SALT']
 #~ except KeyError:
-    #~ SALT = "fake salt"
+    #~ print("The default fake salt set. Required actual one from Kount")
 
 #~ put SALT in the local_settings.py and don't commit it
 #~ comment this code if the SALT is an environment variable
 try:
     from .local_settings import *
-except ImportError:
-    SALT = "fake salt"
-
-
-# request's timeout
-TIMEOUT = 5
+except ImportError as ie:
+    print("The default fake salt set. Required actual one from Kount. ", ie)

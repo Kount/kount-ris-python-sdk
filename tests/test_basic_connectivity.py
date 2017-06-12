@@ -10,7 +10,7 @@ Test Basic Connectivity
 from __future__ import absolute_import, unicode_literals, division, print_function
 import unittest
 from kount.response import Response
-from kount.util.ris_validation_exception import RisValidationException
+from kount.ris_validator import RisValidationException
 from kount.client import Client
 from kount.settings import RAISE_ERRORS
 import inittest

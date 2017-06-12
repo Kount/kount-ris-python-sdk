@@ -14,7 +14,7 @@ from kount.request import (ASTAT, BCRSTAT, INQUIRYMODE,
 from kount.request import Update, UPDATEMODE
 from kount.util.khash import Khash
 from kount.util.cartitem import CartItem
-from kount.util.ris_validation_exception import RisValidationException
+from kount.ris_validator import RisValidationException
 from kount.settings import SDK_VERSION, TIMEOUT
 import inittest
 

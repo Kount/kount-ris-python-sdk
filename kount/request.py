@@ -12,7 +12,7 @@ from .util.payment import (
     GiftCardPayment, GooglePayment, GreenDotMoneyPakPayment,
     NoPayment, Payment, PaypalPayment)
 from .util.khash import Khash
-from .util.ris_validation_exception import RisException
+from .ris_validator import RisException
 from .settings import SDK_VERSION, RAISE_ERRORS
 
 __author__ = "Yordanka Spahieva"

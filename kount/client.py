@@ -8,9 +8,8 @@
 from __future__ import absolute_import, unicode_literals, division, print_function
 import logging
 import requests
-from .ris_validator import RisValidator
+from .ris_validator import RisValidator, RisValidationException
 from .util.khash import Khash
-from .util.ris_validation_exception import RisValidationException
 from .settings import TIMEOUT, SDK_VERSION, RAISE_ERRORS
 
 
