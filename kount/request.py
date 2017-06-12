@@ -138,7 +138,7 @@ class Request(object):
         if enabled:
             self.params["PENC"] = "KHASH"
         else:
-            self.params["PENC"] = "MASK"
+            self.params["PENC"] = None
         logger.debug("PENC = %s", self.params["PENC"])
 
     def params_set(self, key, value):
