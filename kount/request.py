@@ -129,11 +129,7 @@ class Request(object):
         self.params["SDK"] = "python"
         self.payment = None
         self.close_on_finish = None
-        card_solted = Khash.hash_payment_token(token="666666669")
-        if card_solted != "6666662I8EDD7LNC77GP" and RAISE_ERRORS:
-            mesg = "Configured SALT phrase is incorrect"
-            logger.error(mesg)
-            raise ValueError(mesg)
+        Khash.verify()
 
     def khash_payment_encoding(self, enabled=True):
         """Set KHASH payment encoding.
