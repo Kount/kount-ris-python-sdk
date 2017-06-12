@@ -43,8 +43,8 @@ class Client:
         Use simplejson if available."""
         invalid, missing_in_xml, empty = self.validator.ris_validator(params=params)
         if invalid:
-            message = "validation errors = %s, missing_in_xml = %s, empty = %s" % (
-                invalid, missing_in_xml, empty)
+            message = "validation errors = %s, missing_in_xml = %s,"\
+                      "empty = %s" % (invalid, missing_in_xml, empty)
             logger.error(message)
             if self.raise_errors:
                 raise RisValidationException(
@@ -79,7 +79,12 @@ class Client:
                 logger.debug(error)
                 raise ValueError(error)
         else:
-            logger.debug("process json: %s", req_json)
+            roundtrip = request.elapsed.total_seconds()
+            merc = headers_api.get("X-Kount-Merc-Id", None)
+            sess = params.get("SESS", None)
+            logger.debug("process json: %s, MERC = %s, SESS = %s, "
+                         "SDK ELAPSED = %s ms.", req_json, merc,
+                         sess, roundtrip)
             return req_json
 
 def parse_k_v(text):
