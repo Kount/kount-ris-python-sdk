@@ -28,7 +28,7 @@ class TestXmlParser(unittest.TestCase):
     def test_xml_to_dict(self):
         "assert the new rools are parsed properly to python dict"
         test_xml = XML_FILENAME_PATH.replace(".xml", "_test.xml")
-        new_rools = """<param name="RE42">
+        new_rules = """<param name="RE42">
                         <required>
                           <mode>Q</mode>
                           <mode>P</mode>
@@ -43,7 +43,7 @@ class TestXmlParser(unittest.TestCase):
                        </ris_validation>"""
         with open(XML_FILENAME_PATH, 'r') as source:
             with open(test_xml, 'w') as fp:
-                new = source.read().replace('</ris_validation>', new_rools)
+                new = source.read().replace('</ris_validation>', new_rules)
                 fp.write(new)
         valid_data_dict, required_field_names, \
             notrequired_field_names = xml_to_dict(test_xml)
