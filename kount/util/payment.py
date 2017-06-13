@@ -5,6 +5,9 @@
 # https://github.com/Kount/kount-ris-python-sdk/)
 # Copyright (C) 2017 Kount Inc. All Rights Reserved.
 from __future__ import absolute_import, unicode_literals, division, print_function
+import re
+from kount.util.khash import Khash
+
 __author__ = "Yordanka Spahieva"
 __version__ = "1.0.0"
 __maintainer__ = "Yordanka Spahieva"
@@ -20,7 +23,7 @@ class Payment(object):
     khashed - Indicates whether payment token is khashed.
     True if payment token is khashed.
     """
-    def __init__(self, payment_token=None, payment_type=None, khashed=False):
+    def __init__(self, payment_type=None, payment_token=None):
         """Constructor for a payment that accepts the payment ID.
         Calculate and set the payment token LAST4 value.
         last4 - Last 4 characters of payment token"""
@@ -30,90 +33,79 @@ class Payment(object):
             self.payment_type = str(payment_type)
         else:
             self.payment_type = "NONE"
+            self.khashed = False
         if payment_token is not None:
             self.payment_token = str(payment_token)
             if len(str(payment_token)) >= 4:
                 self.last4 = self.payment_token[-4:]
-        if khashed:
-            self.khashed = True
-        else:
-            self.khashed = False
 
-
-class GiftCardPayment(Payment):
-    """A class representing a gift card payment.
-    Sets the PTYP parameter to "GIFT".
-    Args: gift_card_number - The gift card number
-    """
-    def __init__(self, gift_card_number):
-        super(GiftCardPayment, self).__init__(
-            payment_type="GIFT", payment_token=str(gift_card_number))
-
-
-class GooglePayment(Payment):
-    """A class representing a google payment.
-        Sets the PTYP parameter to "GIFT".
-        Args: google_payment_id - Google payment ID
+    def khashed(self):
+        """Token that may or may not be khashed
+         return: Boolean, True if token is already khashed
         """
-    def __init__(self, google_payment_id):
-        super(GooglePayment, self).__init__(payment_type="GOOG",
-                                            payment_token=google_payment_id)
+        regex = r"^[0-9a-zA-Z]{6}[0-9A-Z]{14}$"
+        return re.match(regex, str(self.payment_token))
+
+    def khash_token(self):
+        self.payment_token = Khash().hash_payment_token(
+            token=self.payment_token)
+        return self.khashed()
 
 
-class GreenDotMoneyPakPayment(Payment):
-    """Green Dot MoneyPak
-    Sets the PTYP parameter to "GDMP".
-    param green_dot_mp_payment_id - Green Dot MoneyPak payment ID number
-    """
-    def __init__(self, green_dot_mp_payment_id):
-        super(GreenDotMoneyPakPayment, self).__init__(
-            payment_type="GDMP",
-            payment_token=str(green_dot_mp_payment_id))
+def GiftCardPayment(gift_card_number):
+    """Sets the PTYP parameter to GIFT"""
+    return Payment(payment_type="GIFT", payment_token=str(gift_card_number))
 
 
-class NoPayment(Payment):
-    """No payment type. A class representing no payment.
-    Sets the PTYP parameter to "NONE".
-    """
-    def __init__(self):
-        super(NoPayment, self).__init__(payment_type=None, payment_token=None)
+def GooglePayment(google_payment_id):
+    """Sets the PTYP parameter to "GIFT".
+        Args: google_payment_id - Google payment ID"""
+    return Payment(payment_type="GOOG", payment_token=str(google_payment_id))
 
 
-class CheckPayment(Payment):
-    """Constructor for a check payment
-    Sets the PTYP parameter to "CHEK".
+def GreenDotMoneyPakPayment(green_dot_mp_payment):
+    """Sets the PTYP parameter to "GDMP".
+    param green_dot_mp_payment - Green Dot MoneyPak payment ID number"""
+    return Payment(payment_type="GDMP", payment_token=str(green_dot_mp_payment))
+
+
+def NoPayment():
+    """No payment type. Sets the PTYP parameter to "NONE"."""
+    return Payment(payment_type=None, payment_token=None)
+
+
+def CheckPayment(micr):
+    """Sets the PTYP parameter to "CHEK".
     arg: micr - The MICR (Magnetic Ink Character Recognition) line on the check.
     """
-    def __init__(self, micr):
-        super(CheckPayment, self).__init__(payment_type="CHEK",
-                                           payment_token=str(micr))
+    return Payment(payment_type="CHEK", payment_token=str(micr))
 
 
-class PaypalPayment(Payment):
-    """Constructor for a paypal payment that accepts the paypal payment ID.
+def PaypalPayment(paypal_payment_id):
+    """paypal payment - accepts the paypal payment ID.
     Sets the PTYP parameter to "PYPL".
     param paypal_payment_id - Paypal payment ID
     """
-    def __init__(self, paypal_payment_id):
-        super(PaypalPayment, self).__init__(
-            payment_type="PYPL", payment_token=paypal_payment_id)
+    return Payment(payment_type="PYPL", payment_token=paypal_payment_id)
 
 
-class CardPayment(Payment):
-    """Constructor for a credit card payment.
+def CardPayment(card_number):
+    """credit card payment.
     Sets the PTYP parameter to "CARD".
     param card_number - The card number
     """
-    def __init__(self, card_number):
-        super(CardPayment, self).__init__(
-            payment_type="CARD", payment_token=card_number)
+    return Payment(payment_type="CARD", payment_token=card_number)
 
 
-class BillMeLaterPayment(Payment):
-    """A class representing a bill me later payment.
+def BillMeLaterPayment(payment_id):
+    """bill me later payment.
     Sets the PTYP parameter to "BLML".
     param payment_id - The payment ID
     """
-    def __init__(self, payment_id):
-        super(BillMeLaterPayment, self).__init__(
-            payment_type="BLML", payment_token=str(payment_id))
+    return Payment(payment_type="BLML", payment_token=str(payment_id))
+
+def NewPayment(payment_type, payment_token):
+    """New payment type.
+    Sets the PTYP parameter to desired parameter.
+    """
+    return Payment(payment_type, payment_token)
