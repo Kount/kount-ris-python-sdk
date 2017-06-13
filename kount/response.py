@@ -3,8 +3,7 @@
 # This file is part of the Kount python sdk project
 # https://github.com/Kount/kount-ris-python-sdk/)
 # Copyright (C) 2017 Kount Inc. All Rights Reserved.
-from __future__ import (
-    absolute_import, unicode_literals, division, print_function)
+from __future__ import absolute_import, unicode_literals, division, print_function
 import logging
 
 __author__ = "Yordanka Spahieva"
@@ -17,7 +16,7 @@ logger = logging.getLogger('kount.response')
 
 
 class KcEvent(object):
-    """A class that represents a Kount Central event.:
+    """A class that represents a Kount Central event.
     The event object contains three fields: decision, expression, and code.
     """
 

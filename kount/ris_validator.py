@@ -3,16 +3,14 @@
 # This file is part of the Kount python sdk project
 # https://github.com/Kount/kount-ris-python-sdk/)
 # Copyright (C) 2017 Kount Inc. All Rights Reserved.
-"class RisValidator"
+"class RisValidator, RisException, RisValidationException RisResponseException"
 
-from __future__ import (
-    absolute_import, unicode_literals, division, print_function)
+from __future__ import absolute_import, unicode_literals, division, print_function
 import re
 import logging
 from .util.cartitem import CartItem
-from .util.ris_validation_exception import RisValidationException
 from .util.validation_error import ValidationError
-from .util.xml_dict import XML_DICT, REQUIRED, NOTREQUIRED
+from .util.xml_rules import XML_DICT, REQUIRED, NOTREQUIRED
 
 logger = logging.getLogger('kount.request')
 
@@ -36,7 +34,7 @@ class RisValidator(object):
         self.notrequired = NOTREQUIRED
         self.raise_errors = raise_errors
 
-    def ris_validator(self, params, xml_2_dict):
+    def ris_validator(self, params):
         """Client side validate the data to be passed to RIS.
         kwargs
             params - Map of data parameters from request,
@@ -52,7 +50,7 @@ class RisValidator(object):
             if params[param] is None or isinstance(params[param], bool):
                 continue
             try:
-                p_xml = xml_2_dict[param.split("[")[0]]
+                p_xml = self.xml_2_dict[param.split("[")[0]]
             except KeyError:
                 missing_in_xml.append(param)
                 logger.debug("missing_in_xml = %s", param)
@@ -138,3 +136,84 @@ class RisValidator(object):
         logger.debug("errors = %s, missing_in_xml = %s, empty = %s",
                      errors, missing_in_xml, empty)
         return errors, missing_in_xml, empty
+
+
+ERROR_MESSAGES = {
+    201: 'Missing version',
+    202: 'Missing mode',
+    203: 'Missing merchant ID',
+    204: 'Missing session ID',
+    205: 'Missing transaction ID',
+    211: 'Missing currency type',
+    212: 'Missing total',
+    221: 'Missing email',
+    222: 'Missing anid',
+    231: 'Missing payment type',
+    232: 'Missing card number',
+    233: 'Missing check micro',
+    234: 'Missing PayPal ID',
+    235: 'Missing Payment Token',
+    241: 'Missing IP address',
+    251: 'Missing merchant acknowledgement',
+    261: 'Missing post body',
+    301: 'Bad version',
+    302: 'Bad mode',
+    303: 'Bad merchant ID',
+    304: 'Bad session ID',
+    305: 'Bad trasaction ID',
+    311: 'Bad currency type',
+    312: 'Bad total',
+    321: 'Bad anid',
+    331: 'Bad payment type',
+    332: 'Bad card number',
+    333: 'Bad check micro',
+    334: 'Bad PayPal ID',
+    335: 'Bad Google ID',
+    336: 'Bad Bill Me Later ID',
+    341: 'Bad IP address',
+    351: 'Bad merchant acknowledgement',
+    399: 'Bad option',
+    401: 'Extra data',
+    402: "Mismatched payment - type: you provided payment "
+         "information in a field that did not match the payment type",
+    403: 'Unnecessary anid',
+    404: 'Unnecessary payment token',
+    501: 'Unauthorized request',
+    502: 'Unauthorized merchant',
+    503: 'Unauthorized IP address',
+    504: 'Unauthorized passphrase',
+    601: 'System error',
+    701: 'The transaction ID specified in the update was not found.'
+    }
+
+
+class RisException(Exception):
+    """RIS exeption class:
+        message - exception message
+        cause - exception cause"""
+
+
+class RisValidationException(RisException):
+    """Ris validation exception class.
+        kwargs -
+            message - exception message
+            cause - cause
+            errors - list of errors encountered.
+            """
+    def __init__(self, message="", errors=[], cause=""):
+        # Call the base class constructor with the parameters it needs
+        self.message = message
+        self.errors = errors
+        self.cause = cause
+        super(RisValidationException, self).__init__(
+            self.message, self.cause, self.errors)
+
+
+class RisResponseException(RisException):
+    """Response exception
+        kwargs -
+            exception_code - Ris exception code
+    """
+    def __init__(self, exception_code):
+        self.exception_code = ERROR_MESSAGES[exception_code]
+        super(RisResponseException, self).__init__(self.exception_code)

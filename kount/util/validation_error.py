@@ -5,9 +5,7 @@
 # Copyright (C) 2017 Kount Inc. All Rights Reserved.
 "ValidationErrorType, VALIDATIONERROR, ValidationError"
 
-from __future__ import (
-    absolute_import, unicode_literals, division, print_function)
-from enum import Enum
+from __future__ import absolute_import, unicode_literals, division, print_function
 
 __author__ = "Yordanka Spahieva"
 __version__ = "1.0.0"
@@ -16,7 +14,7 @@ __email__ = "yordanka.spahieva@sirma.bg"
 __status__ = "Development"
 
 
-class VALIDATIONERROR(Enum):
+class VALIDATIONERROR(object):
     """VALIDATIONERROR"""
     REGEX_ERR = 'REGEX'
     LENGTH_ERR = 'LENGTH'
@@ -34,9 +32,9 @@ class ValidationErrorType(Exception):
                     VALIDATIONERROR.LENGTH_ERR,
                     VALIDATIONERROR.REGEX_ERR, VALIDATIONERROR.REQUIRED_ERR]:
                 message = "Expected value of the error type %s, %s, %s, "\
-                        "found [%s]" % (VALIDATIONERROR.LENGTH_ERR.value,
-                                        VALIDATIONERROR.REGEX_ERR.value,
-                                        VALIDATIONERROR.REQUIRED_ERR.value,
+                        "found [%s]" % (VALIDATIONERROR.LENGTH_ERR,
+                                        VALIDATIONERROR.REGEX_ERR,
+                                        VALIDATIONERROR.REQUIRED_ERR,
                                         message)
         super(ValidationErrorType, self).__init__(message)
 
@@ -56,17 +54,17 @@ class ValidationError(ValidationErrorType):
         if int(length) < len(field):
             self.message = "Field [%s] has length [%s] which is longer than "\
                            "the maximum of [%s]" % (field, len(field), length)
-            self.error = VALIDATIONERROR.LENGTH_ERR.value
+            self.error = VALIDATIONERROR.LENGTH_ERR
             validation_error = True
         if pattern:
             self.message = "Field [%s] has value [%s] which does not "\
                            "match the pattern [%s]" % (field, value, pattern)
-            self.error = VALIDATIONERROR.REGEX_ERR.value
+            self.error = VALIDATIONERROR.REGEX_ERR
             validation_error = True
         if mode != "" and mode is not None:
             self.message = "Required field [%s] missing for mode [%s]" % (
                 field, mode.upper())
-            self.error = VALIDATIONERROR.REQUIRED_ERR.value
+            self.error = VALIDATIONERROR.REQUIRED_ERR
             validation_error = True
         if validation_error:
             super(ValidationError, self).__init__((self.error, self.message))

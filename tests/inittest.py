@@ -3,13 +3,12 @@
 # This file is part of the Kount python sdk project
 # https://github.com/Kount/kount-ris-python-sdk/)
 # Copyright (C) 2017 Kount Inc. All Rights Reserved.
-"""RisException
-example ussage:
-    exc = RisException("REQUIRED", "jjjsssssssj")
-    raise exc
-    raise RisException(message="REQUIRED", cause="jjjj", kwargs={})
-"""
+"TestKhash"
 from __future__ import absolute_import, unicode_literals, division, print_function
+from kount.util.khash import Khash
+from kount.settings import SALT as iv
+#~ import logging
+#~ logging.basicConfig()
 
 __author__ = "Yordanka Spahieva"
 __version__ = "1.0.0"
@@ -18,7 +17,4 @@ __email__ = "yordanka.spahieva@sirma.bg"
 __status__ = "Development"
 
 
-class RisException(Exception):
-    """RIS exeption class:
-            message - exception message
-            cause - exception cause"""
+Khash.set_iv(iv)

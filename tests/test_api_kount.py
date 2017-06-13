@@ -4,14 +4,14 @@
 # This file is part of the Kount python sdk project
 # https://github.com/Kount/kount-ris-python-sdk
 # Copyright (C) 2017 Kount Inc. All Rights Reserved.
-from __future__ import (
-    absolute_import, unicode_literals, division, print_function)
+from __future__ import absolute_import, unicode_literals, division, print_function
 import logging
 import unittest
 from json_test import example_data_products
-from kount.settings import RAISE_ERRORS
 from kount.client import Client
-from kount.util.ris_validation_exception import RisValidationException
+from kount.ris_validator import RisValidationException
+from kount.settings import RAISE_ERRORS
+import inittest
 
 __author__ = "Yordanka Spahieva"
 __version__ = "1.0.0"
@@ -143,170 +143,139 @@ CURLED = {
 
 class TestAPIRIS(unittest.TestCase):
     "implemented curl from https://kopana.atlassian.net/wiki/display/KS/Testing"
+    maxDiff = None
+
     def setUp(self):
-        "for testing - self.maxDiff = None"
-        self.maxDiff = None
         self.url = URL_API
-        self.data = None
 
     def test_api_kount(self):
         "expected modified 'TRAN'"
-        self.data = CURLED
+        data = CURLED
         self.assertIn('MODE', CURLED)
-        if RAISE_ERRORS:
-            self.assertRaises(
-                RisValidationException,
-                Client(url=URL_API, key=KOUNT_API_KEY).process, self.data)
-        else:
-            self.assertFalse(RAISE_ERRORS)
-            actual = Client(url=URL_API, key=KOUNT_API_KEY).process(
-                params=self.data)
-            expected = {
-                "VERS": "0695", "MODE": "Q", "TRAN": "PTPN0Z04P8Y6",
-                "MERC": "999666", "SESS": "088E9F4961354D4F90041988B8D5C66B",
-                "ORDR": "088E9F496135", "AUTO": "R", "SCOR": "29", "GEOX": "US",
-                "BRND": None, "REGN": None, "NETW": "N", "KAPT": "N", "CARDS": "1",
-                "DEVICES": "1", "EMAILS": "1", "VELO": "0",
-                "VMAX": "0", "SITE": "DEFAULT", "DEVICE_LAYERS": "....",
-                "FINGERPRINT": None, "TIMEZONE": None, "LOCALTIME": " ",
-                "REGION": None,
-                "COUNTRY": None, "PROXY": None, "JAVASCRIPT": None, "FLASH": None,
-                "COOKIES": None, "HTTP_COUNTRY": None, "LANGUAGE":  None,
-                "MOBILE_DEVICE": None, "MOBILE_TYPE": None,
-                "MOBILE_FORWARDER": None,
-                "VOICE_DEVICE": None, "PC_REMOTE": None, "RULES_TRIGGERED":1,
-                "RULE_ID_0": "1024842",
-                "RULE_DESCRIPTION_0": "Review if order total > $1000 USD",
-                "COUNTERS_TRIGGERED": 0,
-                "REASON_CODE": None, "DDFS": None, "DSR": None,
-                "UAS": None, "BROWSER": None,
-                "OS": None, "PIP_IPAD": None, "PIP_LAT": None, "PIP_LON": None,
-                "PIP_COUNTRY": None,
-                "PIP_REGION": None, "PIP_CITY": None, "PIP_ORG": None,
-                "IP_IPAD": None,
-                "IP_LAT": None, "IP_LON": None, "IP_COUNTRY": None,
-                "IP_REGION": None,
-                "IP_CITY": None, "IP_ORG": None, "WARNING_COUNT": 0}
-            added, removed, modified, _ = dict_compare(actual, expected)
-            self.assertEqual(added, set())
-            self.assertEqual(removed, set())
-            expected = {'CARDS': ('196', '1'),
-                        'RULE_ID_0': ('6822', '1024842'),
-                        'TRAN': ('P04S03M57HSP', 'PTPN0Z04P8Y6'),
-                        'SCOR': ('99', '29'),
-                        'EMAILS': ('20', '1')}.keys()
-            self.assertEqual(sorted(modified.keys()), sorted(expected))
+        actual = Client(URL_API, KOUNT_API_KEY,
+                        raise_errors=RAISE_ERRORS).process(params=data)
+        expected = {
+            "VERS": "0695", "MODE": "Q", "TRAN": "PTPN0Z04P8Y6",
+            "MERC": "999666", "SESS": "088E9F4961354D4F90041988B8D5C66B",
+            "ORDR": "088E9F496135", "AUTO": "R", "SCOR": "29", "GEOX": "US",
+            "BRND": None, "REGN": None, "NETW": "N", "KAPT": "N", "CARDS": "1",
+            "DEVICES": "1", "EMAILS": "1", "VELO": "0",
+            "VMAX": "0", "SITE": "DEFAULT", "DEVICE_LAYERS": "....",
+            "FINGERPRINT": None, "TIMEZONE": None, "LOCALTIME": " ",
+            "REGION": None,
+            "COUNTRY": None, "PROXY": None, "JAVASCRIPT": None, "FLASH": None,
+            "COOKIES": None, "HTTP_COUNTRY": None, "LANGUAGE":  None,
+            "MOBILE_DEVICE": None, "MOBILE_TYPE": None,
+            "MOBILE_FORWARDER": None,
+            "VOICE_DEVICE": None, "PC_REMOTE": None, "RULES_TRIGGERED":1,
+            "RULE_ID_0": "1024842",
+            "RULE_DESCRIPTION_0": "Review if order total > $1000 USD",
+            "COUNTERS_TRIGGERED": 0,
+            "REASON_CODE": None, "DDFS": None, "DSR": None,
+            "UAS": None, "BROWSER": None,
+            "OS": None, "PIP_IPAD": None, "PIP_LAT": None, "PIP_LON": None,
+            "PIP_COUNTRY": None,
+            "PIP_REGION": None, "PIP_CITY": None, "PIP_ORG": None,
+            "IP_IPAD": None,
+            "IP_LAT": None, "IP_LON": None, "IP_COUNTRY": None,
+            "IP_REGION": None,
+            "IP_CITY": None, "IP_ORG": None, "WARNING_COUNT": 0}
+        added, removed, modified, _ = dict_compare(actual, expected)
+        self.assertEqual(added, set())
+        self.assertEqual(removed, set())
+        expected = {'CARDS': ('196', '1'),
+                    'RULE_ID_0': ('6822', '1024842'),
+                    'TRAN': ('P04S03M57HSP', 'PTPN0Z04P8Y6'),
+                    'SCOR': ('99', '29'),
+                    'EMAILS': ('20', '1')}.keys()
+        self.assertEqual(sorted(modified.keys()), sorted(expected))
 
     def test_api_kount_2_items(self):
         "expected modified 'TRAN'"
-        self.data = example_data_products.copy()
-        self.assertIn('MODE', self.data)
-        if RAISE_ERRORS:
-            self.assertRaises(
-                RisValidationException,
-                Client(url=URL_API, key=KOUNT_API_KEY).process, self.data)
-        else:
-            self.assertFalse(RAISE_ERRORS)
-            actual = Client(url=URL_API, key=KOUNT_API_KEY).process(
-                params=self.data)
-            del (actual['TRAN'], actual['RULE_ID_0'],
-                 actual['VELO'], actual['VMAX'])
-            self.assertEqual(actual, expected1)
+        data = example_data_products.copy()
+        self.assertIn('MODE', data)
+        actual = Client(URL_API, KOUNT_API_KEY,
+                        raise_errors=True).process(params=data)
+        del (actual['TRAN'], actual['RULE_ID_0'],
+             actual['VELO'], actual['VMAX'])
+        self.assertEqual(actual, expected1)
 
     def test_last_2_items_bad_email(self):
         "last_2_items_bad_email"
-        self.data = example_data_products.copy()
+        data = example_data_products.copy()
         self.assertIn('MODE', CURLED)
         bad = CURLED['EMAL'].replace('@', "%40")
-        self.data["EMAL"] = bad
-        if RAISE_ERRORS:
-            self.assertRaises(
-                RisValidationException,
-                Client(url=URL_API, key=KOUNT_API_KEY).process, self.data)
-        else:
-            self.assertFalse(RAISE_ERRORS)
-            expected = {
-                'ERROR_0':
-                "321 BAD_EMAL Cause: [[%s is an invalid email address],"
-                " Field: [EMAL], Value: [%s]" % (bad, bad),
-                'ERRO': 321, 'ERROR_COUNT': 1,
-                'WARNING_COUNT': 0, 'MODE': 'E'}
-            actual = Client(url=URL_API, key=KOUNT_API_KEY).process(
-                params=self.data)
-            self.assertEqual(actual, expected)
+        data["EMAL"] = bad
+        self.assertRaises(
+            RisValidationException,
+            Client(URL_API, KOUNT_API_KEY,
+                   raise_errors=True).process, data)
+        expected = {
+            'ERROR_0':
+            "321 BAD_EMAL Cause: [[%s is an invalid email address],"
+            " Field: [EMAL], Value: [%s]" % (bad, bad),
+            'ERRO': 321, 'ERROR_COUNT': 1,
+            'WARNING_COUNT': 0, 'MODE': 'E'}
+        actual = Client(URL_API, KOUNT_API_KEY,
+                        raise_errors=False).process(params=data)
+        self.assertEqual(actual, expected)
 
     def test_2_items_bad_s2em(self):
         "bad S2EM"
         bad = example_data_products["S2EM"].replace('@', "%40")
-        self.data = example_data_products.copy()
-        self.data["S2EM"] = bad
-        if RAISE_ERRORS:
-            self.assertRaises(
-                RisValidationException,
-                Client(url=URL_API, key=KOUNT_API_KEY).process, self.data)
-        else:
-            self.assertFalse(RAISE_ERRORS)
-            actual = Client(url=URL_API, key=KOUNT_API_KEY).process(
-                params=self.data)
-            del (actual['TRAN'], actual['RULE_ID_0'],
-                 actual['VELO'], actual['VMAX'])
-            self.assertEqual(actual, expected1)
+        data = example_data_products.copy()
+        data["S2EM"] = bad
+        self.assertRaises(
+            RisValidationException,
+            Client(URL_API, KOUNT_API_KEY,
+                   raise_errors=True).process, data)
+        actual = Client(URL_API, KOUNT_API_KEY,
+                        raise_errors=False).process(params=data)
+        del (actual['TRAN'], actual['RULE_ID_0'],
+             actual['VELO'], actual['VMAX'])
+        self.assertEqual(actual, expected1)
 
     def test_two_items_none_email(self):
         "email = None"
-        self.data = example_data_products.copy()
-        self.data["EMAL"] = None
-        self.assertIn('MODE', self.data)
+        data = example_data_products.copy()
+        data["EMAL"] = None
+        self.assertIn('MODE', data)
         expected = {
             'ERRO': 221, 'ERROR_COUNT': 1,
             'MODE': 'E', 'WARNING_COUNT': 0,
             'ERROR_0': "221 MISSING_EMAL Cause: "
                        "[Non-empty value was required in this case], "
                        "Field: [EMAL], Value: []"}
-        if RAISE_ERRORS:
-            self.assertRaises(
-                RisValidationException,
-                Client(url=URL_API, key=KOUNT_API_KEY).process, self.data)
-        else:
-            self.assertFalse(RAISE_ERRORS)
-            actual = Client(url=URL_API, key=KOUNT_API_KEY).process(
-                params=self.data)
-            self.assertEqual(actual, expected)
+        actual = Client(URL_API, KOUNT_API_KEY,
+                        raise_errors=True).process(params=data)
+        self.assertEqual(actual, expected)
 
     def test_two_items_missing_email(self):
         "missing email"
-        self.data = example_data_products.copy()
-        del self.data["EMAL"]
-        self.assertIn('MODE', self.data)
+        data = example_data_products.copy()
+        del data["EMAL"]
+        self.assertIn('MODE', data)
         expected = {
             'ERRO': 221, 'ERROR_COUNT': 1,
             'MODE': 'E', 'WARNING_COUNT': 0,
             'ERROR_0': "221 MISSING_EMAL Cause: "
                        "[Non-empty value was required in this case], "
                        "Field: [EMAL], Value: []",}
-        if RAISE_ERRORS:
-            self.assertRaises(
-                RisValidationException,
-                Client(url=URL_API, key=KOUNT_API_KEY).process, self.data)
-        else:
-            self.assertFalse(RAISE_ERRORS)
-            actual = Client(url=URL_API, key=KOUNT_API_KEY).process(
-                params=self.data)
-            self.assertEqual(actual, expected)
+        actual = Client(URL_API, KOUNT_API_KEY,
+                        raise_errors=False).process(params=data)
+        self.assertEqual(actual, expected)
 
     def test_api_kount_empty_data(self):
         "empty data"
-        self.data = {'FRMT': 'JSON'}
+        data = {'FRMT': 'JSON'}
         expected = {"MODE": "E", "ERRO": "201"}
-        if not RAISE_ERRORS:
-            actual = Client(url=URL_API, key=KOUNT_API_KEY).process(
-                params=self.data)
-            self.assertEqual(actual, expected)
-        else:
-            self.assertTrue(RAISE_ERRORS)
-            self.assertRaises(
-                RisValidationException,
-                Client(url=URL_API, key=KOUNT_API_KEY).process, self.data)
+        actual = Client(URL_API, KOUNT_API_KEY,
+                        raise_errors=False).process(params=data)
+        self.assertEqual(actual, expected)
+        self.assertRaises(
+            RisValidationException,
+            Client(URL_API, KOUNT_API_KEY,
+                   raise_errors=True).process, data)
 
 
 if __name__ == "__main__":

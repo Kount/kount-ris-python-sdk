@@ -5,11 +5,13 @@
 # Copyright (C) 2017 Kount Inc. All Rights Reserved.
 "class Khash"
 
-from __future__ import (
-    absolute_import, unicode_literals, division, print_function)
+from __future__ import absolute_import, unicode_literals, division, print_function
 import hashlib
 import re
+import logging
 from string import digits, ascii_uppercase
+from kount.settings import SALT
+from resources.correct_salt_cryp import correct_salt_cryp
 
 __author__ = "Yordanka Spahieva"
 __version__ = "1.0.0"
@@ -17,6 +19,7 @@ __maintainer__ = "Yordanka Spahieva"
 __email__ = "yordanka.spahieva@sirma.bg"
 __status__ = "Development"
 
+logger = logging.getLogger('kount.khash')
 
 def validator(*args):
     """check is list with arguments is valid -
@@ -49,7 +52,25 @@ class Khash(object):
     Uninstantiable class constructor.
     Class for creating Kount RIS KHASH encoding payment tokens.
     """
-    salt = 'very secret salt provided by Kount'
+    iv = SALT
+
+    @classmethod
+    def verify(cls):
+        current_crypted = hashlib.sha256(cls.salt.encode('utf-8')).hexdigest()
+        if current_crypted != correct_salt_cryp:
+            mesg = "Configured SALT phrase is incorrect."
+            logger.error(mesg)
+            raise ValueError(mesg)
+        logger.info("Configured SALT phrase is correct.")
+        return True
+
+    @classmethod
+    def set_iv(cls, iv):
+        """
+        initialize the SALT phrase used in hashing operations.
+        Khash.set_salt(salt)"""
+        cls.salt = iv
+        cls.verify()
 
     @classmethod
     def hash_payment_token(cls, token):
@@ -94,9 +115,8 @@ class Khash(object):
             length = len(legal_chars)
             hashed = []
             plain_text_bytes = plain_text.encode('utf-8') #Python 3.x
-            salt_bytes = cls.salt.encode('utf-8')
             sha1 = hashlib.sha1(plain_text_bytes + ".".encode('utf-8') +
-                                salt_bytes).hexdigest()
+                                cls.iv.encode('utf-8')).hexdigest()
             for i in range(0, loop_max, 2):
                 hashed.append(legal_chars[int(sha1[i: i+hex_chunk], 16)
                                           % length])
@@ -109,6 +129,5 @@ class Khash(object):
         """ Arg: val - String, Token that may or may not be khashed
          return: Boolean, True if token is already khashed
         """
-        regex = r"^[0-9]{6}[0-9A-Z]{14}$"
-        #regex = r"^[0-9a-zA-Z]{6}[0-9A-Z]{14}$"
+        regex = r"^[0-9a-zA-Z]{6}[0-9A-Z]{14}$"
         return re.match(regex, val)

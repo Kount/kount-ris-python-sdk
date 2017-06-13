@@ -6,7 +6,6 @@
 requests==2.11.1
 
 #~ uncomment this for python 2.7.13
-#~ enum==0.4.6
 #~ pathlib==1.0.1
 
 #~ uncomment this to install Sphinx to generate the documentation

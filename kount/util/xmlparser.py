@@ -1,14 +1,11 @@
 ﻿#!/usr/bin/env python
 # -*- coding: utf-8 -*-
-"""parse Kount's validation xml to python dict and use
-this dict in the package to avoid parsing. New XML_DICT must be generated
-if the xml file 'validate.xml' is changed."""
+"""parse Kount's validation xml to python dict, used in RisValidator"""
 # This file is part of the Kount python sdk project
 # https://github.com/Kount/kount-ris-python-sdk/)
 # Copyright (C) 2017 Kount Inc. All Rights Reserved.
 
-from __future__ import (
-    absolute_import, unicode_literals, division, print_function)
+from __future__ import absolute_import, unicode_literals, division, print_function
 import xml.etree.ElementTree as ET
 
 __author__ = "Yordanka Spahieva"
