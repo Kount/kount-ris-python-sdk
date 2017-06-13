@@ -16,7 +16,7 @@ logger = logging.getLogger('kount.response')
 
 
 class KcEvent(object):
-    """A class that represents a Kount Central event.:
+    """A class that represents a Kount Central event.
     The event object contains three fields: decision, expression, and code.
     """
 
