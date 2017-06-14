@@ -16,6 +16,7 @@ from kount.util.khash import Khash
 from kount.util.cartitem import CartItem
 from kount.ris_validator import RisValidationException
 from kount.settings import SDK_VERSION, TIMEOUT
+from kount.util.payment import CardPayment
 import inittest
 
 
@@ -49,10 +50,11 @@ class TestRisTestSuite(unittest.TestCase):
         self.session_id = generate_unique_id()[:32]
         self.client = Client(RIS_ENDPOINT_BETA, KOUNT_API_KEY,
                              TIMEOUT, RAISE_ERRORS)
+        payment = CardPayment(PTOK, khashed=False)
         self.inq = default_inquiry(session_id=self.session_id,
                                    merchant_id=MERCHANT_ID,
                                    email_client=EMAIL_CLIENT,
-                                   ptok=PTOK)
+                                   ptok=PTOK, payment=payment, khashed=False)
 
     def test_1_ris_q_1_item_required_field_1_rule_review(self):
         "test_1_ris_q_1_item_required_field_1_rule_review"
@@ -339,6 +341,26 @@ class TestRisTestSuite(unittest.TestCase):
             'ERROR_COUNT': 1,
             'MODE': 'E',
             'WARNING_COUNT': 0}, rr.params)
+
+
+class TestRisTestSuiteKhashed(TestRisTestSuite):
+    """Ris Test Suite Khashed
+        default logging errors instead fo raising
+        to raise errors - put raise_errors=True in Client:
+        Client(url=URL_API, key=KOUNT_API_KEY,
+               timeout=TIMEOUT, RAISE_ERRORS=True)
+    """
+    maxDiff = None
+
+    def setUp(self):
+        self.session_id = generate_unique_id()[:32]
+        self.client = Client(RIS_ENDPOINT_BETA, KOUNT_API_KEY,
+                             TIMEOUT, RAISE_ERRORS)
+        payment = CardPayment(PTOK, khashed=True)
+        self.inq = default_inquiry(session_id=self.session_id,
+                                   merchant_id=MERCHANT_ID,
+                                   email_client=EMAIL_CLIENT,
+                                   ptok=PTOK, payment=payment, khashed=True)
 
 
 if __name__ == "__main__":

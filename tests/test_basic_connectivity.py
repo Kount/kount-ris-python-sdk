@@ -13,6 +13,7 @@ from kount.response import Response
 from kount.ris_validator import RisValidationException
 from kount.client import Client
 from kount.settings import RAISE_ERRORS
+from kount.util.payment import Payment, CardPayment
 import inittest
 from test_inquiry import generate_unique_id, default_inquiry
 
@@ -28,6 +29,7 @@ URL_API_BETA = URL_API
 MERCHANT_ID6 = '999666'
 MERCHANT_ID7 = '999667'
 PTOK = "0007380568572514"
+EMAIL = 'predictive@kount.com'
 KOUNT_API_KEY6 = "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiI5OTk2NjYiLCJhdWQiOiJLb3VudC4xIiwiaWF0IjoxNDk0NTM0Nzk5LCJzY3AiOnsia2EiOm51bGwsImtjIjpudWxsLCJhcGkiOmZhbHNlLCJyaXMiOnRydWV9fQ.eMmumYFpIF-d1up_mfxA5_VXBI41NSrNVe9CyhBUGck"
 KOUNT_API_KEY7 = "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiI5OTk2NjciLCJhdWQiOiJLb3VudC4xIiwiaWF0IjoxNDk0NTM1OTE2LCJzY3AiOnsia2EiOm51bGwsImtjIjpudWxsLCJhcGkiOmZhbHNlLCJyaXMiOnRydWV9fQ.KK3zG4dMIhTIaE5SeCbej1OAFhZifyBswMPyYFAVRrM"
 
@@ -38,10 +40,13 @@ class TestBasicConnectivity(unittest.TestCase):
 
     def setUp(self):
         self.session_id = generate_unique_id()[:32]
-        self.email_client = 'predictive@kount.com'
-        self.inq = default_inquiry(self.session_id,
-                                   MERCHANT_ID7,
-                                   self.email_client, ptok=PTOK)
+        self.email_client = EMAIL
+        payment = CardPayment(PTOK, khashed=False)
+        #~ payment = Payment(payment_type="CARD", payment_token=PTOK,
+                          #~ khashed=False)
+        self.inq = default_inquiry(
+            self.session_id, MERCHANT_ID7, self.email_client,
+            ptok=PTOK, payment=payment, khashed=False)
 
     def test_12_expected_score(self):
         "test_12_expected_score"
@@ -110,8 +115,7 @@ class TestBasicConnectivity(unittest.TestCase):
             "</body></html>\n"\
             "MODE=E\n"\
             "ERRO=201"
-        inq = default_inquiry(self.session_id, MERCHANT_ID7,
-                              self.email_client, ptok=PTOK)
+        inq = self.inq
         for bad in bad_list:
             inq.params["S2NM"] = bad * 999
             self.assertRaises(
@@ -126,8 +130,20 @@ class TestBasicConnectivity(unittest.TestCase):
             except ValueError as vale:
                 self.assertEqual(expected, str(vale))
 
+class TestBasicConnectivityKhashed(TestBasicConnectivity):
+    "Test Basic Connectivity Khashed"
+    maxDiff = None
+
+    def setUp(self):
+        self.session_id = generate_unique_id()[:32]
+        self.email_client = EMAIL
+        payment = CardPayment(PTOK, khashed=True)
+        self.inq = default_inquiry(
+            self.session_id, MERCHANT_ID7, self.email_client,
+            ptok=PTOK, payment=payment, khashed=True)
+
 
 if __name__ == "__main__":
     unittest.main(
-        #~ defaultTest="TestBasicConnectivity.test_12_expected_score"
+        #~ defaultTest="TestBasicConnectivity.test_16_expected_geox"
                   )

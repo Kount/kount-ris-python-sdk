@@ -30,12 +30,12 @@ class TestPaymentType(unittest.TestCase):
         ptype = GiftCardPayment(gift_card_number=self.test)
         self.assertTrue(isinstance(ptype, Payment))
         self.assertEqual(ptype.last4, str(self.test)[-4:])
-        self.assertIsNone(ptype.khashed())
+        self.assertFalse(ptype.khashed)
         self.assertEqual(ptype.payment_type, "GIFT")
         self.assertEqual(ptype.payment_token, str(self.test))
 
     def test_payments(self):
-        "all payments"
+        "all predefined payments"
         plist = (Payment, BillMeLaterPayment, CardPayment,
                  CheckPayment, GiftCardPayment, GooglePayment,
                  GreenDotMoneyPakPayment, NoPayment, Payment, PaypalPayment)
@@ -66,23 +66,37 @@ class TestPaymentType(unittest.TestCase):
 
     def test_user_defined_payment(self):
         "user defined payments"
-        curp = Payment("PM42", self.test)
+        curp = Payment("PM42", self.test, False)
         self.assertEqual(curp.last4, str(self.test)[-4:])
         self.assertEqual(curp.payment_token, str(self.test))
-        self.assertIsNone(curp.khashed())
+        self.assertFalse(curp.khashed)
         self.assertEqual(curp.payment_type, "PM42")
         self.assertEqual(curp.payment_token, str(self.test))
         self.assertIsInstance(curp, Payment)
 
     def test_user_defined_payment_khashed(self):
-        "user defined payments"
-        curp = Payment("PM42", self.test)
+        "user defined payments with Payment - khashed token"
+        curp = Payment("PM42", self.test, True)
         self.assertEqual(curp.last4, str(self.test)[-4:])
-        self.assertEqual(curp.payment_token, str(self.test))
-        curp.khash_token()
+        k = Khash()
+        self.assertEqual(curp.payment_token, k.hash_payment_token(self.test))
         self.assertTrue(curp.khashed)
         self.assertEqual(curp.payment_type, "PM42")
         self.assertIsInstance(curp, Payment)
+
+    def test_user_defined_newpayment(self):
+        "user defined payments - token khashed and notkhashed "
+        curp = NewPayment("PM42", self.test)
+        self.assertEqual(curp.last4, str(self.test)[-4:])
+        k = Khash()
+        self.assertEqual(curp.payment_token, str((self.test)))
+        self.assertFalse(curp.khashed)
+        self.assertEqual(curp.payment_type, "PM42")
+        self.assertIsInstance(curp, Payment)
+        curp = NewPayment("PM42", self.test, True)
+        self.assertEqual(curp.last4, str(self.test)[-4:])
+        self.assertEqual(curp.payment_token, k.hash_payment_token(self.test))
+        self.assertTrue(curp.khashed)
 
 
 if __name__ == "__main__":
