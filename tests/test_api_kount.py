@@ -10,7 +10,7 @@ import unittest
 from json_test import example_data_products
 from kount.client import Client
 from kount.ris_validator import RisValidationException
-from kount.settings import RAISE_ERRORS
+from kount.settings import RAISE_ERRORS, TIMEOUT
 import inittest
 
 __author__ = "Yordanka Spahieva"
@@ -147,13 +147,12 @@ class TestAPIRIS(unittest.TestCase):
 
     def setUp(self):
         self.url = URL_API
+        self.timeout = TIMEOUT
 
     def test_api_kount(self):
         "expected modified 'TRAN'"
         data = CURLED
         self.assertIn('MODE', CURLED)
-        actual = Client(URL_API, KOUNT_API_KEY,
-                        raise_errors=RAISE_ERRORS).process(params=data)
         expected = {
             "VERS": "0695", "MODE": "Q", "TRAN": "PTPN0Z04P8Y6",
             "MERC": "999666", "SESS": "088E9F4961354D4F90041988B8D5C66B",
@@ -180,25 +179,29 @@ class TestAPIRIS(unittest.TestCase):
             "IP_LAT": None, "IP_LON": None, "IP_COUNTRY": None,
             "IP_REGION": None,
             "IP_CITY": None, "IP_ORG": None, "WARNING_COUNT": 0}
-        added, removed, modified, _ = dict_compare(actual, expected)
-        self.assertEqual(added, set())
-        self.assertEqual(removed, set())
-        expected = {'CARDS': ('196', '1'),
-                    'RULE_ID_0': ('6822', '1024842'),
-                    'TRAN': ('P04S03M57HSP', 'PTPN0Z04P8Y6'),
-                    'SCOR': ('99', '29'),
-                    'EMAILS': ('20', '1')}.keys()
-        self.assertEqual(sorted(modified.keys()), sorted(expected))
+        for raise_errors in [True, False]:
+            actual = Client(URL_API, KOUNT_API_KEY,
+                            self.timeout, raise_errors).process(data)
+            added, removed, modified, _ = dict_compare(actual, expected)
+            self.assertEqual(added, set())
+            self.assertEqual(removed, set())
+            modified_exp = {'CARDS': ('196', '1'),
+                            'RULE_ID_0': ('6822', '1024842'),
+                            'TRAN': ('P04S03M57HSP', 'PTPN0Z04P8Y6'),
+                            'SCOR': ('99', '29'),
+                            'EMAILS': ('20', '1')}
+            self.assertEqual(sorted(modified), sorted(modified_exp))
 
     def test_api_kount_2_items(self):
         "expected modified 'TRAN'"
         data = example_data_products.copy()
         self.assertIn('MODE', data)
-        actual = Client(URL_API, KOUNT_API_KEY,
-                        raise_errors=True).process(params=data)
-        del (actual['TRAN'], actual['RULE_ID_0'],
-             actual['VELO'], actual['VMAX'])
-        self.assertEqual(actual, expected1)
+        for raise_errors in [True, False]:
+            actual = Client(URL_API, KOUNT_API_KEY, self.timeout,
+                            raise_errors).process(data)
+            del (actual['TRAN'], actual['RULE_ID_0'],
+                 actual['VELO'], actual['VMAX'])
+            self.assertEqual(actual, expected1)
 
     def test_last_2_items_bad_email(self):
         "last_2_items_bad_email"
@@ -208,7 +211,7 @@ class TestAPIRIS(unittest.TestCase):
         data["EMAL"] = bad
         self.assertRaises(
             RisValidationException,
-            Client(URL_API, KOUNT_API_KEY,
+            Client(URL_API, KOUNT_API_KEY, self.timeout,
                    raise_errors=True).process, data)
         expected = {
             'ERROR_0':
@@ -217,7 +220,7 @@ class TestAPIRIS(unittest.TestCase):
             'ERRO': 321, 'ERROR_COUNT': 1,
             'WARNING_COUNT': 0, 'MODE': 'E'}
         actual = Client(URL_API, KOUNT_API_KEY,
-                        raise_errors=False).process(params=data)
+                        self.timeout, False).process(data)
         self.assertEqual(actual, expected)
 
     def test_2_items_bad_s2em(self):
@@ -227,9 +230,9 @@ class TestAPIRIS(unittest.TestCase):
         data["S2EM"] = bad
         self.assertRaises(
             RisValidationException,
-            Client(URL_API, KOUNT_API_KEY,
+            Client(URL_API, KOUNT_API_KEY, self.timeout,
                    raise_errors=True).process, data)
-        actual = Client(URL_API, KOUNT_API_KEY,
+        actual = Client(URL_API, KOUNT_API_KEY, self.timeout,
                         raise_errors=False).process(params=data)
         del (actual['TRAN'], actual['RULE_ID_0'],
              actual['VELO'], actual['VMAX'])
@@ -246,37 +249,47 @@ class TestAPIRIS(unittest.TestCase):
             'ERROR_0': "221 MISSING_EMAL Cause: "
                        "[Non-empty value was required in this case], "
                        "Field: [EMAL], Value: []"}
-        actual = Client(URL_API, KOUNT_API_KEY,
-                        raise_errors=True).process(params=data)
-        self.assertEqual(actual, expected)
+        for raise_errors in [True, False]:
+            actual = Client(URL_API, KOUNT_API_KEY, self.timeout,
+                            raise_errors).process(data)
+            self.assertEqual(actual, expected)
 
-    def test_two_items_missing_email(self):
-        "missing email"
+    def test_two_items_missing_or_long_email(self):
+        "missing or long incorrect email"
         data = example_data_products.copy()
         del data["EMAL"]
         self.assertIn('MODE', data)
+        self.assertNotIn('EMAL', data)
         expected = {
             'ERRO': 221, 'ERROR_COUNT': 1,
             'MODE': 'E', 'WARNING_COUNT': 0,
             'ERROR_0': "221 MISSING_EMAL Cause: "
                        "[Non-empty value was required in this case], "
-                       "Field: [EMAL], Value: []",}
-        actual = Client(URL_API, KOUNT_API_KEY,
-                        raise_errors=False).process(params=data)
-        self.assertEqual(actual, expected)
+                       "Field: [EMAL], Value: []"}
+        for raise_errors in [True, False]:
+            actual = Client(URL_API, KOUNT_API_KEY,
+                            self.timeout, raise_errors).process(data)
+            self.assertEqual(actual, expected)
+        data["EMAL"] = "a" * 57 + "@aaa.com"
+        with self.assertRaises(RisValidationException):
+            Client(URL_API, KOUNT_API_KEY, self.timeout, True).process(data)
+        self.assertEqual(321, Client(
+            URL_API, KOUNT_API_KEY, self.timeout, False).process(data)['ERRO'])
 
     def test_api_kount_empty_data(self):
         "empty data"
         data = {'FRMT': 'JSON'}
         expected = {"MODE": "E", "ERRO": "201"}
-        actual = Client(URL_API, KOUNT_API_KEY,
-                        raise_errors=False).process(params=data)
+        with self.assertRaises(RisValidationException):
+            self.assertTrue(Client(URL_API, KOUNT_API_KEY, self.timeout,
+                                   raise_errors=True).process(data))
+        actual = Client(URL_API, KOUNT_API_KEY, self.timeout,
+                        raise_errors=False).process(data)
         self.assertEqual(actual, expected)
-        self.assertRaises(
-            RisValidationException,
-            Client(URL_API, KOUNT_API_KEY,
-                   raise_errors=True).process, data)
 
 
 if __name__ == "__main__":
-    unittest.main()
+    unittest.main(
+        #~ defaultTest = "TestAPIRIS.test_two_items_missing_or_long_email"
+        #~ defaultTest = "TestAPIRIS.test_two_items_none_email"
+                  )

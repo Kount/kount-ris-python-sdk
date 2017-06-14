@@ -43,6 +43,11 @@ class RisValidator(object):
             return List of errors encountered as util.ValidationError objects
         """
         errors = []
+        if len(params) <= 1:
+            required_missing = "All required fields are missing %s" % params
+            logger.debug(required_missing)
+            if self.raise_errors:
+                raise RisValidationException(required_missing)
         empty = []
         missing_in_xml = []
         required_err = []

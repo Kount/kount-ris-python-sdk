@@ -10,7 +10,7 @@ import logging
 import requests
 from .ris_validator import RisValidator, RisValidationException
 from .util.khash import Khash
-from .settings import TIMEOUT, SDK_VERSION, RAISE_ERRORS
+from .settings import TIMEOUT, RAISE_ERRORS
 
 
 __author__ = "Yordanka Spahieva"
@@ -50,17 +50,9 @@ class Client:
                 raise RisValidationException(
                     message, errors=invalid, cause="empty = %s" % empty)
         headers_api = {'X-Kount-Api-Key': self._kount_api_key}
-        try:
-            headers_api["X-Kount-Merc-Id"] = params['MERC']
-        except KeyError:
-            message = "Required field 'MERC' is missing. \
-                       Header's param 'X-Kount-Merc-Id' is not set."
-            logger.debug(message)
-            if self.raise_errors:
-                raise RisValidationException(
-                    message, errors=['MERC'], cause="MERC is missing")
+        merc = params.get('MERC', None)
         params['FRMT'] = 'JSON'
-        logger.debug("url %s, headers %s, params %s", self.url,
+        logger.debug("url=%s, headers=%s, params=%s", self.url,
                      headers_api, params)
         request = requests.post(self.url,
                                 headers=headers_api,
@@ -80,12 +72,12 @@ class Client:
                 raise ValueError(error)
         else:
             roundtrip = request.elapsed.total_seconds()
-            merc = headers_api.get("X-Kount-Merc-Id", None)
             sess = params.get("SESS", None)
-            logger.debug("process json: %s, MERC = %s, SESS = %s, "
-                         "SDK ELAPSED = %s ms.", req_json, merc,
-                         sess, roundtrip)
+            logger.debug("MERC = %s, SESS = %s, SDK ELAPSED = %s ms.",
+                         merc, sess, roundtrip)
             return req_json
 
+
 def parse_k_v(text):
+    "parse text to dict"
     return dict(c.split('=', 1) for c in text.split('\n'))
