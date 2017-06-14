@@ -119,6 +119,128 @@ def BillMeLaterPayment(payment_id, khashed=False):
     return Payment(payment_type="BLML", payment_token=str(payment_id),
                    khashed=khashed)
 
+def ApplePay(payment_id, khashed=False):
+    """Apple Pay
+    Sets the PTYP parameter to "APAY".
+    params: payment_id - apay,
+            khashed - boolean
+    """
+    return Payment(payment_type="APAY", payment_token=str(payment_id),
+                   khashed=khashed)
+
+def BPayPayment(payment_id, khashed=False):
+    """BPay Payment
+    Sets the PTYP parameter to "BPAY".
+    params: payment_id - bpay,
+            khashed - boolean
+    """
+    return Payment(payment_type="BPAY", payment_token=str(payment_id),
+                   khashed=khashed)
+
+
+def CarteBleuePayment(payment_id, khashed=False):
+    """Carte Bleue Payment
+    Sets the PTYP parameter to "CARTE_BLEUE".
+    params: payment_id - Carte Bleue id,
+            khashed - boolean
+    """
+    return Payment(payment_type="CARTE_BLEUE", payment_token=str(payment_id),
+                   khashed=khashed)
+
+def ELVPayment(payment_id, khashed=False):
+    """ELV Payment
+    Sets the PTYP parameter to "ELV".
+    params: payment_id - ELV id,
+            khashed - boolean
+    """
+    return Payment(payment_type="ELV", payment_token=str(payment_id),
+                   khashed=khashed)
+
+def GiroPayPayment(payment_id, khashed=False):
+    """GIROPAY Payment
+    Sets the PTYP parameter to "GIROPAY".
+    params: payment_id - id,
+            khashed - boolean
+    """
+    return Payment(payment_type="GIROPAY", payment_token=str(payment_id),
+                   khashed=khashed)
+
+def InteracPayment(payment_id, khashed=False):
+    """Interac Payment
+    Sets the PTYP parameter to "INTERAC".
+    params: payment_id - id,
+            khashed - boolean
+    """
+    return Payment(payment_type="INTERAC", payment_token=str(payment_id),
+                   khashed=khashed)
+
+def MercadoPagoPayment(payment_id, khashed=False):
+    """Mercado Pago Payment
+    Sets the PTYP parameter to "MERCADE_PAGO".
+    params: payment_id - id,
+            khashed - boolean
+    """
+    return Payment(payment_type="MERCADE_PAGO", payment_token=str(payment_id),
+                   khashed=khashed)
+
+
+def NetellerPayment(payment_id, khashed=False):
+    """Neteller Payment
+    Sets the PTYP parameter to "NETELLER".
+    params: payment_id - id,
+            khashed - boolean
+    """
+    return Payment(payment_type="NETELLER", payment_token=str(payment_id),
+                   khashed=khashed)
+
+
+def PoliPayment(payment_id, khashed=False):
+    """POLi Payment
+    Sets the PTYP parameter to "POLI".
+    params: payment_id - id,
+            khashed - boolean
+    """
+    return Payment(payment_type="POLI", payment_token=str(payment_id),
+                   khashed=khashed)
+
+
+def SEPAPayment(payment_id, khashed=False):
+    """Single Euro Payments Area Payment
+    Sets the PTYP parameter to "SEPA".
+    params: payment_id - id,
+            khashed - boolean
+    """
+    return Payment(payment_type="SEPA", payment_token=str(payment_id),
+                   khashed=khashed)
+
+
+def SofortPayment(payment_id, khashed=False):
+    """Sofort Payment
+    Sets the PTYP parameter to "SOFORT".
+    params: payment_id - id,
+            khashed - boolean
+    """
+    return Payment(payment_type="SOFORT", payment_token=str(payment_id),
+                   khashed=khashed)
+
+def TokenPayment(payment_id, khashed=False):
+    """Token Payment
+    Sets the PTYP parameter to "TOKEN".
+    params: payment_id - id,
+            khashed - boolean
+    """
+    return Payment(payment_type="TOKEN", payment_token=str(payment_id),
+                   khashed=khashed)
+
+def SkrillPayment(payment_id, khashed=False):
+    """Skrill/Moneybookers Payment
+    Sets the PTYP parameter to "SKRILL".
+    params: payment_id - id,
+            khashed - boolean
+    """
+    return Payment(payment_type="SKRILL", payment_token=str(payment_id),
+                   khashed=khashed)
+
 def NewPayment(payment_type, payment_token, khashed=False):
     """User-defined payment type
     Sets the PTYP parameter to desired parameter.
