@@ -259,7 +259,6 @@ class TestAPIRIS(unittest.TestCase):
         data = example_data_products.copy()
         del data["EMAL"]
         self.assertIn('MODE', data)
-        self.assertNotIn('EMAL', data)
         expected = {
             'ERRO': 221, 'ERROR_COUNT': 1,
             'MODE': 'E', 'WARNING_COUNT': 0,
@@ -289,7 +288,4 @@ class TestAPIRIS(unittest.TestCase):
 
 
 if __name__ == "__main__":
-    unittest.main(
-        #~ defaultTest = "TestAPIRIS.test_two_items_missing_or_long_email"
-        #~ defaultTest = "TestAPIRIS.test_two_items_none_email"
-                  )
+    unittest.main()

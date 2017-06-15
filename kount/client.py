@@ -40,7 +40,9 @@ class Client:
     def process(self, params):
         """validate data and request post
         https://pypi.python.org/pypi/requests - 0.13.3
-        Use simplejson if available."""
+        Use simplejson if available.
+        if raise_errors==False, the validation errors will not be raised,
+        only logged; by default raise_errors=True"""
         invalid, missing_in_xml, empty = self.validator.ris_validator(params=params)
         if invalid:
             message = "validation errors = %s, missing_in_xml = %s,"\
