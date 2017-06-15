@@ -101,7 +101,6 @@ class CURRENCYTYPE(object):
     HKD = 'HKD'
     NZD = 'NZD'
 
-assert CURRENCYTYPE.USD == 'USD'
 
 class INQUIRYMODE(object):
     """
@@ -298,20 +297,7 @@ class Request(object):
                         payment types
                   ptok - The payment token
         """
-        payment_dict = {
-            "BLML": BillMeLaterPayment(ptok),
-            "CARD": CardPayment(ptok),
-            "CHEK": CheckPayment(ptok),
-            "GIFT": GiftCardPayment(ptok),
-            "GOOG": GooglePayment(ptok),
-            "GDMP": GreenDotMoneyPakPayment(ptok),
-            "NONE": NoPayment(ptok),
-            "PYPL": PaypalPayment(ptok)
-            }
-        if ptyp in payment_dict:
-            self.payment = payment_dict[ptyp]
-        else:
-            self.payment = Payment(ptyp, ptok)
+        self.payment = Payment(ptyp, ptok)
         logger.debug("mask_token = %s", self.payment)
 
     def payment_masked(self, payment):
