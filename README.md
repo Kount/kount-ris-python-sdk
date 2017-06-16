@@ -25,7 +25,7 @@ or
         * pathlib
       
 
-install all dependencies from [requirements.txt](https://github.com/Kount/kount-ris-python-sdk/blob/master/kount/requirements.py)
+install all dependencies from [requirements.txt](https://github.com/Kount/kount-ris-python-sdk/blob/master/requirements.txt)
  with
 
 `pip install -r requirements.txt`
