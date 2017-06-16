@@ -7,9 +7,7 @@
 from __future__ import absolute_import, unicode_literals, division, print_function
 import unittest
 from json_test import example_data, example_data_products
-from kount.ris_validator import RisValidator
-from kount.ris_validator import RisValidationException
-
+from kount.ris_validator import RisValidator, RisValidationException
 
 __author__ = "Yordanka Spahieva"
 __version__ = "1.0.0"
@@ -46,12 +44,9 @@ class TestRisValidator(unittest.TestCase):
         example = example_data_products.copy()
         bad = example['S2EM'].replace('@', '%40')
         example['S2EM'] = bad
-        with self.assertRaises(RisValidationException):
-            self.validator.ris_validator(params=example)
-        try:
-            self.validator.ris_validator(params=example)
-        except RisValidationException as vale:
-            self.assertIn("Regex", str(vale))
+        with self.assertRaises(RisValidationException) as context:
+            self.validator.ris_validator(example)
+        self.assertIn("Regex", str(context.exception))
 
 
 if __name__ == "__main__":

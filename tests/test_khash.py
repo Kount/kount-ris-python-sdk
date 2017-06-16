@@ -56,12 +56,9 @@ class TestKhash(unittest.TestCase):
         self.assertEqual(card_solted, "Beatle5STRFTYPXBR14E")
         self.assertTrue(self.k.khashed(card_solted))
         bad = "John"
-        try:
-            self.k.hash_payment_token(token=bad)
-        except ValueError as vale:
-            self.assertEqual("incorrect arg: [%s]" % bad, str(vale))
-        with self.assertRaises(ValueError):
+        with self.assertRaises(ValueError) as context:
             self.assertTrue(self.k.hash_payment_token(token=bad))
+        self.assertEqual("incorrect arg: [%s]" % bad, str(context.exception))
 
     def test_hash_gift_card(self):
         "gift card"

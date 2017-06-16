@@ -12,7 +12,7 @@ import unittest
 from kount.response import Response
 from kount.ris_validator import RisValidationException
 from kount.client import Client
-from kount.settings import RAISE_ERRORS
+from kount.settings import RAISE_ERRORS, TIMEOUT
 from kount.util.payment import Payment, CardPayment
 import inittest
 from test_inquiry import generate_unique_id, default_inquiry
@@ -41,6 +41,7 @@ class TestBasicConnectivity(unittest.TestCase):
     def setUp(self):
         self.session_id = generate_unique_id()[:32]
         self.email_client = EMAIL
+        self.timeout = TIMEOUT
         payment = CardPayment(PTOK, khashed=False)
         #~ payment = Payment(payment_type="CARD", payment_token=PTOK,
                           #~ khashed=False)
@@ -118,17 +119,15 @@ class TestBasicConnectivity(unittest.TestCase):
         inq = self.inq
         for bad in bad_list:
             inq.params["S2NM"] = bad * 999
-            self.assertRaises(
-                RisValidationException,
-                Client(URL_API,
-                       KOUNT_API_KEY6,
-                       raise_errors=True).process, inq.params)
-            try:
-                Client(
-                    URL_API, KOUNT_API_KEY6,
-                    raise_errors=False).process(params=inq.params)
-            except ValueError as vale:
-                self.assertEqual(expected, str(vale))
+            with self.assertRaises(RisValidationException) as context:
+                self.assertTrue(Client(URL_API, KOUNT_API_KEY6, self.timeout,
+                                       raise_errors=True).process(inq.params))
+            self.assertEqual("Validation process failed", context.exception.message)
+            with self.assertRaises(ValueError) as context:
+                self.assertTrue(Client(URL_API, KOUNT_API_KEY6, self.timeout,
+                                       raise_errors=False).process(inq.params))
+            self.assertEqual(expected, str(context.exception))
+
 
 class TestBasicConnectivityKhashed(TestBasicConnectivity):
     "Test Basic Connectivity Khashed"
@@ -137,6 +136,7 @@ class TestBasicConnectivityKhashed(TestBasicConnectivity):
     def setUp(self):
         self.session_id = generate_unique_id()[:32]
         self.email_client = EMAIL
+        self.timeout = TIMEOUT
         payment = CardPayment(PTOK, khashed=True)
         self.inq = default_inquiry(
             self.session_id, MERCHANT_ID7, self.email_client,
@@ -144,6 +144,6 @@ class TestBasicConnectivityKhashed(TestBasicConnectivity):
 
 
 if __name__ == "__main__":
-    unittest.main(
-        #~ defaultTest="TestBasicConnectivity.test_16_expected_geox"
+    unittest.main(verbosity=2
+        #~ defaultTest="TestBasicConnectivity.test_long"
                   )

@@ -43,14 +43,12 @@ class Client:
         Use simplejson if available.
         if raise_errors==False, the validation errors will not be raised,
         only logged; by default raise_errors=True"""
-        invalid, missing_in_xml, empty = self.validator.ris_validator(params=params)
+        invalid = self.validator.ris_validator(params)[0]
         if invalid:
-            message = "validation errors = %s, missing_in_xml = %s,"\
-                      "empty = %s" % (invalid, missing_in_xml, empty)
+            message = "validation errors = %s" % invalid
             logger.error(message)
             if self.raise_errors:
-                raise RisValidationException(
-                    message, errors=invalid, cause="empty = %s" % empty)
+                raise RisValidationException(message, errors=invalid)
         headers_api = {'X-Kount-Api-Key': self._kount_api_key}
         merc = params.get('MERC', None)
         params['FRMT'] = 'JSON'
