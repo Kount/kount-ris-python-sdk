@@ -26,12 +26,12 @@ Contains the Kount Python SDK, tests, and build/package routines.
             * pathlib
       
 
-    install all dependencies from `requirements.txt <https://github.com/Kount/kount-ris-python-sdk/blob/master/kount/requirements.py>`
-    with
+      install all dependencies from `requirements.txt <https://github.com/Kount/kount-ris-python-sdk/blob/master/kount/requirements.py>`
+      with
     
-    .. code-block:: python
+      .. code-block:: python
     
-      pip install -r requirements.txt
+          pip install -r requirements.txt
 
 3. How to run integration tests in root directory?
 
@@ -45,7 +45,8 @@ Contains the Kount Python SDK, tests, and build/package routines.
 
 
 4. Setting up IDE projects
-Komodo IDE/Edit, Scite, Visual Studio - have automatic python integration
+
+    Komodo IDE/Edit, Scite, Visual Studio - have automatic python integration
 
 5. Who do I talk to?
 
