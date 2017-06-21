@@ -8,6 +8,25 @@ Welcome to kount's documentation!
 
 .. toctree::
    :maxdepth: 2
+
+         advanced <Advanced.rst>
+         connection-troubleshooting <Connection-troubleshooting.rst>
+         Data-Collector-FAQ-and-Troubleshooting <Data-Collector-FAQ-and-Troubleshooting.rst>
+         Downloading_the_KountRISPythonSDK <Downloading_the_KountRISPythonSDK.rst>
+         Making-requests-to-the-Kount-RIS <Making-requests-to-the-Kount-RIS.rst>
+         PaymentTypes <PaymentTypes.rst>
+         PredictiveResponse <PredictiveResponse.rst>
+         README <README.rst>
+         Request-types-and-Parameters <Request-types-and-Parameters.rst>
+         Requirements <Requirements.rst>
+         Responce_description <Responce_description.rst>
+         SDK-Integration-&-Unit-Tests <SDK-Integration-&-Unit-Tests.rst>
+         Session-related-Parameters <Session-related-Parameters.rst>
+         Troubleshooting <Troubleshooting.rst>
+         sdkpython <sdkpython.rst>
+         util <util.rst>
+
+
    :caption: Contents:
      exceptions
 

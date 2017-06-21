@@ -7,10 +7,8 @@
 from __future__ import absolute_import, unicode_literals, division, print_function
 import unittest
 import os
-from shutil import copyfile
 from kount.settings import RESOURCE_FOLDER, XML_FILENAME
 from kount.util.xmlparser import xml_to_dict
-from kount.util.xml_rules import XML_DICT, REQUIRED, NOTREQUIRED
 
 __author__ = "Yordanka Spahieva"
 __version__ = "1.0.0"
@@ -20,6 +18,7 @@ __status__ = "Development"
 
 XML_FILENAME_PATH = os.path.join(os.path.dirname(__file__), '..',
                                  RESOURCE_FOLDER, XML_FILENAME)
+
 
 class TestXmlParser(unittest.TestCase):
     "Test Xml Parser"

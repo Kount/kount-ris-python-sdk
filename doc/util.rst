@@ -36,13 +36,6 @@ kount\.util\.payment module
     :undoc-members:
     :show-inheritance:
 
-kount\.util\.ris\_validation\_exception module
---------------------------------------------------
-
-.. automodule:: kount.util.ris_validation_exception
-    :members:
-    :undoc-members:
-    :show-inheritance:
 
 kount\.util\.risexception module
 ------------------------------------
@@ -61,13 +54,6 @@ kount\.util\.validation\_error module
     :undoc-members:
     :show-inheritance:
 
-kount\.util\.xml\_dict module
----------------------------------
-
-.. automodule:: kount.util.xml_dict
-    :members:
-    :undoc-members:
-    :show-inheritance:
 
 kount\.util\.xmlparser module
 ---------------------------------
@@ -82,6 +68,11 @@ Module contents
 ---------------
 
 .. automodule:: kount.util
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+.. automodule:: resources
     :members:
     :undoc-members:
     :show-inheritance:

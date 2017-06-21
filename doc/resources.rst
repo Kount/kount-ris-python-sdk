@@ -1,10 +1,15 @@
 resources package
-============================
+=======================
 
-Module contents
----------------
+Submodules
+-------------------
 
-.. automodule:: resources
+resources\.correct_salt_cryp module
+----------------------------------------------------------
+
+.. automodule:: resources.correct_salt_cryp
     :members:
     :undoc-members:
     :show-inheritance:
+
+.. literalinclude:: ../resources/validate.xml

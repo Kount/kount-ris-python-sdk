@@ -7,13 +7,10 @@
 
 from __future__ import absolute_import, unicode_literals, division, print_function
 import logging
-from .util.payment import (
-    BillMeLaterPayment, CardPayment, CheckPayment,
-    GiftCardPayment, GooglePayment, GreenDotMoneyPakPayment,
-    NoPayment, Payment, PaypalPayment)
+from .util.payment import (CardPayment, GiftCardPayment, NoPayment, Payment)
 from .util.khash import Khash
 from .ris_validator import RisException
-from .settings import SDK_VERSION, RAISE_ERRORS
+from .settings import SDK_VERSION
 
 __author__ = "Yordanka Spahieva"
 __version__ = "1.0.0"
@@ -290,12 +287,11 @@ class Request(object):
 
     def set_payment(self, ptyp, ptok):
         """ Set a payment by payment type and payment token.
-            The payment type parameter provided is checked
-            if it's one of the predefined payment types
-            and Payment is created appropriately
-            Args: ptyp - See SDK documentation for a list of accepted
-                        payment types
-                  ptok - The payment token
+        The payment type parameter provided is checked
+        if it's one of the predefined payment types
+        and Payment is created appropriately
+        Args: ptyp - See SDK documentation for a list of accepted payment types
+        ptok - The payment token
         """
         self.payment = Payment(ptyp, ptok)
         logger.debug("mask_token = %s", self.payment)
@@ -340,7 +336,7 @@ class Request(object):
         """Check if KHASH payment encoding has been set.
            return boolean TRUE when set.
         """
-        encoded = "PENC" in self.params and self.params["PENC"]=="KHASH"
+        encoded = "PENC" in self.params and self.params["PENC"] == "KHASH"
         logger.debug("is_set_khash_payment_encoding = %s", encoded)
         return encoded
 
@@ -355,8 +351,8 @@ class Request(object):
 
 class UPDATEMODE(object):
     "UPDATEMODE - U, X"
-    NO_RESPONSE='U'
-    WITH_RESPONSE='X'
+    NO_RESPONSE = 'U'
+    WITH_RESPONSE = 'X'
 
 
 class Update(Request):
