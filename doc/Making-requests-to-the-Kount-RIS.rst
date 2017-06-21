@@ -105,11 +105,9 @@ following the numbered comments in code
 
 .. _Advanced: https://github.com/Kount/kount-ris-python-sdk/wiki/Advanced.rst/
 
-__ Advanced_ 
-
 #. Setting a session identifier. This ID should be unique for a 30-day span and is used to track all changes regarding the purchase   described in the request. More information on the Advanced_ page.
 
-#. IP address of the customer. The merchant can discover it or it can be obtained through the [[Data Collector|Data-Collector.rst]] service.
+#. IP address of the customer. The merchant can discover it or it can be obtained through the `Data Collector <https://github.com/Kount/kount-ris-python-sdk/wiki/Data-Collector.rst>`__ service.
 
 #. Set this to a correct credit number or select another payment  method (for test purposes).
 
@@ -127,15 +125,11 @@ __ Advanced_
 
 .. _Responce_description: https://github.com/Kount/kount-ris-python-sdk/wiki/Responce_description.rst/
 
-__ Responce_description_ 
-
 .. _SDKIntegrationUnitTests: https://github.com/Kount/kount-ris-python-sdk/wiki/SDK-Integration-&-Unit-Tests.rst/
 
-__ SDKIntegrationUnitTests_ 
 
+*Next step*: Get to know what Kount RIS is returning at the `Responce_description <https://github.com/Kount/kount-ris-python-sdk/wiki/Responce_description.rst>`__ section.
 
-*Next step*: Get to know what Kount RIS is returning at the Responce_description_ section.
-
-*Next step*: Check the Advanced_ wiki page for detailed information on request parameters and SDK usage.
+*Next step*: Check the `Advanced <https://github.com/Kount/kount-ris-python-sdk/wiki/Advanced.rst>`__ wiki page for detailed information on request parameters and SDK usage.
 
 *Next step*: Examine the SDKIntegrationUnitTests_ for more examples and insight on configuration

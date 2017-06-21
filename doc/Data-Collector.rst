@@ -1,5 +1,4 @@
-| Quick link: 
-* `Data Collector FAQ and Troubleshooting <https://github.com/Kount/kount-ris-python-sdk/wiki/Data-Collector-FAQ-and-Troubleshooting.rst>`__
+| Quick link: * `Data Collector FAQ and Troubleshooting <https://github.com/Kount/kount-ris-python-sdk/wiki/Data-Collector-FAQ-and-Troubleshooting.rst>`__
 
 Feature description
 ===================

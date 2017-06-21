@@ -1,5 +1,4 @@
-Here we discuss the request types supported by the Kount RIS Python SDK
-and mandatory/optional parameters.
+Here we discuss the request types supported by the Kount RIS Python SDK and mandatory/optional parameters.
 
 Request types
 =============
@@ -35,7 +34,7 @@ order and the merchant wants them reflected into the Kount system.
 
 +------------+--------------------+---------------------------------------------+
 | ``Update   | SDK Constant       | Description                                 |
-| MODE``      |                    |                                             |
+| MODE``     |                    |                                             |
 +============+====================+=============================================+
 | ``U``      | ``UPDATEMODE.NO_RE | Default update mode, only sends the update  |
 |            | SPONSE``           | event                                       |

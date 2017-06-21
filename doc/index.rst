@@ -12,6 +12,7 @@ Welcome to kount's documentation!
          advanced <Advanced.rst>
          connection-troubleshooting <Connection-troubleshooting.rst>
          Data-Collector-FAQ-and-Troubleshooting <Data-Collector-FAQ-and-Troubleshooting.rst>
+         Data-Collector <Data-Collector.rst>
          Downloading_the_KountRISPythonSDK <Downloading_the_KountRISPythonSDK.rst>
          Making-requests-to-the-Kount-RIS <Making-requests-to-the-Kount-RIS.rst>
          PaymentTypes <PaymentTypes.rst>

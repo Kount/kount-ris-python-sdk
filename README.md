@@ -6,6 +6,9 @@ Contains the Kount Python SDK, tests, and build/package routines.
 
 ## What is this repository for?
 
+Kount's SDK helps integrate Kount's fraud fighting solution into your python app.
+http://www.kount.com/fraud-detection-software
+
     Contains sources, tests, and resources for the Kount Python SDK
     SDK version: 1.0.0
     Python 2.7.13 and 3.5, 3.6.1 
@@ -23,7 +26,7 @@ or
         * pathlib
       
 
-install all dependencies from [requirements.txt](https://github.com/Kount/kount-ris-python-sdk/blob/master/kount/requirements.py)
+install all dependencies from [requirements.txt](https://github.com/Kount/kount-ris-python-sdk/blob/master/requirements.txt)
  with
 
 `pip install -r requirements.txt`
