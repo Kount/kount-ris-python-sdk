@@ -64,8 +64,8 @@ master_doc = 'index'
 
 # General information about the project.
 project = u'kount'
-copyright = u'2017, Yordanka Spahieva'
-author = u'Yordanka Spahieva'
+copyright = u'2017, Kount SDK'
+author = u'Kount SDK'
 
 # The version info for the project you're documenting, acts as replacement for
 # |version| and |release|, also used in various other places throughout the

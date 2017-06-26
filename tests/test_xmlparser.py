@@ -10,10 +10,10 @@ import os
 from kount.settings import RESOURCE_FOLDER, XML_FILENAME
 from kount.util.xmlparser import xml_to_dict
 
-__author__ = "Yordanka Spahieva"
+__author__ = "Kount SDK"
 __version__ = "1.0.0"
-__maintainer__ = "Yordanka Spahieva"
-__email__ = "yordanka.spahieva@sirma.bg"
+__maintainer__ = "Kount SDK"
+__email__ = "sdkadmin@kount.com"
 __status__ = "Development"
 
 XML_FILENAME_PATH = os.path.join(os.path.dirname(__file__), '..',

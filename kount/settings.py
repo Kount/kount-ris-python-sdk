@@ -7,10 +7,10 @@
 from __future__ import absolute_import, unicode_literals, division, print_function
 
 
-__author__ = "Yordanka Spahieva"
+__author__ = "Kount SDK"
 __version__ = "1.0.0"
-__maintainer__ = "Yordanka Spahieva"
-__email__ = "yordanka.spahieva@sirma.bg"
+__maintainer__ = "Kount SDK"
+__email__ = "sdkadmin@kount.com"
 __status__ = "Development"
 
 PYTHON_VERSION = "3.6.1"

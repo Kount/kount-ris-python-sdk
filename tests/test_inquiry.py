@@ -15,10 +15,10 @@ from kount.util.cartitem import CartItem
 from kount.util.address import Address
 from kount.settings import SDK_VERSION
 
-__author__ = "Yordanka Spahieva"
+__author__ = "Kount SDK"
 __version__ = "1.0.0"
-__maintainer__ = "Yordanka Spahieva"
-__email__ = "yordanka.spahieva@sirma.bg"
+__maintainer__ = "Kount SDK"
+__email__ = "sdkadmin@kount.com"
 __status__ = "Development"
 
 

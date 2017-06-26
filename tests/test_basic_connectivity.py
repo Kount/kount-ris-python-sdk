@@ -17,10 +17,10 @@ from kount.util.payment import Payment, CardPayment
 import inittest
 from test_inquiry import generate_unique_id, default_inquiry
 
-__author__ = "Yordanka Spahieva"
+__author__ = "Kount SDK"
 __version__ = "1.0.0"
-__maintainer__ = "Yordanka Spahieva"
-__email__ = "yordanka.spahieva@sirma.bg"
+__maintainer__ = "Kount SDK"
+__email__ = "sdkadmin@kount.com"
 __status__ = "Development"
 
 

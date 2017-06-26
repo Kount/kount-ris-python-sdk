@@ -13,10 +13,10 @@ from kount.ris_validator import RisValidationException
 from kount.settings import RAISE_ERRORS, TIMEOUT
 import inittest
 
-__author__ = "Yordanka Spahieva"
+__author__ = "Kount SDK"
 __version__ = "1.0.0"
-__maintainer__ = "Yordanka Spahieva"
-__email__ = "yordanka.spahieva@sirma.bg"
+__maintainer__ = "Kount SDK"
+__email__ = "sdkadmin@kount.com"
 __status__ = "Development"
 
 KOUNT_API_KEY = "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiI5OTk2NjYiLCJhdWQiOiJLb3VudC4xIiwiaWF0IjoxNDk0NTM0Nzk5LCJzY3AiOnsia2EiOm51bGwsImtjIjpudWxsLCJhcGkiOmZhbHNlLCJyaXMiOnRydWV9fQ.eMmumYFpIF-d1up_mfxA5_VXBI41NSrNVe9CyhBUGck"
