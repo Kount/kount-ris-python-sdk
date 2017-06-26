@@ -1,0 +1,47 @@
+Getting started
+===========================
+
+1. `Home <Home>`_
+
+2. `SDK Features <SDK-Features>`_
+
+3. `Downloading the Kount RIS Python SDK <Downloading_the_KountRISPythonSDK>`_
+
+4. `Making requests to the Kount RIS <Making-requests-to-the-Kount-RIS>`_
+
+  #. `Configuration prerequisites and requirements <Making-requests-to-the-Kount-RIS>`_
+
+  #. `Creating request objects <Making-requests-to-the-Kount-RIS>`_
+
+  #. `Explanation of the request <Making-requests-to-the-Kount-RIS>`_
+
+5. `Response description <Response_description.rst>`_
+
+6. `SDK Integration SDK Integration & Unit Tests <SDK-Integration-&-Unit-Tests>`_
+
+7. `Connection Troubleshooting <Connection-troubleshooting>`_
+
+Going deeper
+=============
+
+1. `Advanced documentation <Advanced>`_
+     #. `Requests and their parameters <Request-types-and-Parameters>`_
+     #. `Request types <Request-types-and-Parameters>`_
+     #. `Mandatory Parameters <Request-types-and-Parameters>`_
+     #. `Optional Parameters <Request-types-and-Parameters>`_
+     #. `User-defined Fields <Request-types-and-Parameters>`_
+     #. `Predictive Response <PredictiveResponse>`_
+ 
+2. `Kount Data Collector <Data-Collector>`_
+    #. `Description <Data-Collector>`_
+    #. `Data Collector Requirements <Data-Collector>`_
+    #. `Sample Code <Data-Collector#sample-code>`_
+    #. `Phone Order Submissions <Data-Collector>`_
+    #. `Data Collector FAQ and Troubleshooting <Data-Collector-FAQ-and-Troubleshooting>`_
+
+3. `Session-related Parameters <Session-related-Parameters>`_
+4. `List of supported payment types <PaymentTypes>`_
+5. `Troubleshooting <Troubleshooting>`_
+
+6. `Generating the documentation for Read the Docs <Generating-the-documentation-for-Read-the-Docs>`_
+

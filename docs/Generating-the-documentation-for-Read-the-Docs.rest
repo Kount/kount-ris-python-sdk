@@ -1,0 +1,74 @@
+Generating the documentation for Read the Docs
+=========================================================
+
+How to generate beautiful technical documentation
+------------------------------------------------------------------
+
+Convert documentation written as plain text files into beautiful HTML documentation using a tool called Sphinx.
+
+1. Install with *pip*: 
+
+   #. Sphinx and 
+   #. sphinx_rtd_theme 
+
+2. If you want to start from scratch, follow the steps from `readthedocs <http://docs.readthedocs.io/en/latest/getting_started.html>`_
+
+OR *use make, conf.py & rst files from this repository*:
+
+2. Generate the documentation locally and preview:
+
+
+  #. git clone https://github.com/Kount/kount-ris-python-sdk.wiki.git
+
+  #. generate the html doc:
+
+  ::
+
+    ~/Kount/kount-ris-python-sdk.wiki& make clean
+    Removing everything under '_build'...
+    ~/Kount/kount-ris-python-sdk.wiki$ make html
+    Running Sphinx v1.6.2
+    making output directory...
+    loading pickled environment... not yet created
+    building [mo]: targets for 0 po files that are out of date
+    building [html]: targets for 25 source files that are out of date
+    updating environment: 25 added, 0 changed, 0 removed
+    reading sources... [100%] util                                                                                                                                                                              
+    /home/user/Kount/kount-ris-python-sdk.wiki/_Sidebar.rst:27: WARNING: Duplicate explicit target name: "predictive response".
+    looking for now-outdated files... none found
+    pickling environment... done
+    checking consistency... /home/user/Kount/kount-ris-python-sdk.wiki/Generating-the-documentation-for-Read-the-Docs.rst: WARNING: document isn't included in any toctree
+    /home/user/Kount/kount-ris-python-sdk.wiki/README.rst: WARNING: document isn't included in any toctree
+    /home/user/Kount/kount-ris-python-sdk.wiki/Requirements.rst: WARNING: document isn't included in any toctree
+    /home/user/Kount/kount-ris-python-sdk.wiki/_Sidebar.rst: WARNING: document isn't included in any toctree
+    done
+    preparing documents... done
+    writing output... [100%] util                                                                                                                                                                               
+    generating indices... genindex py-modindex
+    highlighting module code... [100%] kount.util.address                                                                                                                                                       
+    writing additional pages... search
+    copying images... [100%] images/data-collector.png                                                                                                                                                          
+    copying static files... done
+    copying extra files... done
+    dumping search index in English (code: en) ... done
+    dumping object inventory... done
+    build succeeded, 7 warnings.
+    Build finished. The HTML pages are in _build/html.
+
+
+The warnings are mostly because of not included files in the documentation. They are related to auto-generated doc or github-wiki pages. You can ignore them.
+If a new rst file is created, it must be included in some *toctree* - like the others in **index.rst**.
+Same for new modules. Other documentation related file is **conf.py** - theme, authors, etc.
+
+Webhook
+-----------
+`Create the webhook. <http://docs.readthedocs.io/en/latest/webhooks.html#webhook-creation>`_
+
+After this  within a few seconds your code will automatically be fetched from your public repository, and the documentation will be built. 
+Read the Docs will host multiple versions of Kount code in urls like:
+     
+    #. http://kount-ris-sdk.readthedocs.io/
+    #. http://kount-ris-sdk.readthedocs.io/en/latest/
+
+**NB - Always check for SALT configuration. It must be fake in the documentation.** 
+
