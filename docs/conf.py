@@ -43,7 +43,6 @@ show_authors = True
 extensions = ['sphinx.ext.autodoc',
     'sphinx.ext.doctest',
     'sphinx.ext.todo',
-    'sphinx.ext.note',
     'sphinx.ext.coverage',
     'sphinx.ext.viewcode',
     'sphinx.ext.githubpages',
