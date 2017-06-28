@@ -46,7 +46,7 @@ want to trigger the ``Data Collection`` to occur.
 | **merchantId**| ``m``        | six digit Merchant ID number issued by Kount        |
 +---------------+--------------+-----------------------------------------------------+
 | **sessionId** | ``s``        | 32 character session id; see Session ID Discussion  |
-|               |              |  above for more information                         |
+|               |              | above for more information                          |
 +---------------+--------------+-----------------------------------------------------+
 
 
@@ -103,11 +103,11 @@ Available methods in the ka.ClientSDK object:
 |                            |callback function to be called at a specified life-cycle hook.  |
 |                            | A merchant can pass a JavaScript object containing one or more |
 |                            |life cycle hooks with a function pointer or an anonymous   |br| |
-|                            |function to be executed. List of hooks (in order of firing:   |
+|                            |function to be executed. List of hooks (in order of firing:     |
 |                            |  * ``collect-begin`` - Triggers when the collection starts.    |
 |                            |  * ``collect-end`` - Triggers when the collection ends.        |
 |                            | When executed, the callback function is passed a JavaScript|br||
-|                            |object containing the following properties:                   |
+|                            |object containing the following properties:                     |
 |                            |  * ``MercSessId`` - The merchant provided session.             |
 |                            |  * ``MerchantId`` - The merchant Id.                           |
 +----------------------------+----------------------------------------------------------------+
