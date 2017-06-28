@@ -9,8 +9,7 @@ level while the user is logging into the website via a web clients or
 browser (see section below) or via a mobile app (**iOS or Android**).
 Here are the standard requirements for any Data Collection event.
 
-:information_source:  
-  Access Inquiry Service is designed to be used in conjunction with the Data Collection process. The Data Collection process is passive and provides no information back to a merchant independent of the Access Inquiry Service.
+.:information_source:    Access Inquiry Service is designed to be used in conjunction with the Data Collection process. The Data Collection process is passive and provides no information back to a merchant independent of the Access Inquiry Service.
 
 
 Session ID Discussion
@@ -69,7 +68,7 @@ field ``(m=123456)`` and the Session ID field
     <script type='text/javascript' src='https://sandbox02.kaxsdc.com/collect/sdk? m=123456&s=abcdefg12345abababab123456789012'> </script>
     <img src='https://sandbox02.kaxsdc.com/logo.gif?m=123456&s=abcdefg12345abababab123456789012' />
 
-:information_source: 
+.:information_source:
 
       The script tag will not affect the UI with its placement. The logo.gif is a 1x1 pixel transparent image served by Kount. This is preset image that is set by Kount within the Data Collection process.
 
@@ -235,6 +234,6 @@ Android applications.
 -  For Android implementations see the `Android SDK Guide <http://kount.github.io/mobile-client/android.html>`_
 -  For iOS implementation see the `iOS SDK Guide <http://kount.github.io/mobile-client/ios.html>`_
 
-:information_source:
+.:information_source:
       
        The Access Inquiry Service is designed to be used in conjunction with the Data Collection process. The Data Collection process is passive and provides no information back to a merchant independent of the Access Inquiry Service.
