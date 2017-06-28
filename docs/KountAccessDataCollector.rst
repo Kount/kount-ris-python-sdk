@@ -86,27 +86,26 @@ Available methods in the ka.ClientSDK object:
 +============================+================================================================+
 | **className**              | Sets the class to be used by ``autoLoadEvents()``              |
 +----------------------------+----------------------------------------------------------------+
-| **autoLoadEvents()**       |Automatically load events to trigger the data collection |br|   |
-|                            |process. This will wire all elements with a class equal to |br| |
-|                            |the property className that also have a data-event   |br|       |
-|                            |attribute. |br|                                                 |
-|                            |After the first event fires and the data collection process |br||
+| **autoLoadEvents()**       |Automatically load events to trigger the data collection        |
+|                            |process. This will wire all elements with a class equal to      |
+|                            |the property className that also have a data-event attribute.   |
+|                            |After the first event fires and the data collection process     |
 |                            |begins, no further events will have an effect.                  |
 +----------------------------+----------------------------------------------------------------+
 | **collectData()**          | Manually initiates the data collection process instead of      |
 |                            | waiting for an event to be loaded using the autoLoadEvents()   |
 |                            | method.                                                        |
 +----------------------------+----------------------------------------------------------------+
-| **setupCallback(config)**  |A client programmable callback system that allows the client|br||
-|                            |to execute custom code at certain points in the data |br|       |
-|                            |collection process. This method allows a merchant to add a |br| |
+| **setupCallback(config)**  |A client programmable callback system that allows the client    |
+|                            |to execute custom code at certain points in the data            |
+|                            |collection process. This method allows a merchant to add a      |
 |                            |callback function to be called at a specified life-cycle hook.  |
-|                            | A merchant can pass a JavaScript object containing one or more |
-|                            |life cycle hooks with a function pointer or an anonymous   |br| |
+|                            |A merchant can pass a JavaScript object containing one or more  |
+|                            |life cycle hooks with a function pointer or an anonymous        |
 |                            |function to be executed. List of hooks (in order of firing:     |
 |                            |  * ``collect-begin`` - Triggers when the collection starts.    |
 |                            |  * ``collect-end`` - Triggers when the collection ends.        |
-|                            | When executed, the callback function is passed a JavaScript|br||
+|                            |When executed, the callback function is passed a JavaScript     |
 |                            |object containing the following properties:                     |
 |                            |  * ``MercSessId`` - The merchant provided session.             |
 |                            |  * ``MerchantId`` - The merchant Id.                           |
