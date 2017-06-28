@@ -19,6 +19,7 @@ Welcome to kount's documentation!
          Advanced <Advanced.rst>
          Request types and Parameters <Request-types-and-Parameters.rst>
          Predictive Response <PredictiveResponse.rst>
+         Kount Access Data Collector <KountAccessDataCollector.rst>
          Data Collector <Data-Collector.rst>
          Data Collector FAQ and Troubleshooting <Data-Collector-FAQ-and-Troubleshooting.rst>
          Payment Types <PaymentTypes.rst>
