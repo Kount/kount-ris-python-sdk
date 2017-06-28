@@ -40,16 +40,18 @@ The Data Collector runs on a client's browser and collects a variety of informat
 Add the ``<script>`` tag and an ``<img>`` tag to the web page where you
 want to trigger the ``Data Collection`` to occur.
 
+
+.. |br| raw:: html
+
+   <br />
+
 +---------------+--------------+-----------------------------------------------------+
 | Field         | Parameter    | Value                                               |
 +===============+==============+=====================================================+
 | **merchantId**| ``m``        | six digit Merchant ID number issued by Kount        |
 +---------------+--------------+-----------------------------------------------------+
-| **sessionId** | ``s``        |::                                                   |
-|               |              |                                                     |
-|               |              |  32 character session id; see Session ID Discussion |
-|               |              |  above for more information                         |
-|               |              |                                                     |
+| **sessionId** | ``s``        |32 character session id; see Session ID |br|         |
+|               |              |Discussion above for more information                |
 +---------------+--------------+-----------------------------------------------------+
 
 .. line-block::
@@ -89,50 +91,35 @@ create a new ClientSDK object: ``var client=new ka.ClientSDK();``
 
 Available methods in the ka.ClientSDK object:
 
-+----------------------------+----------------------------------------------------------------+
-| Method                     | Description                                                    |
-+============================+================================================================+
-| **className**              | Sets the class to be used by ``autoLoadEvents()``              |
-+----------------------------+----------------------------------------------------------------+
-| **autoLoadEvents()**       |::                                                              |
-|                            |                                                                |
-|                            |  Automatically load events to trigger the data collection      |
-|                            |  process. This will wire all elements with a class equal to    |
-|                            |  the property className that also have a data-event attribute. |
-|                            |  After the first event fires and the data collection process   |
-|                            |  begins, no further events will have an effect.                |
-|                            |                                                                |
-+----------------------------+----------------------------------------------------------------+
-|  **collectData()**         |::                                                              |
-|                            |                                                                |
-|                            | Manually initiates the data collection process instead of      |
-|                            | waiting for an event to be loaded using the autoLoadEvents()   |
-|                            | method.                                                        |
-|                            |                                                                |
-+----------------------------+----------------------------------------------------------------+
-|                            |::                                                              |
-|                            |                                                                |
-| **setupCallback(config)**  |  A client programmable callback system that allows the client  |
-|                            |  to execute custom code at certain points in the data          |
-|                            |  collection process. This method allows a merchant to add a    |
-|                            |  callback function to be called at a specified life-cycle hook.|
-|                            |  A merchant can pass a JavaScript object containing one or more|
-|                            |  life cycle hooks with a function pointer or an anonymous      |
-|                            |  function to be executed. List of hooks (in order of firing):  |
-|                            |                                                                |
-|                            |                                                                |
-|                            |* ``collect-begin`` - Triggers when the collection starts.      |
-|                            |* ``collect-end`` - Triggers when the collection ends.          |
-|                            |                                                                |
-|                            |::                                                              |
-|                            |                                                                |
-|                            |  When executed, the callback function is passed a JavaScript   |
-|                            |  object containing the following properties:                   |
-|                            |                                                                |
-|                            |* ``MercSessId`` - The merchant provided session.               |
-|                            |* ``MerchantId`` - The merchant Id.                             |
-|                            |                                                                |
-+----------------------------+----------------------------------------------------------------+
++----------------------------+-------------------------------------------------------------------+
+| Method                     | Description                                                       |
++============================+===================================================================+
+| **className**              | Sets the class to be used by ``autoLoadEvents()``                 |
++----------------------------+-------------------------------------------------------------------+
+| **autoLoadEvents()**       |Automatically load events to trigger the data collection  |br|     |
+|                            |process. This will wire all elements with a class equal to |br|    |
+|                            |the property className that also have a data-event attribute |br|  |
+|                            |After the first event fires and the data collection process |br|   |
+|                            |begins, no further events will have an effect.                     |
++----------------------------+-------------------------------------------------------------------+
+|  **collectData()**         |Manually initiates the data collection process instead of |br|     |
+|                            |waiting for an event to be loaded using the autoLoadEvents() |br|  |
+|                            |method.                                                            |
++----------------------------+-------------------------------------------------------------------+
+| **setupCallback(config)**  |A client programmable callback system that allows the client |br|  |
+|                            |to execute custom code at certain points in the data |br|          |
+|                            |collection process. This method allows a merchant to add a |br|    |
+|                            |callback function to be called at a specified life-cycle hook. |br||
+|                            |A merchant can pass a JavaScript object containing one or more |br||
+|                            |life cycle hooks with a function pointer or an anonymous  |br|     |
+|                            |function to be executed. List of hooks (in order of firing): |br|  |
+|                            |  * ``collect-begin`` - Triggers when the collection starts.       |
+|                            |  * ``collect-end`` - Triggers when the collection ends.           |
+|                            |When executed, the callback function is passed a JavaScript |br|   |
+|                            |object containing the following properties:                        |
+|                            |  * ``MercSessId`` - The merchant provided session.                |
+|                            |  * ``MerchantId`` - The merchant Id.                              |
++----------------------------+-------------------------------------------------------------------+
 
 
 Code Example:
