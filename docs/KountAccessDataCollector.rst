@@ -10,7 +10,7 @@ browser (see section below) or via a mobile app (**iOS or Android**).
 
 Here are the standard requirements for any Data Collection event.
 
-:information_source:    Access Inquiry Service is designed to be used in conjunction with the Data Collection process. The Data Collection process is passive and provides no information back to a merchant independent of the Access Inquiry Service.
+. :information_source:    Access Inquiry Service is designed to be used in conjunction with the Data Collection process. The Data Collection process is passive and provides no information back to a merchant independent of the Access Inquiry Service.
 
 
 Session ID Discussion
