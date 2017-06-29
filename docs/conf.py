@@ -183,5 +183,11 @@ texinfo_documents = [
      'Miscellaneous'),
 ]
 
-
+html_context = {
+    "display_github": True, # Integrate GitHub
+    "github_user": "danibudi", # Username
+    "github_repo": "Kount Ris SDK Doc", # Repo name
+    "github_version": "master", # Version
+    "conf_py_path": "/docs/", # Path in the checkout to the docs root
+}
 
