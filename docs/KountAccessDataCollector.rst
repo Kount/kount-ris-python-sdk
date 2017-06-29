@@ -6,11 +6,17 @@ Data Collector
 
 The *Kount Access Data Collector* runs in the background at a sub second
 level while the user is logging into the website via a web clients or
-browser (see section below) or via a mobile app (**iOS or Android**).
+browser (see section below) or via a mobile app (:red:`iOS or Android`).
 
 Here are the standard requirements for any Data Collection event.
 
-. :information_source:    Access Inquiry Service is designed to be used in conjunction with the Data Collection process. The Data Collection process is passive and provides no information back to a merchant independent of the Access Inquiry Service.
+.. note:: Access Inquiry Service is designed to be used in conjunction with the Data Collection process. The Data Collection process is passive and provides no information back to a merchant independent of the Access Inquiry Service.
+
+
+.. admonition:: Info
+   :class: Green
+
+   Session ID Discussion
 
 
 Session ID Discussion
