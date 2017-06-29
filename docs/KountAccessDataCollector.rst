@@ -6,7 +6,7 @@ Data Collector
 
 The *Kount Access Data Collector* runs in the background at a sub second
 level while the user is logging into the website via a web clients or
-browser (see section below) or via a mobile app ( :red: `iOS or Android`).
+browser (see section below) or via a mobile app (``iOS or Android``).
 
 Here are the standard requirements for any Data Collection event.
 
