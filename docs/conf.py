@@ -47,6 +47,8 @@ extensions = ['sphinx.ext.autodoc',
     'sphinx.ext.viewcode',
     'sphinx.ext.githubpages',
     'sphinx.ext.autosectionlabel',
+    'sphinx.ext.autosummary',
+    'sphinx.ext.extlinks',
     ]
 
 
@@ -72,7 +74,7 @@ author = u'Kount SDK'
 # built documents.
 #
 # The short X.Y version.
-version = u'1.0.0'
+version = u'1.0'
 # The full version, including alpha/beta/rc tags.
 release = u'1.0.0'
 
@@ -100,7 +102,7 @@ todo_include_todos = False
 # The theme to use for HTML and HTML Help pages.  See the documentation for
 # a list of builtin themes.
 #
-#~ html_theme = 'alabaster'
+# html_theme = 'classic'
 
 
 # on_rtd is whether we are on readthedocs.org
@@ -181,5 +183,11 @@ texinfo_documents = [
      'Miscellaneous'),
 ]
 
-
+html_context = {
+    "display_github": True, # Integrate GitHub
+    "github_user": "danibudi", # Username
+    "github_repo": "Kount Ris SDK Doc", # Repo name
+    "github_version": "master", # Version
+    "conf_py_path": "/docs/", # Path in the checkout to the docs root
+}
 
