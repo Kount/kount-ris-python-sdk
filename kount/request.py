@@ -323,15 +323,6 @@ class Request(object):
                          "a CardPayment, applying khash instead of masking")
             return self.set_payment(payment, token)
 
-    def expiration_date(self, month, year):
-        """Set Card Expiration Date.
-           Args: month - String Month in two digit format: MM.
-                 year - String Year in four digit format: YYYY.
-        """
-        self.params["CCMM"] = month
-        self.params["CCYY"] = year
-        logger.debug("expiration_date CCMM=%s, CCYY=%s", month, year)
-
     def is_set_khash_payment_encoding(self):
         """Check if KHASH payment encoding has been set.
            return boolean TRUE when set.
