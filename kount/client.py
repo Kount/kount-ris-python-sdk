@@ -39,7 +39,7 @@ class Client:
 
     def process(self, params):
         """validate data and request post
-        https://pypi.python.org/pypi/requests - 0.13.3
+        https://pypi.python.org/pypi/requests
         Use simplejson if available.
         if raise_errors==False, the validation errors will not be raised,
         only logged; by default raise_errors=True"""
