@@ -8,10 +8,15 @@
 from __future__ import absolute_import, unicode_literals, division, print_function
 import hashlib
 import re
+import base64
 import logging
 from string import digits, ascii_uppercase
 from kount.settings import SALT
 from resources.correct_salt_cryp import correct_salt_cryp
+try:
+    from base64 import a85decode
+except ImportError:
+    from mom.codec.base85 import b85decode as a85decode
 
 __author__ = "Kount SDK"
 __version__ = "1.0.0"
@@ -52,7 +57,7 @@ class Khash(object):
     Uninstantiable class constructor.
     Class for creating Kount RIS KHASH encoding payment tokens.
     """
-    iv = SALT
+    iv = a85decode(SALT)
 
     @classmethod
     def verify(cls):
@@ -69,7 +74,7 @@ class Khash(object):
         """
         initialize the SALT phrase used in hashing operations.
         Khash.set_salt(salt)"""
-        cls.salt = iv
+        cls.salt = iv.decode("utf-8")
         cls.verify()
 
     @classmethod
@@ -116,7 +121,7 @@ class Khash(object):
             hashed = []
             plain_text_bytes = plain_text.encode('utf-8') #Python 3.x
             sha1 = hashlib.sha1(plain_text_bytes + ".".encode('utf-8') +
-                                cls.iv.encode('utf-8')).hexdigest()
+                                cls.iv).hexdigest()
             for i in range(0, loop_max, 2):
                 hashed.append(legal_chars[int(sha1[i: i+hex_chunk], 16)
                                           % length])

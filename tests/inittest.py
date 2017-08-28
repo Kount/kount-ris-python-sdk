@@ -15,6 +15,9 @@ __version__ = "1.0.0"
 __maintainer__ = "Kount SDK"
 __email__ = "sdkadmin@kount.com"
 __status__ = "Development"
+try:
+    from base64 import a85encode, a85decode
+except ImportError:
+    from mom.codec.base85 import b85encode as a85encode, b85decode as a85decode
 
-
-Khash.set_iv(iv)
+Khash.set_iv(a85decode(iv))
