@@ -33,29 +33,29 @@ class TestKhash(unittest.TestCase):
         self.assertEqual("000738F16NA2S935A5HY",
                          self.k.hash_payment_token(token="0007380568572514"))
         for i, plain_text in enumerate(self.list_for_hash):
-            card_salted = self.k.hash_payment_token(token=plain_text)
+            card_hashed = self.k.hash_payment_token(token=plain_text)
             expected = "%s%s" % (str(self.list_for_hash[i])[:6],
                                  self.expected[i])
-            self.assertEqual(card_salted, expected)
-            self.assertTrue(self.k.khashed(card_salted))
+            self.assertEqual(card_hashed, expected)
+            self.assertTrue(self.k.khashed(card_hashed))
 
     def test_token_invalid(self):
         "invalid token"
         with self.assertRaises(ValueError):
-            card_salted = self.k.hash_payment_token(token="")
+            card_hashed = self.k.hash_payment_token(token="")
         with self.assertRaises(ValueError):
-            card_salted = self.k.hash_payment_token(token=None)
-        card_salted = self.k.hash_payment_token(token="10**200")
-        self.assertEqual(card_salted, "10**20GA6AXR02LVUE5X")
+            card_hashed = self.k.hash_payment_token(token=None)
+        card_hashed = self.k.hash_payment_token(token="10**200")
+        self.assertEqual(card_hashed, "10**20GA6AXR02LVUE5X")
         with self.assertRaises(ValueError):
-            card_salted = self.k.hash_payment_token(token=-42)
+            card_hashed = self.k.hash_payment_token(token=-42)
         with self.assertRaises(ValueError):
-            card_salted = self.k.hash_payment_token(token=10**200)
+            card_hashed = self.k.hash_payment_token(token=10**200)
         with self.assertRaises(ValueError):
-            card_salted = self.k.hash_payment_token(token=0)
-        card_salted = self.k.hash_payment_token(token="Beatles")
-        self.assertEqual(card_salted, "Beatle5STRFTYPXBR14E")
-        self.assertTrue(self.k.khashed(card_salted))
+            card_hashed = self.k.hash_payment_token(token=0)
+        card_hashed = self.k.hash_payment_token(token="Beatles")
+        self.assertEqual(card_hashed, "Beatle5STRFTYPXBR14E")
+        self.assertTrue(self.k.khashed(card_hashed))
         bad = "John"
         try:
             self.k.hash_payment_token(token=bad)
@@ -67,20 +67,20 @@ class TestKhash(unittest.TestCase):
     def test_hash_gift_card(self):
         "gift card"
         for i in range(len(self.list_for_hash)):
-            card_salted = self.k.hash_gift_card(self.merchant_id,
+            card_hashed = self.k.hash_gift_card(self.merchant_id,
                                                 self.list_for_hash[i])
             expected = "%s%s" % (self.merchant_id, self.expected[i])
-            self.assertEqual(card_salted, expected)
-            self.assertTrue(self.k.khashed(card_salted))
+            self.assertEqual(card_hashed, expected)
+            self.assertTrue(self.k.khashed(card_hashed))
 
     def test_hash_gift_card_int_merchantid(self):
         "test_hash_gift_card_int_merchantid"
         for i in range(len(self.list_for_hash)):
-            card_salted = self.k.hash_gift_card(self.merchant_id,
+            card_hashed = self.k.hash_gift_card(self.merchant_id,
                                                 self.list_for_hash[i])
             expected = "%s%s" % (self.merchant_id, self.expected[i])
-            self.assertEqual(card_salted, expected)
-            self.assertTrue(self.k.khashed(card_salted))
+            self.assertEqual(card_hashed, expected)
+            self.assertTrue(self.k.khashed(card_hashed))
 
     def test_list_for_hash_empty(self):
         "list_for_hash_empty"
