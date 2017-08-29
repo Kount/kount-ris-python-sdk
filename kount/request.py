@@ -11,9 +11,10 @@ from .util.payment import (CardPayment, GiftCardPayment, NoPayment, Payment)
 from .util.khash import Khash
 from .ris_validator import RisException
 from .settings import SDK_VERSION
+from .version import VERSION
 
 __author__ = "Kount SDK"
-__version__ = "1.0.0"
+__version__ = VERSION
 __maintainer__ = "Kount SDK"
 __email__ = "sdkadmin@kount.com"
 __status__ = "Development"

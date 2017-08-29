@@ -12,14 +12,15 @@ import base64
 import logging
 from string import digits, ascii_uppercase
 from kount.settings import configurationKey
+from kount.version import VERSION
 from resources.correct_key_cryp import correct_key_cryp
 try:
-    from base64 import a85decode
+    from base64 import a85decode # python3.x.y
 except ImportError:
-    from mom.codec.base85 import b85decode as a85decode
+    from mom.codec.base85 import b85decode as a85decode # python2.7.13
 
 __author__ = "Kount SDK"
-__version__ = "1.0.0"
+__version__ = VERSION
 __maintainer__ = "Kount SDK"
 __email__ = "sdkadmin@kount.com"
 __status__ = "Development"

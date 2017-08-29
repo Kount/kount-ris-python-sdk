@@ -8,10 +8,10 @@ from __future__ import absolute_import, unicode_literals, division, print_functi
 import os
 from kount.util.xmlparser import xml_to_dict
 from kount.settings import RESOURCE_FOLDER, XML_FILENAME
-
+from kount.version import VERSION
 
 __author__ = "Kount SDK"
-__version__ = "1.0.0"
+__version__ = VERSION
 __maintainer__ = "Kount SDK"
 __email__ = "sdkadmin@kount.com"
 __status__ = "Development"

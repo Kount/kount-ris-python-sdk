@@ -5,9 +5,10 @@
 # Copyright (C) 2017 Kount Inc. All Rights Reserved.
 "correct configurationKey - sha-256"
 
+from kount.version import VERSION
 
 __author__ = "Kount SDK"
-__version__ = "1.0.0"
+__version__ = VERSION
 __maintainer__ = "Kount SDK"
 __email__ = "sdkadmin@kount.com"
 __status__ = "Development"
