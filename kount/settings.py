@@ -28,7 +28,8 @@ RAISE_ERRORS = True
 # request's timeout
 TIMEOUT = 5
 
-configurationKey = "fake configuration key"
+#~ fake configuration key, replace with the valid one orovided by Kount
+configurationKey = b"<+oue+DGm>F(&p)Ch4`2AU&;>AoD]4FCfN8Bl7Q+E-62?Df]K2/c"
 
 #~ uncomment this if you'd like to get the configurationKey from the environment
 #~ import os
