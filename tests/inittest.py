@@ -6,7 +6,7 @@
 "TestKhash"
 from __future__ import absolute_import, unicode_literals, division, print_function
 from kount.util.khash import Khash
-from kount.settings import SALT as iv
+from kount.settings import configurationKey as iv
 #~ import logging
 #~ logging.basicConfig()
 

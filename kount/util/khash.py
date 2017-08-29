@@ -11,8 +11,8 @@ import re
 import base64
 import logging
 from string import digits, ascii_uppercase
-from kount.settings import SALT
-from resources.correct_salt_cryp import correct_salt_cryp
+from kount.settings import configurationKey
+from resources.correct_key_cryp import correct_key_cryp
 try:
     from base64 import a85decode
 except ImportError:
@@ -57,24 +57,24 @@ class Khash(object):
     Uninstantiable class constructor.
     Class for creating Kount RIS KHASH encoding payment tokens.
     """
-    iv = a85decode(SALT)
+    iv = a85decode(configurationKey)
 
     @classmethod
     def verify(cls):
-        current_crypted = hashlib.sha256(cls.salt.encode('utf-8')).hexdigest()
-        if current_crypted != correct_salt_cryp:
-            mesg = "Configured SALT phrase is incorrect."
+        current_crypted = hashlib.sha256(cls.configurationKey.encode('utf-8')).hexdigest()
+        if current_crypted != correct_key_cryp:
+            mesg = "Configured configurationKey is incorrect."
             logger.error(mesg)
             raise ValueError(mesg)
-        logger.info("Configured SALT phrase is correct.")
+        logger.info("Configured configurationKey is correct.")
         return True
 
     @classmethod
     def set_iv(cls, iv):
         """
-        initialize the SALT phrase used in hashing operations.
-        Khash.set_salt(salt)"""
-        cls.salt = iv.decode("utf-8")
+        initialize the configurationKey used in hashing operations.
+        Khash.set_iv(iv)"""
+        cls.configurationKey = iv.decode("utf-8")
         cls.verify()
 
     @classmethod
