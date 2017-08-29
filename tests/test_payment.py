@@ -12,9 +12,10 @@ from kount.util.payment import (BillMeLaterPayment, CardPayment, CheckPayment,
                                 GreenDotMoneyPakPayment, NoPayment,
                                 Payment, PaypalPayment, NewPayment)
 
+from kount.version import VERSION
 
 __author__ = "Kount SDK"
-__version__ = "1.0.0"
+__version__ = VERSION
 __maintainer__ = "Kount SDK"
 __email__ = "sdkadmin@kount.com"
 __status__ = "Development"

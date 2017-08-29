@@ -11,11 +11,12 @@ import logging
 from .util.cartitem import CartItem
 from .util.validation_error import ValidationError
 from .util.xml_rules import XML_DICT, REQUIRED, NOTREQUIRED
+from .version import VERSION
 
 logger = logging.getLogger('kount.request')
 
 __author__ = "Kount SDK"
-__version__ = "1.0.0"
+__version__ = VERSION
 __maintainer__ = "Kount SDK"
 __email__ = "sdkadmin@kount.com"
 __status__ = "Development"

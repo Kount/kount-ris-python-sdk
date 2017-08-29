@@ -7,6 +7,7 @@ requests>=2.11.1
 
 #~ uncomment this for python 2.7.13
 #~ pathlib>=1.0.1
+#~ mom>=0.1.3 # base85
 
 #~ uncomment this to install Sphinx to generate the documentation
 #~ Sphinx>=1.6.2

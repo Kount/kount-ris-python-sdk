@@ -8,13 +8,19 @@
 from __future__ import absolute_import, unicode_literals, division, print_function
 import hashlib
 import re
+import base64
 import logging
 from string import digits, ascii_uppercase
-from kount.settings import SALT
-from resources.correct_salt_cryp import correct_salt_cryp
+from kount.settings import configurationKey
+from kount.version import VERSION
+from resources.correct_key_cryp import correct_key_cryp
+try:
+    from base64 import a85decode # python3.x.y
+except ImportError:
+    from mom.codec.base85 import b85decode as a85decode # python2.7.13
 
 __author__ = "Kount SDK"
-__version__ = "1.0.0"
+__version__ = VERSION
 __maintainer__ = "Kount SDK"
 __email__ = "sdkadmin@kount.com"
 __status__ = "Development"
@@ -52,24 +58,24 @@ class Khash(object):
     Uninstantiable class constructor.
     Class for creating Kount RIS KHASH encoding payment tokens.
     """
-    iv = SALT
+    iv = a85decode(configurationKey)
 
     @classmethod
     def verify(cls):
-        current_crypted = hashlib.sha256(cls.salt.encode('utf-8')).hexdigest()
-        if current_crypted != correct_salt_cryp:
-            mesg = "Configured SALT phrase is incorrect."
+        current_crypted = hashlib.sha256(cls.configurationKey.encode('utf-8')).hexdigest()
+        if current_crypted != correct_key_cryp:
+            mesg = "Configured configurationKey is incorrect."
             logger.error(mesg)
             raise ValueError(mesg)
-        logger.info("Configured SALT phrase is correct.")
+        logger.info("Configured configurationKey is correct.")
         return True
 
     @classmethod
     def set_iv(cls, iv):
         """
-        initialize the SALT phrase used in hashing operations.
-        Khash.set_salt(salt)"""
-        cls.salt = iv
+        initialize the configurationKey used in hashing operations.
+        Khash.set_iv(iv)"""
+        cls.configurationKey = iv.decode("utf-8")
         cls.verify()
 
     @classmethod
@@ -116,7 +122,7 @@ class Khash(object):
             hashed = []
             plain_text_bytes = plain_text.encode('utf-8') #Python 3.x
             sha1 = hashlib.sha1(plain_text_bytes + ".".encode('utf-8') +
-                                cls.iv.encode('utf-8')).hexdigest()
+                                cls.iv).hexdigest()
             for i in range(0, loop_max, 2):
                 hashed.append(legal_chars[int(sha1[i: i+hex_chunk], 16)
                                           % length])

@@ -6,8 +6,10 @@
 "Address class - representing a street address"
 
 from __future__ import absolute_import, unicode_literals, division, print_function
+from kount.version import VERSION
+
 __author__ = "Kount SDK"
-__version__ = "1.0.0"
+__version__ = VERSION
 __maintainer__ = "Kount SDK"
 __email__ = "sdkadmin@kount.com"
 __status__ = "Development"
