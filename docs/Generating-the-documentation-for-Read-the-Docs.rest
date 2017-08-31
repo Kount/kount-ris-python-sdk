@@ -70,5 +70,4 @@ Read the Docs will host multiple versions of Kount code in urls like:
     #. http://kount-ris-sdk.readthedocs.io/
     #. http://kount-ris-sdk.readthedocs.io/en/latest/
 
-**NB - Always check for SALT configuration. It must be fake in the documentation.** 
-
+**NB - Always check for configurationKey configuration. It must be fake in the documentation.** 

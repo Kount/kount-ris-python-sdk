@@ -2,5 +2,5 @@ kount resources
 =======================
 
 
-.. literalinclude:: ../resources/correct_salt_cryp.py
+.. literalinclude:: ../resources/correct_key_cryp.py
 .. literalinclude:: ../resources/validate.xml

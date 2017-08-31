@@ -49,23 +49,23 @@ install all dependencies from `requirements.txt <https://github.com/Kount/kount-
     python -m  tests.test_basic_connectivity
 
 
-The real salt can be set in **local_settings.py**:
+The real configurationKey can be set in **local_settings.py**:
 
-SALT = "replace with real salt"
+configurationKey = "replace with real configurationKey"
 
-OR is set as *environment variable* **K_SALT** . In this case in *settings.py* uncomment this:
+OR is set as *environment variable* **K_KEY** . In this case in *settings.py* uncomment this:
 
 
 ::
 
    #~ import os
    #~ try:
-       #~ SALT = os.environ['K_SALT']
+       #~ configurationKey = os.environ['K_KEY']
    #~ except KeyError:`
-       #~ print("The default fake salt set. Required actual one from Kount")
+       #~ print("The default fake configurationKey set. Required actual one from Kount")
 
 
-In case of correct salt all tests will be executed:
+In case of correct configurationKey all tests will be executed:
 
 
 ::
@@ -93,7 +93,7 @@ In case of correct salt all tests will be executed:
     ===========================================================85 passed in 71.87 seconds ==========
     
 
-with incorrect / missing salt the integration tests will raise a **ValueError: Configured SALT phrase is incorrect.**
+with incorrect / missing configurationKey the integration tests will raise a **ValueError: Configured configurationKey is incorrect.**
 
 ::
 
@@ -115,7 +115,7 @@ with incorrect / missing salt the integration tests will raise a **ValueError: C
         cls.verify()
     kount/util/khash.py:63: in verify
         raise ValueError(mesg)
-    E   ValueError: Configured SALT phrase is incorrect.
+    E   ValueError: Configured configurationKey is incorrect.
     --------------------------------------------------------------------------------------------- Captured stderr ----------------------------------------------------------------------------------------------
     No handlers could be found for logger "kount.khash"
     ____________________________________________________________________________ ERROR collecting tests/test_basic_connectivity.py _____________________________________________________________________________
@@ -127,7 +127,7 @@ with incorrect / missing salt the integration tests will raise a **ValueError: C
         cls.verify()
     kount/util/khash.py:63: in verify
         raise ValueError(mesg)
-    E   ValueError: Configured SALT phrase is incorrect.
+    E   ValueError: Configured configurationKey is incorrect.
     ___________________________________________________________________________________ ERROR collecting tests/test_khash.py ___________________________________________________________________________________
     tests/test_khash.py:9: in <module>
         import inittest
@@ -137,7 +137,7 @@ with incorrect / missing salt the integration tests will raise a **ValueError: C
         cls.verify()
     kount/util/khash.py:63: in verify
         raise ValueError(mesg)
-    E   ValueError: Configured SALT phrase is incorrect.
+    E   ValueError: Configured configurationKey is incorrect.
     ______________________________________________________________________________ ERROR collecting tests/test_ris_test_suite.py _______________________________________________________________________________
     tests/test_ris_test_suite.py:9: in <module>
         from test_basic_connectivity import generate_unique_id, default_inquiry
@@ -151,7 +151,7 @@ with incorrect / missing salt the integration tests will raise a **ValueError: C
         cls.verify()
     kount/util/khash.py:63: in verify
         raise ValueError(mesg)
-    E   ValueError: Configured SALT phrase is incorrect.
+    E   ValueError: Configured configurationKey is incorrect.
     !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! Interrupted: 4 errors during collection !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
     =================================================== 4 error in 0.29 seconds =================================
 

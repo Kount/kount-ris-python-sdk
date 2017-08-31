@@ -41,13 +41,13 @@ following configuration data:
 
 * API key 
 
-* SALT phrase used in encrypting sensitive data.
+* configurationKey used in encrypting sensitive data.
 
-Setting SALT phrase
+Setting configurationKey 
 --------------------------------------
 
 In order to run the set of integration tests, it is required to
-correctly set the SALT phrase in **Khas class**. Feel free to set as a
+correctly set the configurationKey in **Khas class**. Feel free to set as a
 system variable, put it in local\_settings.pt /Django users/, etc.
 Configure it in settings.py
 
@@ -58,15 +58,15 @@ Configure it in settings.py
         Uninstantiable class constructor.
         Class for creating Kount RIS KHASH encoding payment tokens.
         """
-        iv = SALT
+        iv = configurationKey
 
-If the default salt replaced with the correct one, all tests in run
-test\_khash.py will be executed. Else the integration tests with salt
+If the default configurationKey replaced with the correct one, all tests in run
+test\_khash.py will be executed. Else the integration tests with configurationKey 
 will fail with
 
 ::
 
-    ValueError: Configured SALT phrase is incorrect.
+    ValueError: Configured configurationKey is incorrect.
 
 They easily can be skipped because the \@unittest.skipIf\.
 
@@ -81,8 +81,8 @@ They easily can be skipped because the \@unittest.skipIf\.
             self.expected = ['WMS5YA6FUZA1KC', '2NOQRXNKTTFL11', 'FEXQI1QS6TH2O5']
             self.merchant_id = '666666'
 
-        @unittest.skipIf("fake salt" in Khash.salt, "Please, configure the salt in kount.settings "
-                         "with salt from Kount")
+        @unittest.skipIf("fake configurationKey" in Khash.iv, "Please, configure the configurationKey in kount.settings "
+                         "with configurationKey from Kount")
         def test_token_valid(self):
             ...
 
@@ -114,4 +114,4 @@ resources:
 --------------------------
 
 1. `resources/validate.xml <https://github.com/Kount/kount-ris-python-sdk/tree/master/resources/validate.xml>`_ - Kount xml, used for request's validation
-2.  `resources/correct\_salt\_cryp.py  <https://github.com/Kount/kount-ris-python-sdk/tree/master/resources/correct\_salt\_cryp.py>`_- sha-256 of the correct salt, used for validation
+2.  `resources/correct\_key\_cryp.py  <https://github.com/Kount/kount-ris-python-sdk/tree/master/resources/correct\_key\_cryp.py>`_- sha-256 of the correct configurationKey, used for validation

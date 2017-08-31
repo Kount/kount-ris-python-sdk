@@ -13,16 +13,16 @@ the following data from Kount:
 
 * URL for (test) RIS calls - ``url_api``, currently ``url_api = "https://risk.beta.kount.net"`` in `test\_api\_kount.py <https://github.com/Kount/kount-ris-python-sdk/blob/master/tests/test_api_kount.py>`__
 
-* Hashing SALT phrase used to encrypt sensitive data, salt - must be configured in ``kount.settings``:
+* Hashing configurationKey used to encrypt sensitive data, configurationKey - must be configured in ``kount.settings``:
 
-    * as environment variable | K_SALT or 
+    * as environment variable | K_KEY or 
     * any convenient file /like local\_settings.py for Django users/
 
 * API key, a JWT key used for authentication, *key* parameter in class Client `client.py <https://github.com/Kount/kount-ris-python-sdk/blob/master/kount/client.py>`__, used to perform communication with the RIS server.
 
 
 
-Currently: **SALT = 'fake salt'** in `settings.py <https://github.com/Kount/kount-ris-python-sdk/blob/master/kount/settings.py>`__
+Currently: **configurationKey = b'fake configurationKey'** in `settings.py <https://github.com/Kount/kount-ris-python-sdk/blob/master/kount/settings.py>`__
 
 Creating request objects
 ========================
@@ -46,7 +46,7 @@ service. /**see test\_inquiry.py**/
 
     #python
     from kount.util.khash import Khash
-    from kount.settings import SALT as iv
+    from kount.settings import configurationKey as iv
 
     Khash.set_iv(iv)
 
