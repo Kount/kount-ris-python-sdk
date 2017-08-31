@@ -14,9 +14,10 @@ from kount.util.payment import CardPayment, Payment, GiftCardPayment
 from kount.util.cartitem import CartItem
 from kount.util.address import Address
 from kount.settings import SDK_VERSION
+from kount.version import VERSION
 
 __author__ = "Kount SDK"
-__version__ = "1.0.0"
+__version__ = VERSION
 __maintainer__ = "Kount SDK"
 __email__ = "sdkadmin@kount.com"
 __status__ = "Development"
@@ -90,7 +91,7 @@ def generate_unique_id():
     return str(uuid.uuid4()).replace('-', '').upper()
 
 
-def default_inquiry(session_id, merchant_id, email_client, ptok, payment, khashed):
+def default_inquiry(session_id, merchant_id, email_client, ptok, payment):
     "default_inquiry, PENC is not set"
     result = Inquiry()
     result.request_mode(INQUIRYMODE.DEFAULT)
@@ -124,8 +125,6 @@ def default_inquiry(session_id, merchant_id, email_client, ptok, payment, khashe
     result.avs_cvv_reply(BCRSTAT.MATCH)
     result.merchant_acknowledgment_set(MERCHANTACKNOWLEDGMENT.TRUE) #"MACK"
     result.cash('4444')
-    if khashed:
-        result.khash_payment_encoding(enabled=True)
     return result
 
 
@@ -148,7 +147,7 @@ class TestInquiry(unittest.TestCase):
             session_id=self.session_id,
             merchant_id=MERCHANT_ID,
             email_client=EMAIL_CLIENT, ptok=PTOK,
-            payment=payment, khashed=False)
+            payment=payment)
         expected_not_khashed = expected.copy()
         expected_not_khashed["PTOK"] = '0007380568572514'
         actual = result.params
@@ -163,7 +162,7 @@ class TestInquiry(unittest.TestCase):
     def test_utilities_khashed(self):
         "test_utilities khashed"
         _expected = expected.copy()
-        payment = CardPayment(PTOK, khashed=True)
+        payment = CardPayment(PTOK)
         self.assertEqual(payment.payment_type, 'CARD')
         self.assertEqual(payment.last4, '2514')
         self.assertEqual(payment.payment_token, '000738F16NA2S935A5HY')
@@ -171,7 +170,7 @@ class TestInquiry(unittest.TestCase):
         result = default_inquiry(
             session_id=self.session_id,
             merchant_id=MERCHANT_ID,
-            email_client=EMAIL_CLIENT, ptok=PTOK, payment=payment, khashed=True)
+            email_client=EMAIL_CLIENT, ptok=PTOK, payment=payment)
         actual = result.params
         self.assertEqual(actual['PTYP'], 'CARD')
         self.assertIn(_expected['SDK_VERSION'], actual['SDK_VERSION'])
@@ -183,7 +182,7 @@ class TestInquiry(unittest.TestCase):
         "test_utilities GIFT khashed"
         #~ payment = CardPayment(PTOK, khashed=True)
         _expected = expected.copy()
-        payment = GiftCardPayment(PTOK, khashed=True)
+        payment = GiftCardPayment(PTOK)
         self.assertEqual(payment.payment_type, 'GIFT')
         self.assertEqual(payment.last4, '2514')
         self.assertEqual(payment.payment_token, '000738F16NA2S935A5HY')
@@ -191,7 +190,7 @@ class TestInquiry(unittest.TestCase):
         result = default_inquiry(
             session_id=self.session_id,
             merchant_id=MERCHANT_ID,
-            email_client=EMAIL_CLIENT, ptok=PTOK, payment=payment, khashed=True)
+            email_client=EMAIL_CLIENT, ptok=PTOK, payment=payment)
         actual = result.params
         self.assertEqual(actual['PTYP'], 'GIFT')
         self.assertIn(_expected['SDK_VERSION'], actual['SDK_VERSION'])

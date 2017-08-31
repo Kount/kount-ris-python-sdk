@@ -12,9 +12,10 @@ from kount.util.payment import (BillMeLaterPayment, CardPayment, CheckPayment,
                                 GreenDotMoneyPakPayment, NoPayment,
                                 Payment, PaypalPayment, NewPayment)
 
+from kount.version import VERSION
 
 __author__ = "Kount SDK"
-__version__ = "1.0.0"
+__version__ = VERSION
 __maintainer__ = "Kount SDK"
 __email__ = "sdkadmin@kount.com"
 __status__ = "Development"
@@ -27,7 +28,7 @@ class TestPaymentType(unittest.TestCase):
 
     def test_giftcardpayment(self):
         "giftcard payment"
-        ptype = GiftCardPayment(gift_card_number=self.test)
+        ptype = GiftCardPayment(gift_card_number=self.test, khashed=False)
         self.assertTrue(isinstance(ptype, Payment))
         self.assertEqual(ptype.last4, str(self.test)[-4:])
         self.assertFalse(ptype.khashed)
@@ -40,14 +41,14 @@ class TestPaymentType(unittest.TestCase):
                  CheckPayment, GiftCardPayment, GooglePayment,
                  GreenDotMoneyPakPayment, NoPayment, Payment, PaypalPayment)
         payment_dict = {
-            "BLML": BillMeLaterPayment(self.test),
-            "CARD": CardPayment(self.test),
-            "CHEK": CheckPayment(self.test),
-            "GIFT": GiftCardPayment(self.test),
-            "GOOG": GooglePayment(self.test),
-            "GDMP": GreenDotMoneyPakPayment(self.test),
+            "BLML": BillMeLaterPayment(self.test, khashed=False),
+            "CARD": CardPayment(self.test, khashed=False),
+            "CHEK": CheckPayment(self.test, khashed=False),
+            "GIFT": GiftCardPayment(self.test, khashed=False),
+            "GOOG": GooglePayment(self.test, khashed=False),
+            "GDMP": GreenDotMoneyPakPayment(self.test, khashed=False),
             "NONE": NoPayment(),
-            "PYPL": PaypalPayment(self.test),
+            "PYPL": PaypalPayment(self.test, khashed=False),
             }
         ptypes = []
         for current in payment_dict:
@@ -86,7 +87,7 @@ class TestPaymentType(unittest.TestCase):
 
     def test_user_defined_newpayment(self):
         "user defined payments - token khashed and notkhashed "
-        curp = NewPayment("PM42", self.test)
+        curp = NewPayment("PM42", self.test, khashed=False)
         self.assertEqual(curp.last4, str(self.test)[-4:])
         k = Khash()
         self.assertEqual(curp.payment_token, str((self.test)))

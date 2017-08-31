@@ -18,10 +18,11 @@ from kount.ris_validator import RisValidationException
 from kount.settings import SDK_VERSION, TIMEOUT
 from kount.util.payment import CardPayment
 import inittest
+from kount.version import VERSION
 
 
 __author__ = "Kount SDK"
-__version__ = "1.0.0"
+__version__ = VERSION
 __maintainer__ = "Kount SDK"
 __email__ = "sdkadmin@kount.com"
 __status__ = "Development"
@@ -54,7 +55,7 @@ class TestRisTestSuite(unittest.TestCase):
         self.inq = default_inquiry(session_id=self.session_id,
                                    merchant_id=MERCHANT_ID,
                                    email_client=EMAIL_CLIENT,
-                                   ptok=PTOK, payment=payment, khashed=False)
+                                   ptok=PTOK, payment=payment)
 
     def test_1_ris_q_1_item_required_field_1_rule_review(self):
         "test_1_ris_q_1_item_required_field_1_rule_review"
@@ -356,11 +357,11 @@ class TestRisTestSuiteKhashed(TestRisTestSuite):
         self.session_id = generate_unique_id()[:32]
         self.client = Client(RIS_ENDPOINT_BETA, KOUNT_API_KEY,
                              TIMEOUT, RAISE_ERRORS)
-        payment = CardPayment(PTOK, khashed=True)
+        payment = CardPayment(PTOK)
         self.inq = default_inquiry(session_id=self.session_id,
                                    merchant_id=MERCHANT_ID,
                                    email_client=EMAIL_CLIENT,
-                                   ptok=PTOK, payment=payment, khashed=True)
+                                   ptok=PTOK, payment=payment)
 
 
 if __name__ == "__main__":

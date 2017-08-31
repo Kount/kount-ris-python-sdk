@@ -16,9 +16,10 @@ from kount.settings import RAISE_ERRORS
 from kount.util.payment import Payment, CardPayment
 import inittest
 from test_inquiry import generate_unique_id, default_inquiry
+from kount.version import VERSION
 
 __author__ = "Kount SDK"
-__version__ = "1.0.0"
+__version__ = VERSION
 __maintainer__ = "Kount SDK"
 __email__ = "sdkadmin@kount.com"
 __status__ = "Development"
@@ -46,7 +47,7 @@ class TestBasicConnectivity(unittest.TestCase):
                           #~ khashed=False)
         self.inq = default_inquiry(
             self.session_id, MERCHANT_ID7, self.email_client,
-            ptok=PTOK, payment=payment, khashed=False)
+            ptok=PTOK, payment=payment)
 
     def test_12_expected_score(self):
         "test_12_expected_score"
@@ -137,10 +138,10 @@ class TestBasicConnectivityKhashed(TestBasicConnectivity):
     def setUp(self):
         self.session_id = generate_unique_id()[:32]
         self.email_client = EMAIL
-        payment = CardPayment(PTOK, khashed=True)
+        payment = CardPayment(PTOK)
         self.inq = default_inquiry(
             self.session_id, MERCHANT_ID7, self.email_client,
-            ptok=PTOK, payment=payment, khashed=True)
+            ptok=PTOK, payment=payment)
 
 
 if __name__ == "__main__":

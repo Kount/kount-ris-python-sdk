@@ -11,9 +11,10 @@ from .util.payment import (CardPayment, GiftCardPayment, NoPayment, Payment)
 from .util.khash import Khash
 from .ris_validator import RisException
 from .settings import SDK_VERSION
+from .version import VERSION
 
 __author__ = "Kount SDK"
-__version__ = "1.0.0"
+__version__ = VERSION
 __maintainer__ = "Kount SDK"
 __email__ = "sdkadmin@kount.com"
 __status__ = "Development"
@@ -265,6 +266,8 @@ class Request(object):
                              " KHASH payment encoding disabled", str(nsae))
                 #Default to plain text payment tokens
                 self.params["PENC"] = ""
+        if Khash.khashed(payment.payment_token):
+            self.params["PENC"] = "KHASH"
         self.params["PTOK"] = payment.payment_token
         self.params["PTYP"] = payment.payment_type
         self.params["LAST4"] = payment.last4

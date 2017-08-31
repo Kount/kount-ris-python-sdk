@@ -12,9 +12,10 @@ from kount.client import Client
 from kount.ris_validator import RisValidationException
 from kount.settings import RAISE_ERRORS, TIMEOUT
 import inittest
+from kount.version import VERSION
 
 __author__ = "Kount SDK"
-__version__ = "1.0.0"
+__version__ = VERSION
 __maintainer__ = "Kount SDK"
 __email__ = "sdkadmin@kount.com"
 __status__ = "Development"

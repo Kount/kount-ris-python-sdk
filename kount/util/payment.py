@@ -7,9 +7,10 @@
 from __future__ import absolute_import, unicode_literals, division, print_function
 import re
 from kount.util.khash import Khash
+from kount.version import VERSION
 
 __author__ = "Kount SDK"
-__version__ = "1.0.0"
+__version__ = VERSION
 __maintainer__ = "Kount SDK"
 __email__ = "sdkadmin@kount.com"
 __status__ = "Development"
@@ -23,13 +24,12 @@ class Payment(object):
     khashed - Indicates whether payment token is khashed.
     True if payment token is khashed.
     """
-    def __init__(self, payment_type=None, payment_token=None, khashed=False):
+    def __init__(self, payment_type=None, payment_token=None, khashed=True):
         """Constructor for a payment that accepts the payment ID.
         Calculate and set the payment token LAST4 value.
         last4 - Last 4 characters of payment token"""
         self.last4 = "NONE"
         self.payment_token = None
-        self.khashed = False
         if payment_type is not None:
             self.payment_type = str(payment_type)
         else:
@@ -40,6 +40,10 @@ class Payment(object):
                 self.last4 = self.payment_token[-4:]
             if khashed:
                 self.khashed = self.khash_token()
+        if khashed or Khash.khashed(self.payment_token):
+            self.khashed = True
+        else:
+            self.khashed = False
 
     def khash_token(self):
         "hash the payment_token, return True if khashed, else raise ValueError"
@@ -52,7 +56,7 @@ class Payment(object):
                          self.payment_token)
 
 
-def GiftCardPayment(gift_card_number, khashed=False):
+def GiftCardPayment(gift_card_number, khashed=True):
     """Sets the PTYP parameter to GIFT,
     params: gift_card_number,
             khashed - boolean"""
@@ -60,7 +64,7 @@ def GiftCardPayment(gift_card_number, khashed=False):
                    khashed=khashed)
 
 
-def GooglePayment(google_payment_id, khashed=False):
+def GooglePayment(google_payment_id, khashed=True):
     """Sets the PTYP parameter to "GIFT".
     params: google_payment_id - Google payment ID
                 khashed - boolean"""
@@ -68,7 +72,7 @@ def GooglePayment(google_payment_id, khashed=False):
                    khashed=khashed)
 
 
-def GreenDotMoneyPakPayment(green_dot_mp_payment, khashed=False):
+def GreenDotMoneyPakPayment(green_dot_mp_payment, khashed=True):
     """Sets the PTYP parameter to "GDMP".
     params: green_dot_mp_payment - Green Dot MoneyPak payment ID number
             khashed - boolean"""
@@ -81,7 +85,7 @@ def NoPayment():
     return Payment(payment_type=None, payment_token=None)
 
 
-def CheckPayment(micr, khashed=False):
+def CheckPayment(micr, khashed=True):
     """Sets the PTYP parameter to "CHEK".
     params: micr - The MICR (Magnetic Ink Character Recognition) line on the check.
             khashed - boolean
@@ -90,7 +94,7 @@ def CheckPayment(micr, khashed=False):
                    khashed=khashed)
 
 
-def PaypalPayment(paypal_payment_id, khashed=False):
+def PaypalPayment(paypal_payment_id, khashed=True):
     """paypal payment - accepts the paypal payment ID.
     Sets the PTYP parameter to "PYPL".
     params: paypal_payment_id - Paypal payment ID
@@ -100,7 +104,7 @@ def PaypalPayment(paypal_payment_id, khashed=False):
                    khashed=khashed)
 
 
-def CardPayment(card_number, khashed=False):
+def CardPayment(card_number, khashed=True):
     """credit card payment
     Sets the PTYP parameter to "CARD".
     params: card_number - The card number
@@ -110,7 +114,7 @@ def CardPayment(card_number, khashed=False):
                    khashed=khashed)
 
 
-def BillMeLaterPayment(payment_id, khashed=False):
+def BillMeLaterPayment(payment_id, khashed=True):
     """bill me later payment
     Sets the PTYP parameter to "BLML".
     params: payment_id - The payment ID,
@@ -119,7 +123,7 @@ def BillMeLaterPayment(payment_id, khashed=False):
     return Payment(payment_type="BLML", payment_token=str(payment_id),
                    khashed=khashed)
 
-def ApplePay(payment_id, khashed=False):
+def ApplePay(payment_id, khashed=True):
     """Apple Pay
     Sets the PTYP parameter to "APAY".
     params: payment_id - apay,
@@ -128,7 +132,7 @@ def ApplePay(payment_id, khashed=False):
     return Payment(payment_type="APAY", payment_token=str(payment_id),
                    khashed=khashed)
 
-def BPayPayment(payment_id, khashed=False):
+def BPayPayment(payment_id, khashed=True):
     """BPay Payment
     Sets the PTYP parameter to "BPAY".
     params: payment_id - bpay,
@@ -138,7 +142,7 @@ def BPayPayment(payment_id, khashed=False):
                    khashed=khashed)
 
 
-def CarteBleuePayment(payment_id, khashed=False):
+def CarteBleuePayment(payment_id, khashed=True):
     """Carte Bleue Payment
     Sets the PTYP parameter to "CARTE_BLEUE".
     params: payment_id - Carte Bleue id,
@@ -147,7 +151,7 @@ def CarteBleuePayment(payment_id, khashed=False):
     return Payment(payment_type="CARTE_BLEUE", payment_token=str(payment_id),
                    khashed=khashed)
 
-def ELVPayment(payment_id, khashed=False):
+def ELVPayment(payment_id, khashed=True):
     """ELV Payment
     Sets the PTYP parameter to "ELV".
     params: payment_id - ELV id,
@@ -156,7 +160,7 @@ def ELVPayment(payment_id, khashed=False):
     return Payment(payment_type="ELV", payment_token=str(payment_id),
                    khashed=khashed)
 
-def GiroPayPayment(payment_id, khashed=False):
+def GiroPayPayment(payment_id, khashed=True):
     """GIROPAY Payment
     Sets the PTYP parameter to "GIROPAY".
     params: payment_id - id,
@@ -165,7 +169,7 @@ def GiroPayPayment(payment_id, khashed=False):
     return Payment(payment_type="GIROPAY", payment_token=str(payment_id),
                    khashed=khashed)
 
-def InteracPayment(payment_id, khashed=False):
+def InteracPayment(payment_id, khashed=True):
     """Interac Payment
     Sets the PTYP parameter to "INTERAC".
     params: payment_id - id,
@@ -174,7 +178,7 @@ def InteracPayment(payment_id, khashed=False):
     return Payment(payment_type="INTERAC", payment_token=str(payment_id),
                    khashed=khashed)
 
-def MercadoPagoPayment(payment_id, khashed=False):
+def MercadoPagoPayment(payment_id, khashed=True):
     """Mercado Pago Payment
     Sets the PTYP parameter to "MERCADE_PAGO".
     params: payment_id - id,
@@ -184,7 +188,7 @@ def MercadoPagoPayment(payment_id, khashed=False):
                    khashed=khashed)
 
 
-def NetellerPayment(payment_id, khashed=False):
+def NetellerPayment(payment_id, khashed=True):
     """Neteller Payment
     Sets the PTYP parameter to "NETELLER".
     params: payment_id - id,
@@ -194,7 +198,7 @@ def NetellerPayment(payment_id, khashed=False):
                    khashed=khashed)
 
 
-def PoliPayment(payment_id, khashed=False):
+def PoliPayment(payment_id, khashed=True):
     """POLi Payment
     Sets the PTYP parameter to "POLI".
     params: payment_id - id,
@@ -204,7 +208,7 @@ def PoliPayment(payment_id, khashed=False):
                    khashed=khashed)
 
 
-def SEPAPayment(payment_id, khashed=False):
+def SEPAPayment(payment_id, khashed=True):
     """Single Euro Payments Area Payment
     Sets the PTYP parameter to "SEPA".
     params: payment_id - id,
@@ -214,7 +218,7 @@ def SEPAPayment(payment_id, khashed=False):
                    khashed=khashed)
 
 
-def SofortPayment(payment_id, khashed=False):
+def SofortPayment(payment_id, khashed=True):
     """Sofort Payment
     Sets the PTYP parameter to "SOFORT".
     params: payment_id - id,
@@ -223,7 +227,7 @@ def SofortPayment(payment_id, khashed=False):
     return Payment(payment_type="SOFORT", payment_token=str(payment_id),
                    khashed=khashed)
 
-def TokenPayment(payment_id, khashed=False):
+def TokenPayment(payment_id, khashed=True):
     """Token Payment
     Sets the PTYP parameter to "TOKEN".
     params: payment_id - id,
@@ -232,7 +236,7 @@ def TokenPayment(payment_id, khashed=False):
     return Payment(payment_type="TOKEN", payment_token=str(payment_id),
                    khashed=khashed)
 
-def SkrillPayment(payment_id, khashed=False):
+def SkrillPayment(payment_id, khashed=True):
     """Skrill/Moneybookers Payment
     Sets the PTYP parameter to "SKRILL".
     params: payment_id - id,
@@ -241,7 +245,7 @@ def SkrillPayment(payment_id, khashed=False):
     return Payment(payment_type="SKRILL", payment_token=str(payment_id),
                    khashed=khashed)
 
-def NewPayment(payment_type, payment_token, khashed=False):
+def NewPayment(payment_type, payment_token, khashed=True):
     """User-defined payment type
     Sets the PTYP parameter to desired parameter.
     params: payment_type
