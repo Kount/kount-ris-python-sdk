@@ -266,6 +266,8 @@ class Request(object):
                              " KHASH payment encoding disabled", str(nsae))
                 #Default to plain text payment tokens
                 self.params["PENC"] = ""
+        if Khash.khashed(payment.payment_token):
+            self.params["PENC"] = "KHASH"
         self.params["PTOK"] = payment.payment_token
         self.params["PTYP"] = payment.payment_type
         self.params["LAST4"] = payment.last4
