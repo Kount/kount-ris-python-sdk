@@ -60,3 +60,7 @@ test_xmlparser.py
 test_bed_examples.py
 
 .. literalinclude:: ../tests/test_bed_examples.py
+
+test_base85_encode_decode.py
+
+.. literalinclude:: ../tests/test_base85_encode_decode.py
