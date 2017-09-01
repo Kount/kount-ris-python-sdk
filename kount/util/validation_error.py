@@ -42,13 +42,13 @@ class ValidationErrorType(Exception):
 
 class ValidationError(ValidationErrorType):
     """Get the string representation of the error.
-        Keyword arguments:
-            field - the name of the bad field
-            mode - the RIS mode the field is associated with
-            value - field value
-            pattern - the regular expression violated
-            length - the maximum allowable length
-        raise  ValidationError
+    Keyword arguments:
+    field - the name of the bad field
+    mode - the RIS mode the field is associated with
+    value - field value
+    pattern - the regular expression violated
+    length - the maximum allowable length
+    raise  ValidationError
     """
     def __init__(self, field="", mode="", value="", pattern="", length=0):
         validation_error = False

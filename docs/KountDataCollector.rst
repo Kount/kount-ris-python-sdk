@@ -1,10 +1,10 @@
-Kount Access Data Collector
+Kount Ris Data Collector
 =========================================
 
-Data Collector
-~~~~~~~~~~~~~~
+Kount Data Collector
+~~~~~~~~~~~~~~~~~~~~~
 
-The *Kount Access Data Collector* runs in the background at a sub second
+The *Kount Data Collector* runs in the background at a sub second
 level while the user is logging into the website via a web clients or
 browser (see section below) or via a mobile app (``iOS or Android``).
 
@@ -79,7 +79,7 @@ configurable using the Client Collector SDK.
 Namespace & ka.ClientSDK Object
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-All ``Kount Access JavaScript`` is namespaced under the
+All ``Kount collector JavaScript`` is namespaced under the
 ``ka JavaScript`` object. To start using the Client Collector SDK,
 create a new ClientSDK object: ``var client=new ka.ClientSDK();``
 
@@ -107,10 +107,13 @@ Available methods in the ka.ClientSDK object:
 |                            |A merchant can pass a JavaScript object containing one or more |br||
 |                            |life cycle hooks with a function pointer or an anonymous  |br|     |
 |                            |function to be executed. List of hooks (in order of firing): |br|  |
+|                            |                                                                   |
 |                            |  * ``collect-begin`` - Triggers when the collection starts.       |
 |                            |  * ``collect-end`` - Triggers when the collection ends.           |
+|                            |                                                                   |
 |                            |When executed, the callback function is passed a JavaScript |br|   |
 |                            |object containing the following properties:                        |
+|                            |                                                                   |
 |                            |  * ``MercSessId`` - The merchant provided session.                |
 |                            |  * ``MerchantId`` - The merchant Id.                              |
 +----------------------------+-------------------------------------------------------------------+

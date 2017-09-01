@@ -95,9 +95,9 @@ class Khash(object):
     @classmethod
     def hash_gift_card(cls, merchant_id, card_number):
         """ Hash a gift card payment token using the Kount hashing algorithm.
-            Args:   merchant_id - Merchant ID number
-                    card_number - Card number to be hashed
-            returns: String hashed
+        Args: merchant_id - Merchant ID number
+        card_number - Card number to be hashed
+        returns: String hashed
         """
         merchant_id, card_number = validator(merchant_id, card_number)
         return "%s%s" % (merchant_id, cls.hash(cls, plain_text=card_number))
