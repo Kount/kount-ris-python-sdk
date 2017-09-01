@@ -194,7 +194,7 @@ with incorrect / missing configurationKey the integration tests will raise a **V
     .............validation errors = ['Mode J invalid for MACK', 'Mode J invalid for SESS', 'Mode J invalid for SITE', 'Mode J invalid for PROD_QUANT[0]', 'Mode J invalid for PROD_ITEM[0]', 'Mode J invalid for PROD_PRICE[0]', 'Mode J invalid for PROD_TYPE[0]']
     ......................
     ----------------------------------------------------------------------
-    Ran 85 tests in 71.508s
+    Ran 91 tests in 71.508s
     OK
 
 
@@ -205,13 +205,13 @@ with incorrect / missing configurationKey the integration tests will raise a **V
 ::
 
     ~/Kount$ coverage run -m unittest discover tests
-    .......................................................................................
+    ...........................................................................................
     ----------------------------------------------------------------------
-    Ran 87 tests in 67.346s
+    Ran 91 tests in 67.346s
     ~/Kount$ coverage report --omit=*/local/*,*/.local/*
 
 
-**TOTAL**  -  **91%**  
+**TOTAL**  -  **92%**  
 
 or generate **detailed html coverage** in folder ~htmlcov with:
 
