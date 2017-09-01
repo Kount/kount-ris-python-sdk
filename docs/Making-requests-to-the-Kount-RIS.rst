@@ -72,10 +72,9 @@ service. /**see test\_inquiry.py**/
         #~ set customer information
         inquiry.unique_customer_id(session_id[:20])
         inquiry.ip_address(SITE_ID)
-        payment = CardPayment(PTOK, khashed=False)   # credit-card-number, khashed=False
-        #~ or for khashed token
-        #~ payment = CardPayment(PTOK, hashed=True)   # credit-card-number
-        #~ inquiry.khash_payment_encoding(enabled=True)
+        payment = CardPayment(PTOK, khashed=False)   # credit-card-number
+        #~ or for khashed token:
+        #~ payment = CardPayment(PTOK)   # credit-card-number, khashed=True *default value*
         inquiry.payment_set(payment) 
         inquiry.customer_name("SdkTestFirstName SdkTestLastName")
         inquiry.email_client(EMAIL_CLIENT)
@@ -122,3 +121,5 @@ following the numbered comments in code
     NewPayment(payment_type="PM42", payment_token=token, khashed=True) 
     Payment("PM42", token, False)
     Payment("PM42", token, True)
+
+Good examples - `test_bed_examples.py <https://github.com/Kount/kount-ris-python-sdk/blob/master/tests/test_bed_examples.py>`__
