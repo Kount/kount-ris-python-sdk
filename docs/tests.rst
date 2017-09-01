@@ -56,3 +56,7 @@ test_ris_validator.py
 test_xmlparser.py
 
 .. literalinclude:: ../tests/test_xmlparser.py
+
+test_bed_examples.py
+
+.. literalinclude:: ../tests/test_bed_examples.py

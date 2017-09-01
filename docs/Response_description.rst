@@ -1,4 +1,4 @@
-Responce description
+Response description
 ===============================
 
 After a merchant has posted RIS information to Kount, a key-value pair

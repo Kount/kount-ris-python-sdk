@@ -19,7 +19,7 @@ RIS Warning and Error Codes
 ===========================
 
 +---------------+-----------------------+--------------------------------------------------+
-| Responce Code | Warning/Error Label   | Response Code Description                        |
+| Response Code | Warning/Error Label   | Response Code Description                        |
 +===============+=======================+==================================================+
 | 201           | ``MISSING_VERS``      | Missing version of Kount, this is built into SDK |
 |               |                       | but must be supplied by merchant if not using    |
