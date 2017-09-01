@@ -78,10 +78,11 @@ In case of correct configurationKey all tests will be executed:
     metadata: {'Platform': 'Linux-4.10.0-21-generic-x86_64-with-Ubuntu-17.04-zesty', 'Plugins': {'html': '1.14.2', 'metadata': '1.5.0'}, 'Packages': {'py': '1.4.33', 'pytest': '3.1.0', 'pluggy': '0.4.0'}, 'Python': '3.6.1'}
     rootdir: /home/dani/Kount, inifile:
     plugins: metadata-1.5.0, html-1.14.2
-    collected 87 items 
-    
+    collected 91 items                                                                                                                                                                                          
+
     tests/test_address.py ...
     tests/test_api_kount.py .......
+    tests/test_base85_encode_decode.py ....
     tests/test_basic_connectivity.py ..........
     tests/test_bed_examples.py ..
     tests/test_inquiry.py ...
@@ -92,8 +93,9 @@ In case of correct configurationKey all tests will be executed:
     tests/test_ris_validator.py ...
     tests/test_validation_error.py ........
     tests/test_xmlparser.py .
+
     
-    ===========================================================87 passed in 71.87 seconds ==========
+    ===========================================================91 passed in 71.87 seconds ==========
     
 
 with incorrect / missing configurationKey the integration tests will raise a **ValueError: Configured configurationKey is incorrect.**
