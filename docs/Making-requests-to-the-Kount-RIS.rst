@@ -72,9 +72,9 @@ service. /**see test\_inquiry.py**/
         #~ set customer information
         inquiry.unique_customer_id(session_id[:20])
         inquiry.ip_address(SITE_ID)
-        payment = CardPayment(PTOK)   # credit-card-number, khashed=False
+        payment = CardPayment(PTOK, khashed=False)   # credit-card-number, khashed=False
         #~ or for khashed token
-        #~ payment = CardPayment(PTOKk, hashed=True)   # credit-card-number
+        #~ payment = CardPayment(PTOK, hashed=True)   # credit-card-number
         #~ inquiry.khash_payment_encoding(enabled=True)
         inquiry.payment_set(payment) 
         inquiry.customer_name("SdkTestFirstName SdkTestLastName")
