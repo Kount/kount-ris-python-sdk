@@ -28,7 +28,7 @@ or
    2. Dependencies
         * requests
         
-         only for python 2.7.13, uncomment in `requirements.txt <https://github.com/Kount/kount-ris-python-sdk/blob/master/requirements.txt>`_
+         only for python 2.7.13, uncomment pathlib and mom in `requirements.txt <https://github.com/Kount/kount-ris-python-sdk/blob/master/requirements.txt>`_
          
         * pathlib>=1.0.1
         
