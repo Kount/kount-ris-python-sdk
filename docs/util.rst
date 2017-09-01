@@ -26,6 +26,8 @@ kount\.util\.khash module
     :undoc-members:
     :show-inheritance:
 
+.. literalinclude:: ../kount/util/khash.py
+
 kount\.util\.payment module
 -------------------------------
 
@@ -34,6 +36,7 @@ kount\.util\.payment module
     :undoc-members:
     :show-inheritance:
 
+.. literalinclude:: ../kount/util/payment.py
 
 kount\.util\.risexception module
 ------------------------------------
