@@ -30,6 +30,8 @@ kount\.request module
     :members:
     :undoc-members:
     :show-inheritance:
+   
+.. literalinclude:: ../kount/request.py
 
 kount\.response module
 --------------------------
@@ -39,7 +41,7 @@ kount\.response module
     :undoc-members:
     :show-inheritance:
 
-.. literalinclude:: ../kount/request.py
+
 
 kount\.ris\_validator module
 --------------------------------
