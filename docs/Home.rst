@@ -28,9 +28,11 @@ or
    2. Dependencies
         * requests
         
-         only for python 2.7.13, uncomment them in `requirements.txt <https://github.com/Kount/kount-ris-python-sdk/blob/master/requirements.txt>`_
+         only for python 2.7.13, uncomment in `requirements.txt <https://github.com/Kount/kount-ris-python-sdk/blob/master/requirements.txt>`_
          
-        * pathlib
+        * pathlib>=1.0.1
+        
+        * mom>=0.1.3 # base85
 
 
 install all dependencies from `requirements.txt <https://github.com/Kount/kount-ris-python-sdk/blob/master/requirements.txt>`_  with
@@ -89,8 +91,9 @@ In case of correct configurationKey all tests will be executed:
     tests/test_ris_validator.py ...
     tests/test_validation_error.py ........
     tests/test_xmlparser.py .
+    tests/test_bed_examples.py ..
     
-    ===========================================================85 passed in 71.87 seconds ==========
+    ===========================================================87 passed in 71.87 seconds ==========
     
 
 with incorrect / missing configurationKey the integration tests will raise a **ValueError: Configured configurationKey is incorrect.**
@@ -200,9 +203,9 @@ with incorrect / missing configurationKey the integration tests will raise a **V
 ::
 
     ~/Kount$ coverage run -m unittest discover tests
-    .....................................................................................
+    .......................................................................................
     ----------------------------------------------------------------------
-    Ran 85 tests in 67.346s
+    Ran 87 tests in 67.346s
     ~/Kount$ coverage report --omit=*/local/*,*/.local/*
 
 
