@@ -47,7 +47,7 @@ Setting configurationKey
 --------------------------------------
 
 In order to run the set of integration tests, it is required to
-correctly set the configurationKey in **Khas class**. Feel free to set as a
+correctly set the configurationKey in **Khash class**. Feel free to set as a
 system variable, put it in local\_settings.pt /Django users/, etc.
 Configure it in settings.py
 
