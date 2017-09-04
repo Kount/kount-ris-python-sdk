@@ -185,7 +185,7 @@ RIS Warning and Error Codes
 | 413           | ``REQUEST_ENTITY_TOO_ | The RIS Post to Kount exceeded the 4K limit.     |
 |               | LARGE``               |                                                  |
 +---------------+-----------------------+--------------------------------------------------+
-| 501           | ``UNAUTH_REQ``        | Error regarding certificate -- Using test        |
+| 501           | ``UNAUTH_REQ``        | Error regarding certificate - Using test         |
 |               |                       | certificate in prod                              |
 +---------------+-----------------------+--------------------------------------------------+
 | 502           | ``UNAUTH_MERC``       | Invalid Merchant ID has been entered             |
