@@ -84,8 +84,9 @@ RIS Warning and Error Codes
 | 301           | ``BAD_VERS``          | The version of Kount supplied by merchant does      |
 |               |                       | not fit the four integer parameter                  |
 +---------------+-----------------------+-----------------------------------------------------+
-| 302           | ``BAD_MODE``          | The mode type is invalid. Refer to the              |
-|               |                       | [RIS  Inquiry Service Modes]-kount/inquiry.py       |
+| 302           | ``BAD_MODE``          | The mode type is invalid. Refer to the RIS  Inquiry |
+|               |                       | Service Modes:                                      |
+|               |                       | `inquiry <sdkpython.html#kount-inquiry-module>`__   |
 +---------------+-----------------------+-----------------------------------------------------+
 | 303           | ``BAD_MERC``          | The six digit Merchant ID is malformed or wrong     |
 +---------------+-----------------------+-----------------------------------------------------+
