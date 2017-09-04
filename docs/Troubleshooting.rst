@@ -40,7 +40,7 @@ RIS Warning and Error Codes
 +---------------+-----------------------+--------------------------------------------------+
 | 221           | ``MISSING_EMAL``      | The email address was missing                    |
 +---------------+-----------------------+--------------------------------------------------+
-| 222           | ``MISSING_ANID``      | For ``MODE = P`` RIS inqueries the caller ID is  |
+| 222           | ``MISSING_ANID``      | For ``MODE = P`` RIS inquiries the caller ID is  |
 |               |                       | missing                                          |
 +---------------+-----------------------+--------------------------------------------------+
 | 223           | ``MISSING_SITE``      | The website identifier that was created in the   |
