@@ -102,7 +102,7 @@ RIS Warning and Error Codes
 | 321           | ``BAD_EMAL``          | The email address does not meet required format  |
 |               |                       | or is greater than 64 characters in length       |
 +---------------+-----------------------+--------------------------------------------------+
-| 322           | ``BAD_ANID``          | For ``MODE = P`` RIS inqueries the caller ID is  |
+| 322           | ``BAD_ANID``          | For ``MODE = P`` RIS inquiries the caller ID is  |
 |               |                       | malformed                                        |
 +---------------+-----------------------+--------------------------------------------------+
 | 323           | ``BAD_SITE``          | The website identifier that was created in the   |
