@@ -48,7 +48,7 @@ RIS Warning and Error Codes
 |               |                       | website ID) is missing                              |
 +---------------+-----------------------+-----------------------------------------------------+
 | 231           | ``MISSING_PTYP``      | The payment type is missing. Refer to the           |
-|               |                       | `RIS Payment Types <PaymentTypes>`__                |
+|               |                       | `RIS Payment Types <PaymentTypes.html>`__           |
 +---------------+-----------------------+-----------------------------------------------------+
 | 232           | ``MISSING_CARD``      | The credit card information is missing              |
 +---------------+-----------------------+-----------------------------------------------------+
@@ -90,7 +90,7 @@ RIS Warning and Error Codes
 | 303           | ``BAD_MERC``          | The six digit Merchant ID is malformed or wrong     |
 +---------------+-----------------------+-----------------------------------------------------+
 | 304           | ``BAD_SESS``          | The unique session ID is invalid. Refer to the      |
-|               |                       | `Data Collector <Kount-Data-Collector>`__           |
+|               |                       | `Data Collector <Data-Collector.html>`__            |
 +---------------+-----------------------+-----------------------------------------------------+
 | 305           | ``BAD_TRAN``          | Transaction ID number is malformed                  |
 +---------------+-----------------------+-----------------------------------------------------+
@@ -114,7 +114,7 @@ RIS Warning and Error Codes
 |               |                       | are key value pairs, XML, JSON, YAML                |
 +---------------+-----------------------+-----------------------------------------------------+
 | 331           | ``BAD_PTYP``          | The payment type is wrong. Refer to the             |
-|               |                       | `RIS Payment Types <PaymentTypes>`__                |
+|               |                       | `RIS Payment Types <PaymentTypes.html>`__           |
 +---------------+-----------------------+-----------------------------------------------------+
 | 332           | ``BAD_CARD``          | The credit card information is malformed or         |
 |               |                       | wrong, test cards do not work in the production     |
