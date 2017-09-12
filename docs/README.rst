@@ -6,7 +6,7 @@ Contains the Kount Python SDK, tests, and build/package routines.
 1.  What is this repository for?
 
     Contains sources, tests, and resources for the Kount Python SDK
-    SDK version: 1.0.0
+    SDK version: 2.0
     Python 2.7.13 and 3.5, 3.6.1 
 
 2. How do I get set up?  
