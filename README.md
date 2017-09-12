@@ -20,7 +20,7 @@ How do I get set up?
 or
    1. Clone the repository
    2. Dependencies
-        * requests
+        * requests>=2.11.1
         
         // only for python 2.7.13 /uncomment them in requirements.txt/:
         * pathlib>=1.0.1
