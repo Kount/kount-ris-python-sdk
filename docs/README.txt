@@ -20,11 +20,11 @@ pip install kount_ris_sdk
 or
    1. Clone the repository
    2. Dependencies
-        * requests
+        * requests>=2.11.1
         
         // only for python 2.7.13 /uncomment them in requirements.txt/:
         
-        * pathlib
+        * pathlib>=1.0.1
         * mom>=0.1.3 # base85
 
 install all dependencies from [requirements.txt](https://github.com/Kount/kount-ris-python-sdk/blob/master/requirements.txt)
