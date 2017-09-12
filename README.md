@@ -48,6 +48,3 @@ How to build the SDK and run integration tests in root directory?
 
     Repo owner or admin
     Other community or team contact
-
-**TODO** _A project that exists as an aid to the `Python Packaging User Guide [pip - link](<https://kount_ris_sdk.python.org>)_
-
