@@ -19,7 +19,7 @@ Contains the Kount Python SDK, tests, and build/package routines.
        1. Clone the repository
        2. Dependencies
        
-            * requests
+            * requests>=2.11.1
         
             # only for python 2.7.13, uncomment them in requirements.txt:
             
