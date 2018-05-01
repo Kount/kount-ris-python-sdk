@@ -253,3 +253,6 @@ def NewPayment(payment_type, payment_token, khashed=True):
             khashed - boolean
     """
     return Payment(payment_type, payment_token, khashed=khashed)
+
+def __eq__(self, other):
+    return self.__dict__ == other.__dict__

@@ -53,8 +53,9 @@ class Client:
                 raise RisValidationException(
                     message, errors=invalid, cause="empty = %s" % empty)
         headers_api = {'X-Kount-Api-Key': self._kount_api_key}
-        merc = params.get('MERC', None)
+
         params['FRMT'] = 'JSON'
+        merc = params.get('MERC', None)
         logger.debug("url=%s, headers=%s, params=%s", self.url,
                      headers_api, params)
         request = requests.post(self.url,

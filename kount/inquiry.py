@@ -12,7 +12,7 @@ from .request import (Request, CURRENCYTYPE, INQUIRYMODE,
                       GENDER, ADDRESS, SHIPPINGTYPESTAT)
 from .util.cartitem import CartItem
 from .util.address import Address
-from .settings import SDK_VERSION
+from .settings import (SDK_VERSION, SDK)
 from .version import VERSION
 
 __author__ = "Kount SDK"
@@ -36,8 +36,8 @@ class Inquiry(Request):
         """
     def __init__(self):
         self.params = {}
+        self.params['SDK'] = SDK 
         self.version()
-        self.params["SDK"] = "CUST"
         self.params["ANID"] = ""
         self.params["FRMT"] = "JSON"
         self.inquiry_mode = INQUIRYMODE.DEFAULT

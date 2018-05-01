@@ -13,6 +13,7 @@ from kount.ris_validator import RisValidationException
 from kount.settings import RAISE_ERRORS, TIMEOUT
 import inittest
 from kount.version import VERSION
+from settings import (INTEGRATION_TEST_URL, TEST_MERCHANT_API_KEY, TEST_MERCHANT_ID)
 
 __author__ = "Kount SDK"
 __version__ = VERSION
@@ -20,15 +21,15 @@ __maintainer__ = "Kount SDK"
 __email__ = "sdkadmin@kount.com"
 __status__ = "Development"
 
-KOUNT_API_KEY = "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiI5OTk2NjYiLCJhdWQiOiJLb3VudC4xIiwiaWF0IjoxNDk0NTM0Nzk5LCJzY3AiOnsia2EiOm51bGwsImtjIjpudWxsLCJhcGkiOmZhbHNlLCJyaXMiOnRydWV9fQ.eMmumYFpIF-d1up_mfxA5_VXBI41NSrNVe9CyhBUGck"
-URL_API = "https://risk.beta.kount.net"
+KOUNT_API_KEY = TEST_MERCHANT_API_KEY 
+URL_API = INTEGRATION_TEST_URL 
 LOGGER = logging.getLogger('kount')
 
 expected1 = {
     'AUTO': 'R',
     'BRND': None,
     'BROWSER': None,
-    'CARDS': '11',
+    'CARDS': '5',
     'COOKIES': None,
     'COUNTERS_TRIGGERED': 0,
     'COUNTRY': None,
@@ -36,10 +37,10 @@ expected1 = {
     'DEVICES': '1',
     'DEVICE_LAYERS': '....',
     'DSR': None,
-    'EMAILS': '9',
+    'EMAILS': '21',
     'FINGERPRINT': None,
     'FLASH': None,
-    'GEOX': 'CA',
+    'GEOX': 'US',
     'HTTP_COUNTRY': None,
     'IP_CITY': None,
     'IP_COUNTRY': None,
@@ -52,7 +53,7 @@ expected1 = {
     'KAPT': 'N',
     'LANGUAGE': None,
     'LOCALTIME': ' ',
-    'MERC': '999666',
+    'MERC': TEST_MERCHANT_ID,
     'MOBILE_DEVICE': None,
     'MOBILE_FORWARDER': None,
     'MOBILE_TYPE': None,
@@ -71,7 +72,7 @@ expected1 = {
     'PROXY': None,
     'REASON_CODE': None,
     'REGION': None,
-    'REGN': 'CA_NS',
+    'REGN': None,
     'RULES_TRIGGERED': 1,
     'RULE_DESCRIPTION_0': 'Review if order total > $1000 USD',
     'SCOR': '99',
@@ -196,6 +197,7 @@ class TestAPIRIS(unittest.TestCase):
     def test_api_kount_2_items(self):
         "expected modified 'TRAN'"
         data = example_data_products.copy()
+        #data['REGN'] = 'CA_NS'
         self.assertIn('MODE', data)
         for raise_errors in [True, False]:
             actual = Client(URL_API, KOUNT_API_KEY, self.timeout,

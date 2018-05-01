@@ -13,7 +13,7 @@ from kount.inquiry import Inquiry
 from kount.util.payment import CardPayment, Payment, GiftCardPayment
 from kount.util.cartitem import CartItem
 from kount.util.address import Address
-from kount.settings import SDK_VERSION
+from kount.settings import (SDK_VERSION, SDK)
 from kount.version import VERSION
 
 __author__ = "Kount SDK"
@@ -77,7 +77,7 @@ expected = {
     'S2PC': '99762',
     'S2PN': '555-777-1212',
     'S2ST': 'AK',
-    'SDK': 'CUST',
+    'SDK': SDK,
     'SDK_VERSION': 'Sdk-Ris-Python-%s' % SDK_VERSION,
     'SITE': 'DEFAULT',
     'SPREMISE': '',

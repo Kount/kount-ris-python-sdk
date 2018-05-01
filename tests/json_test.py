@@ -5,6 +5,7 @@
 # Copyright (C) 2017 Kount Inc. All Rights Reserved.
 "example data from https://kopana.atlassian.net/wiki/display/KS/Testing"
 from __future__ import absolute_import, unicode_literals, division, print_function
+from kount.settings import SDK
 from kount.version import VERSION
 
 __author__ = "Kount SDK"
@@ -111,6 +112,6 @@ example_data_products = {
             'AppleWebKit%2F537.36+%28KHTML%2C+like+Gecko%29+'\
             'Chrome%2F37.0.2062.124+Safari%2F537.36',
     'UNIQ': 'F8E874A38B7B4B6DBB71',
-    'SDK': 'CUST',
+    'SDK': SDK,
     'VERS': '0695'
     }

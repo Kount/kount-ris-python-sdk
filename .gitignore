@@ -10,3 +10,4 @@ kount_ris_*
 py3*
 local_settings.py
 dist
+.DS_Store

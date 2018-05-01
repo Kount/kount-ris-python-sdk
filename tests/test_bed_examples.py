@@ -19,8 +19,9 @@ from kount.request import (ASTAT, BCRSTAT, INQUIRYMODE,
                            CURRENCYTYPE, MERCHANTACKNOWLEDGMENT)
 from kount.util.cartitem import CartItem
 from kount.util.address import Address
-from kount.settings import SDK_VERSION
+from kount.settings import (SDK_VERSION, SDK)
 from kount.version import VERSION
+from .settings import (INTEGRATION_TEST_URL, TEST_MERCHANT_ID, TEST_MERCHANT_API_KEY)
 
 __author__ = "Kount SDK"
 __version__ = VERSION
@@ -29,15 +30,12 @@ __email__ = "sdkadmin@kount.com"
 __status__ = "Development"
 
 
-URL_API = "https://risk.beta.kount.net"
+URL_API = INTEGRATION_TEST_URL 
 URL_API_BETA = URL_API
-MERCHANT_ID6 = '999666'
+MERCHANT_ID6 = TEST_MERCHANT_ID 
 PTOK = "4111111111111111"
 EMAIL = 'john@test.com'
-KOUNT_API_KEY6 = "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiI5OTk2Nj"\
-                 "YiLCJhdWQiOiJLb3VudC4xIiwiaWF0IjoxNDk0NTM0Nzk5LCJzY3AiO"\
-                 "nsia2EiOm51bGwsImtjIjpudWxsLCJhcGkiOmZhbHNlLCJyaXMiOnRy"\
-                 "dWV9fQ.eMmumYFpIF-d1up_mfxA5_VXBI41NSrNVe9CyhBUGck"
+KOUNT_API_KEY6 = TEST_MERCHANT_API_KEY
 
 BILLING_ADDRESS = Address("", "", "Manchester", "NH", "03109", "US")
 BILLING_PHONE = "555-888-5678"
@@ -68,6 +66,7 @@ def user_inquiry(session_id, merchant_id, email_client, payment):
     result.order_number(session_id[:10])  #ORDR
     result.authorization_status(ASTAT.Approve) #AUTH
     result.avs_zip_reply(BCRSTAT.MATCH)
+    result.params_set("SDK",SDK)
     result.avs_address_reply(BCRSTAT.MATCH)
     result.avs_cvv_reply(BCRSTAT.MATCH)
     result.merchant_acknowledgment_set(MERCHANTACKNOWLEDGMENT.TRUE) #"MACK"
@@ -106,7 +105,7 @@ expected = {
     'PROD_TYPE[0]': '1',
     'PTOK': PTOK,
     'PTYP': 'CARD',
-    'SDK': 'CUST',
+    'SDK': SDK,
     #~ 'SDK_VERSION': 'Sdk-Ris-Python-0695-201708301601',
     #~ 'SESS': '4F7132C2FE8547928CD9329B78AA0A59',
     'SITE': 'DEFAULT',

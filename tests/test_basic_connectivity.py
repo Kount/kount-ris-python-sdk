@@ -17,6 +17,7 @@ from kount.util.payment import Payment, CardPayment
 import inittest
 from test_inquiry import generate_unique_id, default_inquiry
 from kount.version import VERSION
+from settings import (INTEGRATION_TEST_URL, TEST_MERCHANT_ID, TEST_MERCHANT_API_KEY)
 
 __author__ = "Kount SDK"
 __version__ = VERSION
@@ -25,14 +26,14 @@ __email__ = "sdkadmin@kount.com"
 __status__ = "Development"
 
 
-URL_API = "https://risk.beta.kount.net"
+URL_API = INTEGRATION_TEST_URL 
 URL_API_BETA = URL_API
-MERCHANT_ID6 = '999666'
-MERCHANT_ID7 = '999667'
+MERCHANT_ID6 = TEST_MERCHANT_ID 
+MERCHANT_ID7 = TEST_MERCHANT_ID 
 PTOK = "0007380568572514"
 EMAIL = 'predictive@kount.com'
-KOUNT_API_KEY6 = "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiI5OTk2NjYiLCJhdWQiOiJLb3VudC4xIiwiaWF0IjoxNDk0NTM0Nzk5LCJzY3AiOnsia2EiOm51bGwsImtjIjpudWxsLCJhcGkiOmZhbHNlLCJyaXMiOnRydWV9fQ.eMmumYFpIF-d1up_mfxA5_VXBI41NSrNVe9CyhBUGck"
-KOUNT_API_KEY7 = "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiI5OTk2NjciLCJhdWQiOiJLb3VudC4xIiwiaWF0IjoxNDk0NTM1OTE2LCJzY3AiOnsia2EiOm51bGwsImtjIjpudWxsLCJhcGkiOmZhbHNlLCJyaXMiOnRydWV9fQ.KK3zG4dMIhTIaE5SeCbej1OAFhZifyBswMPyYFAVRrM"
+KOUNT_API_KEY6 = TEST_MERCHANT_API_KEY 
+KOUNT_API_KEY7 = TEST_MERCHANT_API_KEY 
 
 
 class TestBasicConnectivity(unittest.TestCase):

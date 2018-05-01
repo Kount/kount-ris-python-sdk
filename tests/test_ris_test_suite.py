@@ -19,6 +19,7 @@ from kount.settings import SDK_VERSION, TIMEOUT
 from kount.util.payment import CardPayment
 import inittest
 from kount.version import VERSION
+from settings import (TEST_MERCHANT_ID, INTEGRATION_TEST_URL, TEST_MERCHANT_API_KEY)
 
 
 __author__ = "Kount SDK"
@@ -27,16 +28,16 @@ __maintainer__ = "Kount SDK"
 __email__ = "sdkadmin@kount.com"
 __status__ = "Development"
 
-URL_API = "https://risk.beta.kount.net"
+URL_API = INTEGRATION_TEST_URL 
 RIS_ENDPOINT_BETA = URL_API
 
 # raise_errors - if  True - raise errors instead of logging in debugger
 RAISE_ERRORS = False
 
-MERCHANT_ID = '999666'
+MERCHANT_ID = TEST_MERCHANT_ID 
 PTOK = "0007380568572514"
 EMAIL_CLIENT = "sdkTest@kountsdktestdomain.com"
-KOUNT_API_KEY = "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiI5OTk2NjYiLCJhdWQiOiJLb3VudC4xIiwiaWF0IjoxNDk0NTM0Nzk5LCJzY3AiOnsia2EiOm51bGwsImtjIjpudWxsLCJhcGkiOmZhbHNlLCJyaXMiOnRydWV9fQ.eMmumYFpIF-d1up_mfxA5_VXBI41NSrNVe9CyhBUGck"
+KOUNT_API_KEY = TEST_MERCHANT_API_KEY 
 
 class TestRisTestSuite(unittest.TestCase):
     """Ris Test Suite
@@ -229,6 +230,8 @@ class TestRisTestSuite(unittest.TestCase):
         res = self.client.process(params=self.inq.params)
         self.assertIsNotNone(res)
         rr = Response(res)
+        print("res value" + str(res) + "\n")
+        print("rr value" + str(rr))
         transaction_id = rr.params['TRAN']
         session_id = rr.params['SESS']
         order_id = rr.params['ORDR']

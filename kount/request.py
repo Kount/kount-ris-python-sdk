@@ -10,7 +10,7 @@ import logging
 from .util.payment import (CardPayment, GiftCardPayment, NoPayment, Payment)
 from .util.khash import Khash
 from .ris_validator import RisException
-from .settings import SDK_VERSION
+from .settings import (SDK_VERSION, SDK)
 from .version import VERSION
 
 __author__ = "Kount SDK"
@@ -123,7 +123,7 @@ class Request(object):
         self.params = {}
         self.params['VERS'] = SDK_VERSION
         self.khash_payment_encoding(True)
-        self.params["SDK"] = "python"
+        self.params['SDK'] = SDK 
         self.payment = None
         self.close_on_finish = None
         Khash.verify()
@@ -234,7 +234,9 @@ class Request(object):
         self.params["CVVR"] = cvv_reply
         logger.debug("CVVR = %s", cvv_reply)
 
+
     def payment_set(self, payment):
+
         """ Set a payment.
             Depending on the payment type, various request parameters are set:
             PTOK, PTYP, LAST4.
@@ -242,10 +244,10 @@ class Request(object):
             to empty string.
             Args: payment -  Payment
         """
-        if "PENC" in self.params and not (isinstance(payment, NoPayment))\
+        if "PENC" in self.params and payment != NoPayment\
                 and not payment.khashed:
             try:
-                if isinstance(payment, GiftCardPayment):
+                if payment == GiftCardPayment:
                     merchant_id = int(self.params["MERC"])
                     payment.payment_token = Khash.hash_gift_card(
                         merchant_id, payment.payment_token)
