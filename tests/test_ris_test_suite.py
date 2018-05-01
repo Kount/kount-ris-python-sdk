@@ -230,8 +230,6 @@ class TestRisTestSuite(unittest.TestCase):
         res = self.client.process(params=self.inq.params)
         self.assertIsNotNone(res)
         rr = Response(res)
-        print("res value" + str(res) + "\n")
-        print("rr value" + str(rr))
         transaction_id = rr.params['TRAN']
         session_id = rr.params['SESS']
         order_id = rr.params['ORDR']
