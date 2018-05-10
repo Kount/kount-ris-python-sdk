@@ -4,9 +4,9 @@
 # https://github.com/Kount/kount-ris-python-sdk/)
 # Copyright (C) 2017 Kount Inc. All Rights Reserved.
 """TestValidationError"""
-from __future__ import absolute_import, unicode_literals, division, print_function
 import unittest
-from kount.util.validation_error import ValidationError, ValidationErrorType
+
+from kount.util.validation_error import ValidationError
 from kount.version import VERSION
 
 __author__ = "Kount SDK"
@@ -17,93 +17,47 @@ __status__ = "Development"
 
 
 class TestValidationError(unittest.TestCase):
-    "TestValidationError"
+    """TestValidationError"""
+
     def test_max_length(self):
-        "test_max_length"
+        """test_max_length"""
         incorrect = "a" * 10
         lengthr = 2
         vale = ValidationError(field=incorrect, length=lengthr)
         with self.assertRaises(ValidationError):
             raise vale
-        self.assertIn('LENGTH', str(vale))
-        self.assertIn("Field [%s] has length [%s] which is longer "
-                      "than the maximum of [%s]')" %
-                      (incorrect, len(incorrect), lengthr), str(vale))
+        self.assertEqual('LENGTH', vale.error)
+        self.assertEqual("Field [%s] has length [%s] which is longer "
+                         "than the maximum of [%s]" %
+                         (incorrect, len(incorrect), lengthr), vale.message)
 
     def test_mode(self):
-        "test_mode"
+        """test_mode"""
         incorrect = "a" * 10
         mode = "q"
         vale = ValidationError(field=incorrect, mode=mode)
         with self.assertRaises(ValidationError):
             raise vale
-        self.assertIn('REQUIRED', str(vale))
-        self.assertIn("Required field [%s] missing for mode [%s]')" %
+        self.assertIn('REQUIRED', vale.error)
+        self.assertIn("Required field [%s] missing for mode [%s]" %
                       (incorrect, mode.upper()), str(vale))
 
-    def test_correct_type(self):
-        "test_correct_type"
-        for correct in ["REGEX_ERR", "REQUIRED_ERR", "LENGTH_ERR"]:
-            vale = ValidationErrorType(correct)
-            with self.assertRaises(ValidationErrorType):
-                raise vale
-            self.assertEqual("Expected value of the error type LENGTH, "
-                             "REGEX, REQUIRED, found [%s]" % correct, str(vale))
-
-    def test_incorrect_type(self):
-        "test_incorrect_type"
-        incorrect = "42"
-        vale = ValidationErrorType(message=incorrect)
-        with self.assertRaises(ValidationErrorType):
-            raise vale
-        self.assertEqual(
-            str(vale),
-            "Expected value of the error type LENGTH, REGEX, REQUIRED, "\
-            "found [%s]" % incorrect)
-
-    def test_empty_field(self):
-        "test_empty_field"
-        incorrect = ""
-        vale = ValidationErrorType(message=incorrect)
-        with self.assertRaises(ValidationErrorType):
-            raise vale
-        self.assertEqual(
-            str(vale),
-            "Expected value of the error type LENGTH, REGEX, REQUIRED, "\
-            "found [%s]" % incorrect)
-
-    def test_no_field(self):
-        "test_no_field"
-        incorrect = None
-        vale = ValidationErrorType(message=incorrect)
-        with self.assertRaises(ValidationErrorType):
-            raise vale
-        self.assertEqual(
-            str(vale),
-            "Expected value of the error type LENGTH, REGEX, REQUIRED,"
-            " found [%s]" % incorrect)
-
     def test_none_field(self):
-        "test_none_field"
-        vale = ValidationErrorType()
-        with self.assertRaises(ValidationErrorType):
-            raise vale
-        self.assertEqual(
-            str(vale),
-            "Expected value of the error type LENGTH, REGEX, REQUIRED, found []"
-            )
+        """test_none_field"""
+        with self.assertRaises(RuntimeError):
+            ValidationError()
 
     def test_pattern(self):
-        "test_pattern"
+        """test_pattern"""
         field = 'RFCB'
         value = "42"
         pattern = '^[RC]?$'
         vale = ValidationError(field=field, value=value, pattern=pattern)
         with self.assertRaises(ValidationError):
             raise vale
-        self.assertIn('REGEX', str(vale))
+        self.assertIn('REGEX', vale.error)
         self.assertIn("Field [%s] has value [%s] which does not"
-                      " match the pattern [%s]')" % (field, value, pattern),
+                      " match the pattern [%s]" % (field, value, pattern),
                       str(vale))
 
 

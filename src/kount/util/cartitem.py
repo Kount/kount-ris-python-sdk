@@ -5,7 +5,9 @@
 # Copyright (C) 2017 Kount Inc. All Rights Reserved
 "CartItem class"
 
-from __future__ import absolute_import, unicode_literals, division, print_function
+from __future__ import absolute_import, unicode_literals, division, \
+    print_function
+
 from kount.version import VERSION
 
 __author__ = "Kount SDK"
@@ -33,7 +35,7 @@ class CartItem(object):
         self.quantity = quantity
         self.price = price
 
-    def to_string(self):
+    def __str__(self):
         "String representation of this shopping cart item"
         cart = "Product Type: %s\nItem Name: %s\nDescription:"\
                "%s\nQuantity: %s\nPrice: %s\n" % (

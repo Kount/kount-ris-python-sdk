@@ -18,18 +18,17 @@
 #
 import os
 import sys
-#~ import kount
+# import kount
 sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
 sys.path.insert(0, "https://github.com/Kount/kount-ris-python-sdk")
 sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '../kount-ris-python-sdk.wiki')))
-sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '../resources')))
 sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '../tests')))
 
 
 project = 'Sphinx'
 copyright = '2007-2017, Georg Brandl and the Sphinx team'
-#~ version = kount.__version__
-#~ release = version
+# version = kount.__version__
+# release = version
 show_authors = True
 # -- General configuration ------------------------------------------------
 
@@ -40,7 +39,8 @@ show_authors = True
 # Add any Sphinx extension module names here, as strings. They can be
 # extensions coming with Sphinx (named 'sphinx.ext.*') or your custom
 # ones.
-extensions = ['sphinx.ext.autodoc',
+extensions = [
+    'sphinx.ext.autodoc',
     'sphinx.ext.doctest',
     'sphinx.ext.todo',
     'sphinx.ext.coverage',
@@ -58,7 +58,7 @@ templates_path = ['_templates']
 # The suffix(es) of source filenames.
 # You can specify multiple suffix as a list of string:
 #
-#~ source_suffix = ['.rst', '.md']
+# source_suffix = ['.rst', '.md']
 source_suffix = '.rst'
 
 # The master toctree document.
@@ -124,7 +124,7 @@ if not on_rtd:  # only import and set the theme if we're building docs locally
 # Add any paths that contain custom static files (such as style sheets) here,
 # relative to this directory. They are copied after the builtin static files,
 # so a file named "default.css" will overwrite the builtin "default.css".
-html_static_path = ['_static']
+html_static_path = ['images']
 
 
 # -- Options for HTMLHelp output ------------------------------------------

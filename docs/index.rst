@@ -36,7 +36,7 @@ Welcome to kount's documentation!
 .. module:: kount.request
 .. module:: kount.response
 .. module:: kount.ris_validator
-.. module:: kount.settings
+.. module:: kount.config
 .. module:: kount.util
 
 

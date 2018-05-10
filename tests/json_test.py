@@ -4,7 +4,6 @@
 # https://github.com/Kount/kount-ris-python-sdk/)
 # Copyright (C) 2017 Kount Inc. All Rights Reserved.
 "example data from https://kopana.atlassian.net/wiki/display/KS/Testing"
-from __future__ import absolute_import, unicode_literals, division, print_function
 from kount.version import VERSION
 
 __author__ = "Kount SDK"

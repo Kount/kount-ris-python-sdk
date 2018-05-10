@@ -6,7 +6,7 @@ Contains the Kount Python SDK, tests, and build/package routines.
 1.  What is this repository for?
 
     Contains sources, tests, and resources for the Kount Python SDK
-    SDK version: 2.0
+    SDK version: 3.0
     Python 2.7.13 and 3.5, 3.6.1 
 
 2. How do I get set up?  
@@ -15,33 +15,28 @@ Contains the Kount Python SDK, tests, and build/package routines.
 
        pip install kount_ris_sdk
 
-    or
-       1. Clone the repository
-       2. Dependencies
-       
-            * requests>=2.11.1
-        
-            # only for python 2.7.13, uncomment them in requirements.txt:
-            
-            * pathlib>=1.0.1
-            * mom>=0.1.3 # base85
+3. How to run integration tests against the installed sdk library.
 
-      install all dependencies from `requirements.txt <https://github.com/Kount/kount-ris-python-sdk/blob/master/kount/requirements.py>`
-      with
-    
-      .. code-block:: python
-    
-          pip install -r requirements.txt
+    First, you need to obtain configuration key from Kount.
 
-3. How to run integration tests in root directory?
+    Download the source code from https://github.com/Kount/kount-ris-python-sdk
 
-
+    Go to the root directory of the project and execute:
     .. code-block:: python
 
-        python3 -m tests.test_api_kount
-        python2 -m tests.test_ris_test_suite
-        python -m  tests.test_basic_connectivity
-    
+        pip install .[test]
+
+        pytest tests --conf-key={KEY}
+
+        or
+
+        export CONF_KEY={KEY}
+        pytest tests
+
+    Running specific test:
+
+    .. code-block:: python
+        pytest tests/test_file.py
 
 
 4. Setting up IDE projects
