@@ -172,7 +172,7 @@ class Request(object):
     def set_merchant_acknowledgment(self, ma_type):
         """Set the merchant acknowledgment.
         Merchants acknowledgement to ship/process the order.
-        The MACK field must be set as MERCHANTACKNOWLEDGMENT.TRUE
+        The MACK field must be set as MerchantAcknowledgment.TRUE
         if personal data is to be
         collected to strengthen the score.
         Args: ma_type - merchant acknowledgment type
@@ -183,7 +183,7 @@ class Request(object):
         """Set the Authorization Status.
         Authorization Status returned to merchant from processor.
         Acceptable values for the
-        AUTH field are ASTAT. In orders where AUTH=A will
+        AUTH field are AuthStatus. In orders where AUTH=A will
         aggregate towards order velocity of the persona while
         orders where AUTH=D will
         decrement the velocity of the persona.
@@ -334,7 +334,7 @@ class Request(object):
 
 
 class UpdateMode(object):
-    """UPDATEMODE - U, X"""
+    """UpdateMode - U, X"""
     NO_RESPONSE = 'U'
     WITH_RESPONSE = 'X'
 

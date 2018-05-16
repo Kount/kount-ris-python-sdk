@@ -41,7 +41,7 @@ service. /**see test\_inquiry.py**/
     from kount.client import Client
     from kount.config import SDKConfig
     from kount.inquiry import Inquiry
-    from kount.request import INQUIRYMODE, MERCHANTACKNOWLEDGMENT, CURRENCYTYPE
+    from kount.request import InquiryMode, MerchantAcknowledgment, CurrencyType
     from kount.util.address import Address
     from kount.util.cartitem import CartItem
     from kount.util.payment import CardPayment
@@ -65,8 +65,8 @@ service. /**see test\_inquiry.py**/
 
         # set merchant information, see default_inquiry() in test_basic_connectivity.py
         inquiry.set_merchant(MERCHANT_ID)
-        inquiry.set_request_mode(INQUIRYMODE.DEFAULT)
-        inquiry.set_merchant_acknowledgment(MERCHANTACKNOWLEDGMENT.TRUE)
+        inquiry.set_request_mode(InquiryMode.DEFAULT)
+        inquiry.set_merchant_acknowledgment(MerchantAcknowledgment.TRUE)
         inquiry.set_website("DEFAULT")
 
         # set customer information
@@ -81,7 +81,7 @@ service. /**see test\_inquiry.py**/
         inquiry.set_shopping_cart(SHIPPING_ADDRESS)
 
         # set purchase information
-        inquiry.set_currency(CURRENCYTYPE.USD)
+        inquiry.set_currency(CurrencyType.USD)
         inquiry.set_total('123456')
         cart_items = list()
         cart_items.append(CartItem("SPORTING_GOODS", "SG999999",
@@ -102,7 +102,7 @@ following the numbered comments in code
 
 #. Creating the communication client, requires the RIS service url and provided API key. The API key is set as request header for the network request.
 
-#. Setting the request mode. As mentioned previously, there are several request modes and **INQUIRYMODE.INITIAL_INQUIRY** is the most  used one. Please check the :ref:`Advanced` page for more information on request modes.
+#. Setting the request mode. As mentioned previously, there are several request modes and **InquiryMode.INITIAL_INQUIRY** is the most  used one. Please check the :ref:`Advanced` page for more information on request modes.
 
 
 #. Setting a session identifier. This ID should be unique for a 30-day span and is used to track all changes regarding the purchase   described in the request. More information on the :ref:`Advanced` page.

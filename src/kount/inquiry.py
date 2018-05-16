@@ -33,7 +33,7 @@ class Inquiry(Request):
         Class constructor. Sets the RIS mode to "Inquiry" ("Q"),
         sets currency to "USD", and sets the Python SDK identifier.
         The mode and currency can be adjusted by called
-        INQUIRYMODE and CURRENCYTYPE methods respectively.
+        InquiryMode and CurrencyType methods respectively.
         """
     def __init__(self):
         super(Inquiry, self).__init__()
@@ -81,7 +81,7 @@ class Inquiry(Request):
 
     def set_request_mode(self, mode):
         """Set the request mode.
-            Acceptable values are: INQUIRYMODE
+            Acceptable values are: InquiryMode
             Arg: mode - Mode of the request
         """
         if mode in _enum_values(InquiryMode):
@@ -92,7 +92,7 @@ class Inquiry(Request):
 
     def set_currency(self, currency):
         """Set the three character ISO-4217 currency code.
-            Arg: currency - Type of currency, CURRENCYTYPE
+            Arg: currency - Type of currency, CurrencyType
         """
         self.set_param("CURR", currency)
 
@@ -207,12 +207,12 @@ class Inquiry(Request):
 
     def set_shipment_type(self, shipment):
         """Set shipment type
-            Arg: shipment -  type SHIPPINGTYPESTAT
+            Arg: shipment -  type ShippingType
         """
         if shipment in _enum_values(ShippingType):
             self.set_param("SHTP", shipment)
         else:
-            raise ValueError("shipment must be in SHIPPINGTYPESTAT")
+            raise ValueError("shipment must be in ShippingType")
 
     def set_anid(self, anid_order):
         """Set the anid
