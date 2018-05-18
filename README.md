@@ -17,7 +17,7 @@ How do I get set up?
 
 `pip install kount_ris_sdk`  
 
-How to build the SDK and run integration tests in root directory?
+How to run integration tests in root directory?
 
    * First, you need to obtain configuration key from Kount.
 

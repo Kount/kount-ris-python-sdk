@@ -31,7 +31,7 @@ with open(version_file) as ver_file:
     VERSION = main_ns['VERSION']
 
 # Get the long description from the README file
-with open(os.path.join(this_path, 'README.rst'), encoding='utf-8') as f:
+with open(os.path.join(this_path, 'README.md'), encoding='utf-8') as f:
     LONG_DESC = f.read()
 
 REQUIRES = (
