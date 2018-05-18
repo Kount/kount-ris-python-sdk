@@ -19,17 +19,17 @@ parameter.
 | ``Inquiry   | SDK Constant            | Description                           |
 | MODE``      |                         |                                       |
 +=============+=========================+=======================================+
-| ``Q``       | ``INQUIRYMODE.DEFAULT`` | Default inquiry mode, internet order  |
+| ``Q``       | ``InquiryMode.DEFAULT`` | Default inquiry mode, internet order  |
 |             |                         | type                                  |
 +-------------+-------------------------+---------------------------------------+
-| ``P``       | ``INQUIRYMODE.PHONE``   | Used to analyze a phone-received      |
+| ``P``       | ``InquiryMode.PHONE``   | Used to analyze a phone-received      |
 |             |                         | order                                 |
 +-------------+-------------------------+---------------------------------------+
-| ``W``       | ``INQUIRYMODE.WITHTHRES | Kount Central full inquiry with       |
-|             | HOLDS``                 | returned thresholds                   |
+| ``W``       | ``InquiryMode.WITH_THRE | Kount Central full inquiry with       |
+|             | SHOLDS``                | returned thresholds                   |
 +-------------+-------------------------+---------------------------------------+
-| ``J``       | ``INQUIRYMODE.JUSTTHRES | Kount Central fast inquiry with just  |
-|             | HOLDS``                 | thresholds                            |
+| ``J``       | ``InquiryMode.JUST_THRE | Kount Central fast inquiry with just  |
+|             | SHOLDS``                | thresholds                            |
 +-------------+-------------------------+---------------------------------------+
 
 ``Update`` type should be used whenever there are changes to a given
@@ -39,10 +39,10 @@ order and the merchant wants them reflected into the Kount system.
 +------------+--------------------+---------------------------------------------+
 |   Update   | SDK Constant       | Description                                 |
 +============+====================+=============================================+
-| ``U``      | ``UPDATEMODE.NO_RE | Default update mode, only sends the update  |
+| ``U``      | ``UpdateMode.NO_RE | Default update mode, only sends the update  |
 |            | SPONSE``           | event                                       |
 +------------+--------------------+---------------------------------------------+
-| ``X``      | ``UPDATEMODE.WITH_ | Sends the update event and RIS service      |
+| ``X``      | ``UpdateMode.WITH_ | Sends the update event and RIS service      |
 |            | RESPONSE``         | returns a status response                   |
 +------------+--------------------+---------------------------------------------+
 

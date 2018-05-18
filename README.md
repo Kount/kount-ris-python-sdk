@@ -17,29 +17,27 @@ How do I get set up?
 
 `pip install kount_ris_sdk`  
 
-or
-   1. Clone the repository
-   2. Dependencies
-        * requests>=2.11.1
-        
-        // only for python 2.7.13 /uncomment them in requirements.txt/:
-        * pathlib>=1.0.1
-        * mom>=0.1.3 # base85
-      
-
-install all dependencies from [requirements.txt](https://github.com/Kount/kount-ris-python-sdk/blob/master/requirements.txt)
- with
-
-`pip install -r requirements.txt`
-
 How to build the SDK and run integration tests in root directory?
 
+   * First, you need to obtain configuration key from Kount.
 
+   * Download the source code from https://github.com/Kount/kount-ris-python-sdk
+
+   * Go to the root directory of the project and execute:
+
+    pip install .[test]
+
+   * Execute tests providing the configuration key on the command line
+
+    pytest tests --conf-key={KEY}
+   * or set shell environment
+
+    export CONF_KEY={KEY}
     pytest tests
-    python3 -m tests.test_api_kount
-    python2 -m tests.test_ris_test_suite
-    python -m  tests.test_basic_connectivity
 
+### How to use the SDK
+For more information read the official docs:
+http://kount-ris-sdk.readthedocs.io/en/latest/
 
 ### Setting up IDE projects
 * Komodo IDE/Edit, Scite, Visual Studio - have automatic python integration

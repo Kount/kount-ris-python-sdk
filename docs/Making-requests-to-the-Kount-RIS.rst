@@ -13,16 +13,9 @@ the following data from Kount:
 
 * URL for (test) RIS calls - ``url_api``, currently ``url_api = "https://risk.beta.kount.net"`` in `test\_api\_kount.py <https://github.com/Kount/kount-ris-python-sdk/blob/master/tests/test_api_kount.py>`__
 
-* Hashing configurationKey used to encrypt sensitive data, configurationKey - must be configured in ``kount.settings``:
+* Hashing configurationKey used to encrypt sensitive data, configurationKey - must be configured with ``kount.config.SDKConfig.setup()`` call:
 
-    * as environment variable | K_KEY or 
-    * any convenient file /like local\_settings.py for Django users/
-
-* API key, a JWT key used for authentication, *key* parameter in class Client `client.py <https://github.com/Kount/kount-ris-python-sdk/blob/master/kount/client.py>`__, used to perform communication with the RIS server.
-
-
-
-Currently: **configurationKey = b'fake configurationKey'** in `settings.py <https://github.com/Kount/kount-ris-python-sdk/blob/master/kount/settings.py>`__
+* API key, a JWT key used for authentication, *key* parameter in class Client `client.py <https://github.com/Kount/kount-ris-python-sdk/blob/master/src/kount/client.py>`__, used to perform communication with the RIS server.
 
 Creating request objects
 ========================
@@ -45,10 +38,13 @@ service. /**see test\_inquiry.py**/
 ::
 
     #python
-    from kount.util.khash import Khash
-    from kount.settings import configurationKey as iv
-
-    Khash.set_iv(iv)
+    from kount.client import Client
+    from kount.config import SDKConfig
+    from kount.inquiry import Inquiry
+    from kount.request import InquiryMode, MerchantAcknowledgment, CurrencyType
+    from kount.util.address import Address
+    from kount.util.cartitem import CartItem
+    from kount.util.payment import CardPayment
 
     MERCHANT_ID = 999667
     EMAIL_CLIENT = "customer.name@email.com"
@@ -58,41 +54,44 @@ service. /**see test\_inquiry.py**/
     SITE_ID = "192.168.32.16"
     URL_API = "https://kount.ris/url"
     API_KEY = "real api key"
+    PROVIDED_CONFIGURATION_KEY = b'replace-this-with-real-one'
+
+    SDKConfig.setup(PROVIDED_CONFIGURATION_KEY)
+
 
     def evaluate_inquiry():
         session_id = generate_unique_id()[:32]
         inquiry = Inquiry()
 
         # set merchant information, see default_inquiry() in test_basic_connectivity.py
-        inquiry.merchant_set(MERCHANT_ID)
-        inquiry.request_mode(INQUIRYMODE.DEFAULT)
-        inquiry.merchant_acknowledgment_set(MERCHANTACKNOWLEDGMENT.TRUE)
-        inquiry.website("DEFAULT")
-        
-        #~ set customer information
-        inquiry.unique_customer_id(session_id[:20])
-        inquiry.ip_address(SITE_ID)
+        inquiry.set_merchant(MERCHANT_ID)
+        inquiry.set_request_mode(InquiryMode.DEFAULT)
+        inquiry.set_merchant_acknowledgment(MerchantAcknowledgment.TRUE)
+        inquiry.set_website("DEFAULT")
+
+        # set customer information
+        inquiry.set_unique_customer_id(session_id[:20])
+        inquiry.set_ip_address(SITE_ID)
         payment = CardPayment(PTOK, khashed=False)   # credit-card-number
-        #~ or for khashed token:
-        #~ payment = CardPayment(PTOK)   # credit-card-number, khashed=True *default value*
-        inquiry.payment_set(payment) 
-        inquiry.customer_name("SdkTestFirstName SdkTestLastName")
-        inquiry.email_client(EMAIL_CLIENT)
-        inquiry.shipping_address(SHIPPING_ADDRESS)
+        # or for khashed token:
+        # payment = CardPayment(PTOK)   # credit-card-number, khashed=True *default value*
+        inquiry.set_payment(payment)
+        inquiry.set_customer_name("SdkTestFirstName SdkTestLastName")
+        inquiry.set_email_client(EMAIL_CLIENT)
+        inquiry.set_shopping_cart(SHIPPING_ADDRESS)
 
         # set purchase information
-        inquiry.currency_set(CURRENCYTYPE.USD)
-        inquiry.total_set('123456')
-        cart_item = []
-        cart_item.append(CartItem("SPORTING_GOODS", "SG999999",
-                                  "3000 CANDLEPOWER PLASMA FLASHLIGHT",
-                                  '2', '68990'))
-        inquiry.shopping_cart(cart_item)
+        inquiry.set_currency(CurrencyType.USD)
+        inquiry.set_total('123456')
+        cart_items = list()
+        cart_items.append(CartItem("SPORTING_GOODS", "SG999999",
+                                   "3000 CANDLEPOWER PLASMA FLASHLIGHT",
+                                   '2', '68990'))
+        inquiry.set_shopping_cart(cart_items)
 
         client = Client(URL_API, API_KEY)
-        response = client.process(params=self.inq.params)
-        response_params = Response(response).params
-        
+        response = client.process(inquiry)
+
         # do stuff with response
 
 Explanation of the request
@@ -103,7 +102,7 @@ following the numbered comments in code
 
 #. Creating the communication client, requires the RIS service url and provided API key. The API key is set as request header for the network request.
 
-#. Setting the request mode. As mentioned previously, there are several request modes and **INQUIRYMODE.INITIAL_INQUIRY** is the most  used one. Please check the :ref:`Advanced` page for more information on request modes.
+#. Setting the request mode. As mentioned previously, there are several request modes and **InquiryMode.INITIAL_INQUIRY** is the most  used one. Please check the :ref:`Advanced` page for more information on request modes.
 
 
 #. Setting a session identifier. This ID should be unique for a 30-day span and is used to track all changes regarding the purchase   described in the request. More information on the :ref:`Advanced` page.

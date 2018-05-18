@@ -23,22 +23,12 @@ Older Python versions that do not implement TLSv1.2 will be prohibited
 from accessing PyPI.
 
 See below for instructions to check your interpreter's TLS version. To
-check your Python interpreter's TLS version, install the "requests"
-package and run a command. For example, for *Python 2:*
+check your Python interpreter's TLS version:
 
 :: 
 
-    python2 -m pip install --upgrade requests
-    python2 -c "import requests; 
-    print(requests.get('https://www.howsmyssl.com/a/check', verify=False).json()['tls_version'])"
+    python -c "import requests; print(requests.get('https://www.howsmyssl.com/a/check', verify=False).json()['tls_version'])"
 
-*Or Python 3:*
-
-::
-
-    python3 -m pip install --upgrade requests
-    python3 -c "import requests; 
-    print(requests.get('https://www.howsmyssl.com/a/check', verify=False).json()['tls_version'])"
 
 If you see **TLS 1.2**, your interpreter's TLS is up to
 date. If you see "TLS 1.0" or an error like "tlsv1 alert protocol

@@ -5,8 +5,11 @@
 # https://github.com/Kount/kount-ris-python-sdk/)
 # Copyright (C) 2017 Kount Inc. All Rights Reserved.
 
-from __future__ import absolute_import, unicode_literals, division, print_function
+from __future__ import absolute_import, unicode_literals, division, \
+    print_function
+
 import xml.etree.ElementTree as ET
+
 from kount.version import VERSION
 
 __author__ = "Kount SDK"
@@ -32,7 +35,7 @@ def xml_to_dict(xml_filename_path):
             required_field_names.append(param_name)
             current['required'] = True
             mode_tags = required.findall('mode')
-            if mode_tags != []:
+            if mode_tags:
                 current["mode"] = [m.text for m in mode_tags]
         else:
             notrequired_field_names.append(param_name)

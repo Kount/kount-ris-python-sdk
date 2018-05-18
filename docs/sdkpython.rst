@@ -11,7 +11,7 @@ kount\.client module
     :undoc-members:
     :show-inheritance:
 
-.. literalinclude:: ../kount/client.py
+.. literalinclude:: ../src/kount/client.py
 
 kount\.inquiry module
 -------------------------
@@ -21,7 +21,7 @@ kount\.inquiry module
     :undoc-members:
     :show-inheritance:
  
-.. literalinclude:: ../kount/inquiry.py
+.. literalinclude:: ../src/kount/inquiry.py
 
 kount\.request module
 -------------------------
@@ -31,7 +31,7 @@ kount\.request module
     :undoc-members:
     :show-inheritance:
    
-.. literalinclude:: ../kount/request.py
+.. literalinclude:: ../src/kount/request.py
 
 kount\.response module
 --------------------------
@@ -54,12 +54,12 @@ kount\.ris\_validator module
 kount\.settings module
 --------------------------------
 
-.. automodule:: kount.settings
+.. automodule:: kount.config
     :members:
     :undoc-members:
     :show-inheritance:
 
-.. literalinclude:: ../kount/settings.py
+.. literalinclude:: ../src/kount/config.py
 
 kount\.version module
 --------------------------------
@@ -71,7 +71,7 @@ kount\.version module
 
 
 
-.. literalinclude:: ../kount/version.py
+.. literalinclude:: ../src/kount/version.py
 
 
 Subpackages

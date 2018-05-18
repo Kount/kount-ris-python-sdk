@@ -47,56 +47,19 @@ Setting configurationKey
 --------------------------------------
 
 In order to run the set of integration tests, it is required to
-correctly set the configurationKey in **Khash class**. Feel free to set as a
-system variable, put it in local\_settings.pt /Django users/, etc.
-Configure it in settings.py
-
-::
-
-    class Khash(object):
-        """
-        Uninstantiable class constructor.
-        Class for creating Kount RIS KHASH encoding payment tokens.
-        """
-        iv = configurationKey
-
-If the default configurationKey replaced with the correct one, all tests in run
-test\_khash.py will be executed. Else the integration tests with configurationKey 
-will fail with
-
-::
-
-    ValueError: Configured configurationKey is incorrect.
-
-They easily can be skipped because the \@unittest.skipIf\.
-
-::
-
-    class TestKhash(unittest.TestCase):
-        "Khash class test cases"
-        def setUp(self):
-            self.k = Khash
-            self.list_for_hash = ["4111111111111111", '5199185454061655',
-                                  4259344583883]
-            self.expected = ['WMS5YA6FUZA1KC', '2NOQRXNKTTFL11', 'FEXQI1QS6TH2O5']
-            self.merchant_id = '666666'
-
-        @unittest.skipIf("fake configurationKey" in Khash.iv, "Please, configure the configurationKey in kount.settings "
-                         "with configurationKey from Kount")
-        def test_token_valid(self):
-            ...
+provide the configurationKey either with command line argument (--conf-key) or with exporting environment
+variable CONF_KEY
 
 | Within the test suite `test_basic_connectivity.py <https://github.com/Kount/kount-ris-python-sdk/blob/master/tests/test_basic_connectivity.py>`_, there's
-  a test class named `TestBasicConnectivity <https://github.com/Kount/kount-ris-python-sdk/blob/master/tests/test_basic_connectivity.py>`_. Inside, there are two
-  test cases, expecting predefined results (check the :ref:`Predictive Response` section). This class can easily be
-  edited with your personal merchant data in order to test correct
-  connectivity to the RIS server.
-| Fields that need to be modified are: 
+  a test class named `TestBasicConnectivity <https://github.com/Kount/kount-ris-python-sdk/blob/master/tests/test_basic_connectivity.py>`_.
+  Inside, there are two test cases, expecting predefined results (check the :ref:`Predictive Response` section). There are other options that
+  have default values, although they can be overwritten for the test run:
 
-  * MERCHANT\_ID 
-  * URL\_API 
-  * TIMEOUT # request timeout in seconds 
-  * RAISE\_ERRORS # if True -  raise errors instead of logging with **logger.error**
+  * --merchant_id
+
+  * --api-key
+
+  * --api-url
 
 unit tests:
 -------------------
@@ -113,5 +76,5 @@ unit tests:
 resources:
 --------------------------
 
-1. `resources/validate.xml <https://github.com/Kount/kount-ris-python-sdk/tree/master/resources/validate.xml>`_ - Kount xml, used for request's validation
-2.  `resources/correct\_key\_cryp.py  <https://github.com/Kount/kount-ris-python-sdk/tree/master/resources/correct\_key\_cryp.py>`_- sha-256 of the correct configurationKey, used for validation
+1. `resources/validate.xml <https://github.com/Kount/kount-ris-python-sdk/tree/master/src/kount/resources/validate.xml>`_ - Kount xml, used for request's validation
+2. `resources/correct\_key\_cryp.py  <https://github.com/Kount/kount-ris-python-sdk/tree/master/src/kount/resources/correct\_key\_cryp.py>`_- sha-256 of the correct configurationKey, used for validation

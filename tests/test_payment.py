@@ -3,14 +3,16 @@
 # This file is part of the Kount python sdk project
 # https://github.com/Kount/kount-ris-python-sdk
 # Copyright (C) 2017 Kount Inc. All Rights Reserved.
-
 "Test Payment Type"
 import unittest
+import pytest
+
 from kount.util.khash import Khash
-from kount.util.payment import (BillMeLaterPayment, CardPayment, CheckPayment,
-                                GiftCardPayment, GooglePayment,
-                                GreenDotMoneyPakPayment, NoPayment,
-                                Payment, PaypalPayment, NewPayment)
+from kount.util.payment import (
+    BillMeLaterPayment, CardPayment, CheckPayment,
+    GiftCardPayment, GooglePayment,
+    GreenDotMoneyPakPayment, NoPayment,
+    Payment, PaypalPayment)
 
 from kount.version import VERSION
 
@@ -21,13 +23,14 @@ __email__ = "sdkadmin@kount.com"
 __status__ = "Development"
 
 
+@pytest.mark.usefixtures("conf_key")
 class TestPaymentType(unittest.TestCase):
-    "Test Payment Type"
+    """Test Payment Type"""
     def setUp(self):
         self.test = 1234567890*1000000000
 
     def test_giftcardpayment(self):
-        "giftcard payment"
+        """giftcard payment"""
         ptype = GiftCardPayment(gift_card_number=self.test, khashed=False)
         self.assertTrue(isinstance(ptype, Payment))
         self.assertEqual(ptype.last4, str(self.test)[-4:])
@@ -59,19 +62,19 @@ class TestPaymentType(unittest.TestCase):
             else:
                 self.assertEqual(curp.last4, str(self.test)[-4:])
                 self.assertEqual(curp.payment_token, str(self.test))
-            self.assertEqual(curp.payment_type, current)
+            self.assertEqual(curp._payment_type, current)
             ptypes.append(payment_dict[current])
             self.assertIsInstance(payment_dict[current], plist)
             if curp.payment_token is not None:
                 self.assertEqual(curp.payment_token, str(self.test))
 
     def test_user_defined_payment(self):
-        "user defined payments"
+        "user defined payments"""
         curp = Payment("PM42", self.test, False)
         self.assertEqual(curp.last4, str(self.test)[-4:])
         self.assertEqual(curp.payment_token, str(self.test))
         self.assertFalse(curp.khashed)
-        self.assertEqual(curp.payment_type, "PM42")
+        self.assertEqual(curp._payment_type, "PM42")
         self.assertEqual(curp.payment_token, str(self.test))
         self.assertIsInstance(curp, Payment)
 
@@ -79,24 +82,24 @@ class TestPaymentType(unittest.TestCase):
         "user defined payments with Payment - khashed token"
         curp = Payment("PM42", self.test, True)
         self.assertEqual(curp.last4, str(self.test)[-4:])
-        k = Khash()
-        self.assertEqual(curp.payment_token, k.hash_payment_token(self.test))
+        self.assertEqual(curp.payment_token,
+                         Khash.get().hash_payment_token(self.test))
         self.assertTrue(curp.khashed)
-        self.assertEqual(curp.payment_type, "PM42")
+        self.assertEqual(curp._payment_type, "PM42")
         self.assertIsInstance(curp, Payment)
 
     def test_user_defined_newpayment(self):
         "user defined payments - token khashed and notkhashed "
-        curp = NewPayment("PM42", self.test, khashed=False)
+        curp = Payment("PM42", self.test, khashed=False)
         self.assertEqual(curp.last4, str(self.test)[-4:])
-        k = Khash()
         self.assertEqual(curp.payment_token, str((self.test)))
         self.assertFalse(curp.khashed)
         self.assertEqual(curp.payment_type, "PM42")
         self.assertIsInstance(curp, Payment)
-        curp = NewPayment("PM42", self.test, True)
+        curp = Payment("PM42", self.test, True)
         self.assertEqual(curp.last4, str(self.test)[-4:])
-        self.assertEqual(curp.payment_token, k.hash_payment_token(self.test))
+        self.assertEqual(curp.payment_token,
+                         Khash.get().hash_payment_token(self.test))
         self.assertTrue(curp.khashed)
 
 

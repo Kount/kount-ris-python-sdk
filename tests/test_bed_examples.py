@@ -1,26 +1,26 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
-# This file is part of the Kount python sdk project https://github.com/Kount/kount-ris-python-sdk/)
+# This file is part of the Kount python sdk project
+# https://github.com/Kount/kount-ris-python-sdk/)
 # Copyright (C) 2017 Kount Inc. All Rights Reserved.
 """Test Cases for an example implementation
 generate_unique_id
 put test data in user_inquiry
 """
-from __future__ import absolute_import, unicode_literals, division, print_function
 import unittest
-import inittest
-from test_inquiry import generate_unique_id
-from kount.response import Response
+import pytest
+
 from kount.client import Client
-from kount.settings import RAISE_ERRORS
+from kount.config import SDKConfig
 from kount.util.payment import CardPayment
 from kount.inquiry import Inquiry
-from kount.request import (ASTAT, BCRSTAT, INQUIRYMODE,
-                           CURRENCYTYPE, MERCHANTACKNOWLEDGMENT)
+from kount.request import (AuthStatus, BankcardReply, InquiryMode,
+                           CurrencyType, MerchantAcknowledgment)
 from kount.util.cartitem import CartItem
 from kount.util.address import Address
-from kount.settings import SDK_VERSION
 from kount.version import VERSION
+
+from .test_inquiry import generate_unique_id
 
 __author__ = "Kount SDK"
 __version__ = VERSION
@@ -29,49 +29,40 @@ __email__ = "sdkadmin@kount.com"
 __status__ = "Development"
 
 
-URL_API = "https://risk.beta.kount.net"
-URL_API_BETA = URL_API
-MERCHANT_ID6 = '999666'
 PTOK = "4111111111111111"
 EMAIL = 'john@test.com'
-KOUNT_API_KEY6 = "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiI5OTk2Nj"\
-                 "YiLCJhdWQiOiJLb3VudC4xIiwiaWF0IjoxNDk0NTM0Nzk5LCJzY3AiO"\
-                 "nsia2EiOm51bGwsImtjIjpudWxsLCJhcGkiOmZhbHNlLCJyaXMiOnRy"\
-                 "dWV9fQ.eMmumYFpIF-d1up_mfxA5_VXBI41NSrNVe9CyhBUGck"
-
 BILLING_ADDRESS = Address("", "", "Manchester", "NH", "03109", "US")
 BILLING_PHONE = "555-888-5678"
 
+
 def user_inquiry(session_id, merchant_id, email_client, payment):
-    "user_inquiry, PENC is not set"
+    """user_inquiry, PENC is not set"""
     result = Inquiry()
-    result.request_mode(INQUIRYMODE.DEFAULT)
-    result.billing_address(BILLING_ADDRESS)
-    result.currency_set(CURRENCYTYPE.USD)   #CURR
-    result.total_set(3500) #TOTL
-    result.billing_phone_number(BILLING_PHONE) #B2PN
-    result.email_client(email_client)
-    result.customer_name("J Test")
-    result.unique_customer_id(session_id[:20]) #UNIQ
-    result.website("DEFAULT") #SITE
-    result.ip_address("4.127.51.215") #IPAD
-    cart_item = []
-    cart_item.append(CartItem("1", "8482",
-                              "Standard Monthly Plan",
-                              1, '3500'))
-    result.shopping_cart(cart_item)
+    result.set_request_mode(InquiryMode.DEFAULT)
+    result.set_billing_address(BILLING_ADDRESS)
+    result.set_currency(CurrencyType.USD)  # CURR
+    result.set_total(3500)  # TOTL
+    result.set_billing_phone_number(BILLING_PHONE)  # B2PN
+    result.set_email_client(email_client)
+    result.set_customer_name("J Test")
+    result.set_unique_customer_id(session_id[:20])  # UNIQ
+    result.set_website("DEFAULT")  # SITE
+    result.set_ip_address("4.127.51.215")  # IPAD
+    cart_items = [CartItem("1", "8482", "Standard Monthly Plan", 1, '3500')]
+    result.set_shopping_cart(cart_items)
     result.version()
-    result.version_set(SDK_VERSION)  #0695
-    result.merchant_set(merchant_id)
-    result.payment_set(payment) #PTOK
-    result.session_set(session_id) #SESS
-    result.order_number(session_id[:10])  #ORDR
-    result.authorization_status(ASTAT.Approve) #AUTH
-    result.avs_zip_reply(BCRSTAT.MATCH)
-    result.avs_address_reply(BCRSTAT.MATCH)
-    result.avs_cvv_reply(BCRSTAT.MATCH)
-    result.merchant_acknowledgment_set(MERCHANTACKNOWLEDGMENT.TRUE) #"MACK"
+    result.set_version(SDKConfig.SDK_VERSION)  # 0695
+    result.set_merchant(merchant_id)
+    result.set_payment(payment)  # PTOK
+    result.set_session_id(session_id)  # SESS
+    result.set_order_number(session_id[:10])  # ORDR
+    result.set_authorization_status(AuthStatus.APPROVE)  # AUTH
+    result.set_avs_zip_reply(BankcardReply.MATCH)
+    result.set_avs_address_reply(BankcardReply.MATCH)
+    result.set_avs_cvv_reply(BankcardReply.MATCH)
+    result.set_merchant_acknowledgment(MerchantAcknowledgment.TRUE)  # "MACK"
     return result
+
 
 expected = {
     'ANID': '',
@@ -97,8 +88,8 @@ expected = {
     'MERC': '999666',
     'MODE': 'Q',
     'NAME': 'J Test',
-    #~ 'ORDR': '4F7132C2FE',
-    #~ 'PENC': 'KHASH',
+    # 'ORDR': '4F7132C2FE',
+    # 'PENC': 'KHASH',
     'PROD_DESC[0]': 'Standard Monthly Plan',
     'PROD_ITEM[0]': '8482',
     'PROD_PRICE[0]': '3500',
@@ -107,38 +98,43 @@ expected = {
     'PTOK': PTOK,
     'PTYP': 'CARD',
     'SDK': 'CUST',
-    #~ 'SDK_VERSION': 'Sdk-Ris-Python-0695-201708301601',
-    #~ 'SESS': '4F7132C2FE8547928CD9329B78AA0A59',
+    # 'SDK_VERSION': 'Sdk-Ris-Python-0695-201708301601',
+    # 'SESS': '4F7132C2FE8547928CD9329B78AA0A59',
     'SITE': 'DEFAULT',
     'TOTL': 3500,
-    #~ 'UNIQ': '4F7132C2FE8547928CD9',
+    # 'UNIQ': '4F7132C2FE8547928CD9',
     'VERS': '0695'}
 
 
+@pytest.mark.usefixtures("api_url", "api_key", "merchant_id")
 class TestBed(unittest.TestCase):
-    "Test Bed for use-cases, with & without Khash"
+    """Test Bed for use-cases, with & without Khash"""
     maxDiff = None
+
+    merchant_id = None
+    api_key = None
+    api_url = None
 
     def setUp(self):
         self.session_id = generate_unique_id()[:32]
         self.email_client = EMAIL
 
     def test_not_khashed(self):
-        "test without khashed card"
-        #~ required khashed=False
+        """test without khashed card"""
+        # required khashed=False
         payment = CardPayment(PTOK, False)
         self.inq = user_inquiry(
-            self.session_id, MERCHANT_ID6, self.email_client,
+            self.session_id, self.merchant_id, self.email_client,
             payment=payment)
         self.assertNotIn('PENC', self.inq.params)
         self.compare(expected)
 
     def test_khashed(self):
-        "test with khashed card"
-        #~ not required default khashed=True
+        """test with khashed card"""
+        # not required default khashed=True
         payment = CardPayment(PTOK)
         self.inq = user_inquiry(
-            self.session_id, MERCHANT_ID6, self.email_client,
+            self.session_id, self.merchant_id, self.email_client,
             payment=payment)
         self.assertIn('PENC', self.inq.params)
         self.assertEqual('KHASH', self.inq.params['PENC'])
@@ -148,12 +144,10 @@ class TestBed(unittest.TestCase):
         self.compare(expected_khashed)
 
     def compare(self, expected_dict):
-        "common method for both tests"
-        res = Client(URL_API_BETA, KOUNT_API_KEY6,
-                     raise_errors=RAISE_ERRORS).process(params=self.inq.params)
+        """common method for both tests"""
+        res = Client(self.api_url, self.api_key).process(self.inq)
         self.assertIsNotNone(res)
-        rr = Response(res)
-        self.assertNotIn('ERRO', rr.params)
+        self.assertNotIn('ERRO', res.params)
         actual = self.inq.params.copy()
         remove = ['SDK_VERSION', 'SESS', 'UNIQ', 'ORDR']
         for k in remove:

@@ -5,7 +5,9 @@
 # Copyright (C) 2017 Kount Inc. All Rights Reserved.
 "Address class - representing a street address"
 
-from __future__ import absolute_import, unicode_literals, division, print_function
+from __future__ import absolute_import, unicode_literals, division, \
+    print_function
+
 from kount.version import VERSION
 
 __author__ = "Kount SDK"

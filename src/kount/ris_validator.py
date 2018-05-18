@@ -5,15 +5,16 @@
 # Copyright (C) 2017 Kount Inc. All Rights Reserved.
 "class RisValidator, RisException, RisValidationException RisResponseException"
 
-from __future__ import absolute_import, unicode_literals, division, print_function
-import re
 import logging
+import os
+import re
+
+from .util.xmlparser import xml_to_dict
 from .util.cartitem import CartItem
 from .util.validation_error import ValidationError
-from .util.xml_rules import XML_DICT, REQUIRED, NOTREQUIRED
 from .version import VERSION
 
-logger = logging.getLogger('kount.request')
+LOG = logging.getLogger('kount.request')
 
 __author__ = "Kount SDK"
 __version__ = VERSION
@@ -27,12 +28,22 @@ class RisValidator(object):
     RIS input data validator class.
     """
 
-    def __init__(self, raise_errors=False):
+    _xml_rules_cache = dict()
+
+    def __init__(self, xml_file_path, raise_errors=False):
         """parse against xml file provided is sdk"""
+
         self.errors = []
-        self.xml_2_dict = XML_DICT
-        self.required = REQUIRED
-        self.notrequired = NOTREQUIRED
+
+        if not os.path.exists(xml_file_path):
+            raise ValueError("%s not found" % xml_file_path)
+        res = self._xml_rules_cache.get(xml_file_path)
+        if res is None:
+            res = xml_to_dict(xml_file_path)
+            self._xml_rules_cache[xml_file_path] = res
+
+        self.xml_2_dict, self.required, self.notrequired = res
+
         self.raise_errors = raise_errors
 
     def ris_validator(self, params):
@@ -46,20 +57,19 @@ class RisValidator(object):
         errors = []
         if len(params) <= 1:
             required_missing = "All required fields are missing %s" % params
-            logger.debug(required_missing)
+            LOG.debug(required_missing)
             if self.raise_errors:
                 raise RisValidationException(required_missing)
         empty = []
         missing_in_xml = []
-        required_err = []
-        for param in params:
-            if params[param] is None or isinstance(params[param], bool):
+        for key, val in params.items():
+            if val is None or isinstance(val, bool):
                 continue
             try:
-                p_xml = self.xml_2_dict[param.split("[")[0]]
+                p_xml = self.xml_2_dict[key.split("[")[0]]
             except KeyError:
-                missing_in_xml.append(param)
-                logger.debug("missing_in_xml = %s", param)
+                missing_in_xml.append(key)
+                LOG.debug("missing_in_xml = %s", key)
                 continue
             try:
                 regex = p_xml['reg_ex']
@@ -68,43 +78,43 @@ class RisValidator(object):
             mode_dict = p_xml.get('mode', None)
             mode = params.get('MODE', "Q")
             try:
-                param_len = len(str(params[param]))
+                param_len = len(str(val))
             except UnicodeEncodeError:
-                param_len = len(str(params[param].encode('utf-8')))
-            if params[param] is not None and param_len == 0:
-                empty.append(param)
-                logger.debug("empty value for %s", param)
+                param_len = len(str(val.encode('utf-8')))
+            if val is not None and param_len == 0:
+                empty.append(key)
+                LOG.debug("empty value for %s", key)
                 continue
             max_length = p_xml.get('max_length', None)
             if max_length:
                 if int(p_xml['max_length']) < param_len:
                     required_err = "max_length %s invalid for %s" % (
-                        param_len, param)
+                        param_len, key)
                     errors.append(required_err)
-                    logger.debug(required_err)
+                    LOG.debug(required_err)
             try:
-                param_str = str(param)
-                params_param_str = str(params[param])
+                param_str = str(key)
+                params_param_str = str(val)
             except UnicodeEncodeError:
-                param_str = str(param.encode('utf8'))
-                params_param_str = str(params[param].encode('utf8'))
+                param_str = str(key.encode('utf8'))
+                params_param_str = str(val.encode('utf8'))
             if regex and param_str and params_param_str:
                 if not re.match(regex, params_param_str):
                     required_err = "Regex %s invalid for %s" % (
                         p_xml['reg_ex'], param_str)
                     errors.append(required_err)
-                    logger.debug("required_err %s", required_err)
+                    LOG.debug("required_err %s", required_err)
             if mode is not None and mode_dict is not None:
-                if params[param] == "" and mode in mode_dict:
+                if val == "" and mode in mode_dict:
                     required_err = "Invalid parameter [%s] "\
-                                   "for mode [%s]" % (param, mode)
+                                   "for mode [%s]" % (key, mode)
                     errors.append(required_err)
-                    logger.debug("required_err %s", required_err)
-                    raise ValidationError(param, mode)
-                if params[param] != "" and mode not in mode_dict:
-                    required_err = "Mode %s invalid for %s" % (mode, param)
+                    LOG.debug("required_err %s", required_err)
+                    raise ValidationError(key, mode)
+                if val != "" and mode not in mode_dict:
+                    required_err = "Mode %s invalid for %s" % (mode, key)
                     errors.append(required_err)
-                    logger.debug("required_err %s", required_err)
+                    LOG.debug("required_err %s", required_err)
         product_type = sorted(
             [cpt for cpt in params if cpt.startswith("PROD_TYPE[")])
         product_name = sorted(
@@ -115,8 +125,10 @@ class RisValidator(object):
             [cpt for cpt in params if cpt.startswith("PROD_QUANT[")])
         product_price = sorted(
             [cpt for cpt in params if cpt.startswith("PROD_PRICE[")])
-        cart_items_number = max(len(product_type), len(product_name),
-                                len(product_description), len(product_quantity),
+        cart_items_number = max(len(product_type),
+                                len(product_name),
+                                len(product_description),
+                                len(product_quantity),
                                 len(product_price))
         for cin in range(cart_items_number):
             cart = CartItem()
@@ -126,21 +138,21 @@ class RisValidator(object):
                 cart.description = params[product_description[cin]]
                 cart.quantity = params[product_quantity[cin]]
                 cart.price = params[product_price[cin]]
-                logger.debug("cart = %s", cart.to_string())
+                LOG.debug("cart = %s", cart)
             except KeyError as kye:
-                required_err = "CartItem - mandatory field missed "\
-                               "%s. %s" % (cart.to_string(), kye)
+                required_err = ("CartItem - mandatory field missed %s. %s" %
+                                (cart, kye))
                 errors.append(required_err)
-                logger.debug("required_err %s", required_err)
+                LOG.debug("required_err %s", required_err)
             except IndexError as ine:
-                required_err = "CartItem -  %s. %s" % (cart.to_string(), ine)
-                logger.debug("required_err %s", required_err)
+                required_err = "CartItem -  %s. %s" % (cart, ine)
+                LOG.debug("required_err %s", required_err)
                 errors.append(required_err)
         self.errors = errors
-        if len(errors) and self.raise_errors:
+        if errors and self.raise_errors:
             raise RisValidationException("Validation process failed", errors)
-        logger.debug("errors = %s, missing_in_xml = %s, empty = %s",
-                     errors, missing_in_xml, empty)
+        LOG.debug("errors = %s, missing_in_xml = %s, empty = %s",
+                  errors, missing_in_xml, empty)
         return errors, missing_in_xml, empty
 
 
@@ -190,7 +202,7 @@ ERROR_MESSAGES = {
     504: 'Unauthorized passphrase',
     601: 'System error',
     701: 'The transaction ID specified in the update was not found.'
-    }
+}
 
 
 class RisException(Exception):
@@ -206,10 +218,10 @@ class RisValidationException(RisException):
             cause - cause
             errors - list of errors encountered.
             """
-    def __init__(self, message="", errors=[], cause=""):
+    def __init__(self, message="", errors=None, cause=""):
         # Call the base class constructor with the parameters it needs
         self.message = message
-        self.errors = errors
+        self.errors = [] if errors is None else errors
         self.cause = cause
         super(RisValidationException, self).__init__(
             self.message, self.cause, self.errors)
@@ -221,5 +233,8 @@ class RisResponseException(RisException):
             exception_code - Ris exception code
     """
     def __init__(self, exception_code):
-        self.exception_code = ERROR_MESSAGES[exception_code]
-        super(RisResponseException, self).__init__(self.exception_code)
+        msg = ERROR_MESSAGES.get(exception_code)
+        if msg is None:
+            msg = 'Unexpected error code: %s' % exception_code
+        super(RisResponseException, self).__init__(msg)
+        self.exception_code = exception_code

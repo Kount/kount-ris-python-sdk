@@ -1,9 +1,9 @@
 Unit and Integration tests
 =================================================
 
-inittest.py
+conftest.py
 
-.. literalinclude:: ../tests/inittest.py
+.. literalinclude:: ../tests/conftest.py
 
 test_address.py
 
@@ -29,17 +29,11 @@ test_payment.py
 
 .. literalinclude:: ../tests/test_payment.py
 
-test_ris_validation_exception.py  
-
-.. literalinclude:: ../tests/test_ris_validation_exception.py  
 
 test_validation_error.py
 
 .. literalinclude:: ../tests/test_validation_error.py
 
-inittest.py 
-
-.. literalinclude:: ../tests/inittest.py 
 
 test_khash.py
 
