@@ -8,7 +8,6 @@
 import logging
 
 from .config import SDKConfig
-from .ris_validator import RisException
 from .util.khash import Khash
 from .util import payment as payments
 from .version import VERSION
