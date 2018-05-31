@@ -156,7 +156,7 @@ class Response(object):
     def get_rules_triggered(self):
         """Get a Map of the rules triggered by this Response."""
         rules = {}
-        rules_triggered_count = int(self.params["RULES_TRIGGERED"])
+        rules_triggered_count = int(self.params.get("RULES_TRIGGERED", 0))
         for i in range(rules_triggered_count):
             rule_id = self.params["RULE_ID_%s" % i]
             rules[rule_id] = self.params["RULE_DESCRIPTION_%s" % i]
@@ -490,7 +490,7 @@ class Response(object):
     def get_errors(self):
         """Get an ArrayList of errors associated with the response."""
         errors = []
-        error_count = int(self.params["ERROR_COUNT"])
+        error_count = int(self.params.get("ERROR_COUNT", 0))
         for i in range(error_count):
             errors.append(self.params["ERROR_%s" % i])
         LOG.debug("RIS get_errors= %s", errors)
@@ -541,7 +541,7 @@ class Response(object):
         return dict Key: counter name, Value: counter value.
         """
         counters = {}
-        num_counters = int(self.params["COUNTERS_TRIGGERED"])
+        num_counters = int(self.params.get("COUNTERS_TRIGGERED", 0))
         for i in range(num_counters):
             counters[self.params["COUNTER_NAME_%s" % i]] = \
                 self.params["COUNTER_VALUE_%s" % i]
