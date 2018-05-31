@@ -8,7 +8,6 @@
 import logging
 
 from .config import SDKConfig
-from .ris_validator import RisException
 from .util.khash import Khash
 from .util import payment as payments
 from .version import VERSION
@@ -22,7 +21,22 @@ __status__ = "Development"
 LOG = logging.getLogger('kount.request')
 
 
-class AuthStatus(object):
+class _RisType(object):
+
+    __CACHED_ATTRS = None
+
+    @classmethod
+    def is_valid(cls, val):
+        attrs = cls.__CACHED_ATTRS
+        if attrs is None:
+            attrs = {
+                v for k, v in vars(cls).items() if not k.startswith('_')
+            }
+            cls.__CACHED_ATTRS = attrs
+        return val in attrs
+
+
+class AuthStatus(_RisType):
     """Authorization status"""
     APPROVE = 'A'
     DECLINE = 'D'
@@ -33,26 +47,26 @@ class AuthStatus(object):
     ELEVATED = 'C'
 
 
-class BankcardReply(object):
+class BankcardReply(_RisType):
     """Bankcard Reply"""
     MATCH = 'M'
     NO_MATCH = 'N'
     UNAVAILABLE = 'X'
 
 
-class Gender(object):
+class Gender(_RisType):
     """gender"""
     MALE = 'M'
     FEMALE = 'F'
 
 
-class AddressType(object):
+class AddressType(_RisType):
     """address type"""
     BILLING = 'B'
     SHIPPING = 'S'
 
 
-class ShippingType(object):
+class ShippingType(_RisType):
     """
     "SD". Same day shipping type.
     "ND". Next day shipping type.
@@ -65,7 +79,7 @@ class ShippingType(object):
     STANDARD = "ST"
 
 
-class RefundChargebackStatus(object):
+class RefundChargebackStatus(_RisType):
     """Refund charge back status.
     R - The transaction was a refund.
     C - The transaction was a chargeback.
@@ -74,7 +88,7 @@ class RefundChargebackStatus(object):
     CHARGEBACK = 'C'
 
 
-class MerchantAcknowledgment(object):
+class MerchantAcknowledgment(_RisType):
     """merchant acknowledgment
     "Y". The product expects to ship.
     "N". The product does not expect to ship.
@@ -83,7 +97,7 @@ class MerchantAcknowledgment(object):
     TRUE = 'Y'
 
 
-class CurrencyType(object):
+class CurrencyType(_RisType):
     """Currency type object
     "USD". United States Dollars
     "EUR". European currency unit
@@ -102,7 +116,7 @@ class CurrencyType(object):
     NZD = 'NZD'
 
 
-class InquiryMode(object):
+class InquiryMode(_RisType):
     """
     "Q". Default inquiry mode, internet order type.
     "P". Phone order type.
@@ -177,7 +191,10 @@ class Request(object):
         collected to strengthen the score.
         Args: ma_type - merchant acknowledgment type
         """
-        self.set_param("MACK", ma_type)
+        if MerchantAcknowledgment.is_valid(ma_type):
+            self.set_param("MACK", ma_type)
+        else:
+            raise ValueError("Invalid MerchantAcknowledgment = %s" % ma_type)
 
     def set_authorization_status(self, auth_status):
         """Set the Authorization Status.
@@ -189,7 +206,10 @@ class Request(object):
         decrement the velocity of the persona.
         Args: auth_status - Auth status by issuer
         """
-        self.set_param("AUTH", auth_status)
+        if AuthStatus.is_valid(auth_status):
+            self.set_param("AUTH", auth_status)
+        else:
+            raise ValueError("Invalid AuthStatus value %s" % auth_status)
 
     def set_avs_zip_reply(self, avs_zip_reply):
         """Set the Bankcard AVS zip code reply.
@@ -198,7 +218,10 @@ class Request(object):
         processor. Acceptable values are BCRSTAT.
         Args: avs_zip_reply - Bankcard AVS zip code reply
         """
-        self.set_param("AVSZ", avs_zip_reply)
+        if BankcardReply.is_valid(avs_zip_reply):
+            self.set_param("AVSZ", avs_zip_reply)
+        else:
+            raise ValueError('Invalid BankcardReply = %s' % avs_zip_reply)
 
     def set_avs_address_reply(self, avs_address_reply):
         """Set the Bankcard AVS street addres reply.
@@ -206,7 +229,10 @@ class Request(object):
         returned to merchant from processor. Acceptable values are BCRSTAT.
         Args: avs_address_reply - Bankcard AVS street address reply
         """
-        self.set_param("AVST", avs_address_reply)
+        if BankcardReply.is_valid(avs_address_reply):
+            self.set_param("AVST", avs_address_reply)
+        else:
+            raise ValueError('Invalid BankcardReply = %s' % avs_address_reply)
 
     def set_avs_cvv_reply(self, cvv_reply):
         """Set the Bankcard CVV/CVC/CVV2 reply.
@@ -214,7 +240,10 @@ class Request(object):
         Acceptable values are BCRSTAT
         Args: cvv_reply -  Bankcard CVV/CVC/CVV2 reply
         """
-        self.set_param("CVVR", cvv_reply)
+        if BankcardReply.is_valid(cvv_reply):
+            self.set_param("CVVR", cvv_reply)
+        else:
+            raise ValueError('Invalid BankcardReply = %s' % cvv_reply)
 
     def set_payment(self, payment):
         """ Set a payment.
@@ -229,6 +258,8 @@ class Request(object):
                 and not isinstance(payment, payments.NoPayment) \
                 and not payment.khashed:
             try:
+                if not self.params.get("MERC"):
+                    raise ValueError("merchant_id not set")
                 if isinstance(payment, payments.GiftCardPayment):
                     merchant_id = int(self.params["MERC"])
                     payment.payment_token = khasher.hash_gift_card(
@@ -333,7 +364,7 @@ class Request(object):
         LOG.debug("close_on_finish = %s", close_on_finish)
 
 
-class UpdateMode(object):
+class UpdateMode(_RisType):
     """UpdateMode - U, X"""
     NO_RESPONSE = 'U'
     WITH_RESPONSE = 'X'
@@ -354,11 +385,11 @@ class Update(Request):
     def set_mode(self, mode):
         """Set the mode.
         Args - mode - Mode of the request
-        raise RisException when mode is None"""
-        if mode is None:
-            raise RisException("Mode can not be None")
-        if mode in 'UX':
+        """
+        if UpdateMode.is_valid(mode):
             self.params["MODE"] = mode
+        else:
+            raise ValueError("Invalid UpdateMode: %s" % mode)
 
     def set_transaction_id(self, transaction_id):
         """Set the transaction id.
@@ -369,10 +400,9 @@ class Update(Request):
     def set_refund_chargeback_status(self, rc_status):
         """Set the Refund/Chargeback status: R = Refund C = Chargeback.
         Arg - rc_status, String Refund or chargeback status
-        raise RisException when refund_chargeback_status is None
         """
-        if rc_status in 'RC':
+        if RefundChargebackStatus.is_valid(rc_status):
             self.params["RFCB"] = rc_status
         else:
-            raise RisException("rc_status can not be None")
+            raise ValueError("Invalid RefundChargebackStatus: %s" % rc_status)
 

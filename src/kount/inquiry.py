@@ -67,10 +67,10 @@ class Inquiry(Request):
         """Set the gender. Either M(ale) of F(emale).
             Acceptable values: GENDER
             Arg: - gender"""
-        if gender in _enum_values(Gender):
+        if Gender.is_valid(gender):
             self.set_param("GENDER", gender)
         else:
-            LOG.debug('INVALID GENDER = %s', gender)
+            raise ValueError('INVALID GENDER = %s' % gender)
 
     def set_user_defined_field(self, label, value):
         """Set a user defined field.
@@ -84,11 +84,10 @@ class Inquiry(Request):
             Acceptable values are: InquiryMode
             Arg: mode - Mode of the request
         """
-        if mode in _enum_values(InquiryMode):
+        if InquiryMode.is_valid(mode):
             self.set_param("MODE", mode)
         else:
-            LOG.error('MODE = %s', mode)
-            raise ValueError('Required MODE')
+            raise ValueError('INVALID INQUIRY MODE = %s' % mode)
 
     def set_currency(self, currency):
         """Set the three character ISO-4217 currency code.
@@ -209,10 +208,10 @@ class Inquiry(Request):
         """Set shipment type
             Arg: shipment -  type ShippingType
         """
-        if shipment in _enum_values(ShippingType):
+        if ShippingType.is_valid(shipment):
             self.set_param("SHTP", shipment)
         else:
-            raise ValueError("shipment must be in ShippingType")
+            raise ValueError("INVALID SHIPMENT TYPE = %s" % shipment)
 
     def set_anid(self, anid_order):
         """Set the anid
@@ -256,8 +255,3 @@ class Inquiry(Request):
             self.params["PROD_DESC[%i]" % index] = item.description
             self.params["PROD_QUANT[%i]" % index] = item.quantity
             self.params["PROD_PRICE[%i]" % index] = item.price
-
-
-def _enum_values(cls):
-    return [v for k, v in vars(cls).items()
-            if not k.startswith('__')]

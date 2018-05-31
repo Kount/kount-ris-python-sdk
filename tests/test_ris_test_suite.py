@@ -116,6 +116,8 @@ class TestRisTestSuite(unittest.TestCase):
         self.assertEqual("R", res.get_auto())
         self.assertEqual(3, len(res.get_rules_triggered()))
         self.assertEqual(0, len(res.get_warnings()))
+        self.assertEqual(0, len(res.get_errors()))
+        self.assertEqual(0, len(res.get_counters_triggered()))
         expected = sorted(
             {'1025086': 'review if %s contains "trigger"' % udf1,
              '1024842': 'Review if order total > $1000 USD',
