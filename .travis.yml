@@ -4,4 +4,4 @@ python:
   - "3.5"
   - "3.6.1"
 script:
-  - pytest tests --conf-key={KEY}
+  - pytest tests
