@@ -1,5 +1,7 @@
 Welcome to the kount-ris-python-sdk wiki!
 
+![Travis CI status](https://travis-ci.org/Kount/kount-ris-python-sdk.svg?branch=master)
+
 # Kount Python RIS SDK #
 
 Contains the Kount Python SDK, tests, and build/package routines.
