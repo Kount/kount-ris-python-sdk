@@ -47,7 +47,8 @@ def user_inquiry(session_id, merchant_id, email_client, payment):
     result.set_customer_name("J Test")
     result.set_unique_customer_id(session_id[:20])  # UNIQ
     result.set_website("DEFAULT")  # SITE
-    result.set_ip_address("4.127.51.215")  # IPAD
+    # result.set_ip_address("4.127.51.215")  # IPAD
+    result.set_ip_address('2001:0:3238:DFE1:63::FEFB')  # IPAD
     cart_items = [CartItem("1", "8482", "Standard Monthly Plan", 1, '3500')]
     result.set_shopping_cart(cart_items)
     result.version()
@@ -82,7 +83,7 @@ expected = {
     'CVVR': 'M',
     'EMAL': EMAIL,
     'FRMT': 'JSON',
-    'IPAD': '4.127.51.215',
+    'IPAD': '2001:0:3238:DFE1:63::FEFB',
     'LAST4': '1111',
     'MACK': 'Y',
     'MERC': '999666',

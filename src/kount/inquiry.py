@@ -6,6 +6,7 @@
 """RIS initial inquiry class"""
 import time
 
+import ipaddress
 import logging
 from datetime import datetime
 
@@ -187,7 +188,8 @@ class Inquiry(Request):
         """Set the IP address. ipaddress
         Arg: ip_adr - IP Address of the client
         """
-        self.set_param("IPAD", str(ip_adr))
+        ipaddress.ip_address(ip_adr)
+        self.set_param("IPAD", ip_adr)
 
     def set_user_agent(self, useragent):
         """Set the user agent string of the client.
