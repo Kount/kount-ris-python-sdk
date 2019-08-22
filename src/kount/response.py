@@ -35,6 +35,7 @@ class Response(object):
         "AUTO" - Get the RIS auto response (A/R/D).
         "REASON_CODE" - Get the RIS reason for the response.
         "SCOR" - Get the Kount score.
+        "OMNISCORE" - Get the Kount Omniscore.
         "GEOX" - Get the geox.
         "BRND" - Get the credit card brand.
         "VELO" - Get the 6 hour velocity.
@@ -198,6 +199,10 @@ class Response(object):
     def get_score(self):
         """ Get the Kount score. """
         return self.params.get('SCOR')
+
+    def getOmniscore(self):
+        """ Get the Kount Omni Score"""
+        return self.params.get('OMNISCORE')
 
     def get_geox(self):
         """ Get the geox. """
