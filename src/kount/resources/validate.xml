@@ -251,4 +251,16 @@
     <reg_ex>^[JSON]+$</reg_ex>
     <max_length>4</max_length>
   </param>
+
+  <!-- changes are made based on below issue -->
+  <!-- Reference to https://github.com/Kount/kount-ris-python-sdk/issues/17 -->
+  
+  <param name="SDK">
+    <max_length>20</max_length>
+  </param>
+  
+  <param name="SDK_VERSION">
+    <max_length>30</max_length>
+  </param>
+
 </ris_validation>
