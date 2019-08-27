@@ -78,7 +78,7 @@ expected1 = {
     'SITE': 'DEFAULT',
     'TIMEZONE': None,
     'UAS': None,
-    'VERS': '0695',
+    'VERS': '0700',
     'VOICE_DEVICE': None,
     'WARNING_COUNT': 0}
 
@@ -138,7 +138,7 @@ CURLED = {
     'SITE': 'DEFAULT',
     'TOTL': '123456',
     'UNIQ': '088E9F4961354D4F9004',
-    'VERS': '0695'}
+    'VERS': '0700'}
 
 
 @pytest.mark.usefixtures("api_url", "api_key", "merchant_id")
@@ -163,7 +163,7 @@ class TestAPIRIS(unittest.TestCase):
         data = CURLED
         self.assertIn('MODE', CURLED)
         expected = {
-            "VERS": "0695", "MODE": "Q", "TRAN": "PTPN0Z04P8Y6",
+            "VERS": "0700", "MODE": "Q", "TRAN": "PTPN0Z04P8Y6",
             "MERC": "999666", "SESS": "088E9F4961354D4F90041988B8D5C66B",
             "ORDR": "088E9F496135", "AUTO": "R", "SCOR": "29", "GEOX": "US",
             "BRND": None, "REGN": None, "NETW": "N", "KAPT": "N", "CARDS": "1",

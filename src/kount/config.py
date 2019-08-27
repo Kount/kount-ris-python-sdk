@@ -20,7 +20,7 @@ class SDKConfig:
     # field validation rules
     _XML_FILENAME = os.path.join(resources.__path__[0], 'validate.xml')
 
-    SDK_VERSION = "0695"
+    SDK_VERSION = "0700"
 
     # default behaviour for request failures
     _RAISE_ERRORS = True
