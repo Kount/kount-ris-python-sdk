@@ -52,7 +52,7 @@ def user_inquiry(session_id, merchant_id, email_client, payment):
     cart_items = [CartItem("1", "8482", "Standard Monthly Plan", 1, '3500')]
     result.set_shopping_cart(cart_items)
     result.version()
-    result.set_version(SDKConfig.SDK_VERSION)  # 0695
+    result.set_version(SDKConfig.SDK_VERSION)  # 0700
     result.set_merchant(merchant_id)
     result.set_payment(payment)  # PTOK
     result.set_session_id(session_id)  # SESS
@@ -104,7 +104,7 @@ expected = {
     'SITE': 'DEFAULT',
     'TOTL': 3500,
     # 'UNIQ': '4F7132C2FE8547928CD9',
-    'VERS': '0695'}
+    'VERS': '0700'}
 
 
 @pytest.mark.usefixtures("api_url", "api_key", "merchant_id")
