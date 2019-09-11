@@ -42,6 +42,7 @@ class Inquiry(Request):
         self.params["SDK"] = "CUST"
         self.params["ANID"] = ""
         self.params["FRMT"] = "JSON"
+        self.params["VERS"] = SDKConfig.SDK_VERSION
         self.inquiry_mode = InquiryMode.DEFAULT
         self.currency_type = CurrencyType.USD
         LOG.debug('Inquiry: %s', self.params)
