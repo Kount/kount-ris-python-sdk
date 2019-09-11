@@ -260,7 +260,7 @@
   </param>
   
   <param name="SDK_VERSION">
-    <max_length>30</max_length>
+    <max_length>32</max_length>
   </param>
 
 </ris_validation>
