@@ -13,14 +13,15 @@ from .util.xmlparser import xml_to_dict
 from .util.cartitem import CartItem
 from .util.validation_error import ValidationError
 from .version import VERSION
+from .config import SDKConfig
 
 LOG = logging.getLogger('kount.request')
 
-__author__ = "Kount SDK"
+__author__ = SDKConfig.SDK_AUTHOR
 __version__ = VERSION
-__maintainer__ = "Kount SDK"
-__email__ = "sdkadmin@kount.com"
-__status__ = "Development"
+__maintainer__ = SDKConfig.SDK_MAINTAINER
+__email__ = SDKConfig.MAINTAINER_EMAIL
+__status__ = SDKConfig.STATUS
 
 
 class RisValidator(object):

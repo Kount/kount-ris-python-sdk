@@ -14,12 +14,14 @@ from kount.ris_validator import RisValidationException
 from kount.version import VERSION
 
 from .json_test import example_data_products
+from kount.config import SDKConfig
+from setting import TEST_API_KEY, TEST_API_URL, TEST_MERCHANT_ID
 
-__author__ = "Kount SDK"
+__author__ = SDKConfig.SDK_AUTHOR
 __version__ = VERSION
-__maintainer__ = "Kount SDK"
-__email__ = "sdkadmin@kount.com"
-__status__ = "Development"
+__maintainer__ = SDKConfig.SDK_MAINTAINER
+__email__ = SDKConfig.MAINTAINER_EMAIL
+__status__ = SDKConfig.STATUS
 
 LOGGER = logging.getLogger('kount')
 
@@ -148,9 +150,13 @@ class TestAPIRIS(unittest.TestCase):
     """
     maxDiff = None
 
-    api_url = None
-    api_key = None
-    merchant_id = None
+    """
+    Need to set api_url, api_key and merchant id value in setting.py file.
+
+    """
+    api_url = TEST_API_URL
+    api_key = TEST_API_KEY
+    merchant_id = TEST_MERCHANT_ID
     timeout = 5
 
     def _expected_response(self):

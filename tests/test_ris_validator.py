@@ -10,13 +10,13 @@ from kount.ris_validator import RisValidator
 from kount.ris_validator import RisValidationException
 from kount.version import VERSION
 
-from .json_test import example_data, example_data_products
+from json_test import example_data, example_data_products
 
-__author__ = "Kount SDK"
+__author__ = config.SDKConfig.SDK_AUTHOR
 __version__ = VERSION
-__maintainer__ = "Kount SDK"
-__email__ = "sdkadmin@kount.com"
-__status__ = "Development"
+__maintainer__ = config.SDKConfig.SDK_MAINTAINER
+__email__ = config.SDKConfig.MAINTAINER_EMAIL
+__status__ = config.SDKConfig.STATUS
 
 
 class TestRisValidator(unittest.TestCase):

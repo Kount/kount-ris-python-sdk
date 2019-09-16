@@ -18,13 +18,16 @@ from kount.ris_validator import RisValidationException
 from kount.util.payment import CardPayment
 from kount.version import VERSION
 
-from .test_basic_connectivity import generate_unique_id, default_inquiry
+from test_basic_connectivity import generate_unique_id, default_inquiry
 
-__author__ = "Kount SDK"
+from kount.config import SDKConfig
+from setting import TEST_API_KEY, TEST_API_URL, TEST_MERCHANT_ID
+
+__author__ = SDKConfig.SDK_AUTHOR
 __version__ = VERSION
-__maintainer__ = "Kount SDK"
-__email__ = "sdkadmin@kount.com"
-__status__ = "Development"
+__maintainer__ = SDKConfig.SDK_MAINTAINER
+__email__ = SDKConfig.MAINTAINER_EMAIL
+__status__ = SDKConfig.STATUS
 
 # raise_errors - if  True - raise errors instead of logging in debugger
 _RAISE_ERRORS = False
@@ -41,9 +44,11 @@ class TestRisTestSuite(unittest.TestCase):
         Client(url=URL_API, key=KOUNT_API_KEY,
                timeout=TIMEOUT, RAISE_ERRORS=True)
     """
-    merchant_id = None
-    api_key = None
-    api_url = None
+
+    """Need to set api_url, api_key and merchant id value in setting.py file."""
+    merchant_id = TEST_MERCHANT_ID
+    api_key = TEST_API_KEY
+    api_url = TEST_API_URL
 
     maxDiff = None
 
