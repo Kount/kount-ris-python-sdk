@@ -38,6 +38,8 @@ service. /**see test\_inquiry.py**/
 ::
 
     #python
+    import uuid
+    import logging
     from kount.client import Client
     from kount.config import SDKConfig
     from kount.inquiry import Inquiry
@@ -93,6 +95,39 @@ service. /**see test\_inquiry.py**/
         response = client.process(inquiry)
 
         # do stuff with response
+
+
+    # method use for creating unique session id
+
+    def generate_unique_id():
+        return str(uuid.uuid4()).replace('-','').upper()
+
+    
+    def setup_logging():
+
+        req = logging.getLogger('kount.request')
+        req.setLevel(logging.DEBUG)
+        reqh = logging.FileHandler('request.log')
+        reqh.setLevel(logging.DEBUG)
+        req.addHandler(reqh)
+
+
+        cli = logging.getLogger('kount.client')
+        cli.setLevel(logging.DEBUG)
+        clih = logging.FileHandler('client.log')
+        clih.setLevel(logging.DEBUG)
+        cli.addHandler(clih)
+
+
+        resp = logging.getLogger('kount.response')
+        resp.setLevel(logging.DEBUG)
+        resph = logging.FileHandler('response.log')
+        resph.setLevel(logging.DEBUG)
+        resp.addHandler(resph)
+
+
+    # calling the evaluate_inquiry method
+    evaluate_inquiry()
 
 Explanation of the request
 ==========================
