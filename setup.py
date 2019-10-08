@@ -30,7 +30,7 @@ KEYWORDS = ('kount', 'sdk', 'ris')
 
 # Think this can go away if GitLab sets the version based on CI_COMMIT_TAG (gallilama)
 #main_ns = {}
-#this_path = os.path.abspath(os.path.dirname(__file__))
+this_path = os.path.abspath(os.path.dirname(__file__))
 #version_file = os.path.join(this_path, 'src/{0}/version.py'.format(
 #    PROJECT_MODULE))
 #with open(version_file) as ver_file:
