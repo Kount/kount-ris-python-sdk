@@ -11,24 +11,31 @@ import os
 from codecs import open
 from setuptools import setup, find_packages
 
+# GitLab env value will now dynamically set the version (gallilama)
+if os.environ.get('CI_COMMIT_TAG'):
+    version = os.environ['CI_COMMIT_TAG']
+else:
+    version = os.environ['CI_JOB_ID']
+
 AUTHOR = 'Kount'
 EMAIL = 'sdkadmin@kount.com'
 PROJECT = 'kount_ris_sdk'
 PROJECT_MODULE = 'kount'
-VERSION = '<unknown>'
+VERSION = version
 PROJECT_URL = 'https://github.com/Kount/kount-ris-python-sdk'
 DESC = 'Kount Python RIS SDK'
 LONG_DESC = ''
 LICENSE = 'Kount'
 KEYWORDS = ('kount', 'sdk', 'ris')
 
-main_ns = {}
-this_path = os.path.abspath(os.path.dirname(__file__))
-version_file = os.path.join(this_path, 'src/{0}/version.py'.format(
-    PROJECT_MODULE))
-with open(version_file) as ver_file:
-    exec(ver_file.read(), main_ns)
-    VERSION = main_ns['VERSION']
+# Think this can go away if GitLab sets the version based on CI_COMMIT_TAG (gallilama)
+#main_ns = {}
+#this_path = os.path.abspath(os.path.dirname(__file__))
+#version_file = os.path.join(this_path, 'src/{0}/version.py'.format(
+#    PROJECT_MODULE))
+#with open(version_file) as ver_file:
+#    exec(ver_file.read(), main_ns)
+#    VERSION = main_ns['VERSION']
 
 # Get the long description from the README file
 with open(os.path.join(this_path, 'README.md'), encoding='utf-8') as f:
