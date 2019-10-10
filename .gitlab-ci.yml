@@ -6,9 +6,9 @@ stages:
 before_script:
    - pip install twine
    # "You should always upload a source archive and provide built archives..." - PyPi
-   - python setup.py sdist bdist_wheel
+   #- python setup.py sdist bdist_wheel
    # Do we want to do what old internal documentation referenced?
-   #- python setup.py bdist_wheel --universal
+   - python setup.py bdist_wheel --universal
 
 # Upload to Test PyPi
 deploy_staging:
