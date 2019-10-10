@@ -5,19 +5,18 @@ stages:
 
 before_script:
    - pip install twine
-   # "You should always upload a source archive and provide built archives..." - PyPi
-   #- python setup.py sdist bdist_wheel
-   # Do we want to do what old internal documentation referenced?
-   - python setup.py bdist_wheel --universal
+   - python setup.py sdist bdist_wheel
 
 # Upload to Test PyPi
+# Test PyPi may delete our user account without warning.
+# This is brittle, and we may want to remove the stage
+# deployment and replace it with true CI validation.
 deploy_staging:
   stage: deploy
   variables:
     TWINE_USERNAME: $STAGING_USERNAME
     TWINE_PASSWORD: $STAGING_PASSWORD
   script:
-    #- twine upload dist/*
     - twine upload --repository-url $STAGING_REPO_URL dist/*
   except:
     - tags
