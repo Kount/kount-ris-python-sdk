@@ -5,18 +5,20 @@ stages:
 
 before_script:
    - pip install twine
-   - python setup.py sdist
-   # Do we want to do what old internal documentation referenced instead of sdist?
+   # "You should always upload a source archive and provide built archives..." - PyPi
+   - python setup.py sdist bdist_wheel
+   # Do we want to do what old internal documentation referenced?
    #- python setup.py bdist_wheel --universal
 
+# Upload to Test PyPi
 deploy_staging:
   stage: deploy
   variables:
     TWINE_USERNAME: $STAGING_USERNAME
     TWINE_PASSWORD: $STAGING_PASSWORD
   script:
-    - twine upload dist/*
-    #- twine upload --repository-url $PYPRI_REPOSITORY_URL dist/*
+    #- twine upload dist/*
+    - twine upload --repository-url $STAGING_REPO_URL dist/*
   except:
     - tags
 
