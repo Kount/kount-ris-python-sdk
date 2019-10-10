@@ -43,7 +43,7 @@ with open(os.path.join(this_path, 'README.md'), encoding='utf-8') as f:
 
 REQUIRES = (
     'requests>=2.11.1',
-    'mom==0.1.3;python_version<"3.0"',
+    'mom>=0.1.3;python_version<"3.0"',
     'py2-ipaddress>=3.4.1;python_version<"3.0"'
 )
 
