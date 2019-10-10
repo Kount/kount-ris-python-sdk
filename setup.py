@@ -28,7 +28,12 @@ LONG_DESC = ''
 LICENSE = 'Kount'
 KEYWORDS = ('kount', 'sdk', 'ris')
 
-# Think this can go away if GitLab sets the version based on CI_COMMIT_TAG (gallilama)
+# Version can be set dynamically by GitLab, but other things in the
+# SDK appear to be using the value in version.py.
+# I'm not sure if we should adopt dynamic version in GitLab or not.
+# It's shiny, but if other things want the verion info in the file,
+# then things could get confusing.  Going to leave the dynamic GitLab
+# stuff in here along with this long comment. (gallilama)
 #main_ns = {}
 this_path = os.path.abspath(os.path.dirname(__file__))
 #version_file = os.path.join(this_path, 'src/{0}/version.py'.format(
