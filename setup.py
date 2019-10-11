@@ -30,17 +30,9 @@ KEYWORDS = ('kount', 'sdk', 'ris')
 
 # Version can be set dynamically by GitLab, but other things in the
 # SDK appear to be using the value in version.py.
-# I'm not sure if we should adopt dynamic version in GitLab or not.
-# It's shiny, but if other things want the verion info in the file,
-# then things could get confusing.  Going to leave the dynamic GitLab
-# stuff in here along with this long comment. (gallilama)
-#main_ns = {}
+# Developers SHOULD STILL UPDATE the value in version.py for other needs.
+
 this_path = os.path.abspath(os.path.dirname(__file__))
-#version_file = os.path.join(this_path, 'src/{0}/version.py'.format(
-#    PROJECT_MODULE))
-#with open(version_file) as ver_file:
-#    exec(ver_file.read(), main_ns)
-#    VERSION = main_ns['VERSION']
 
 # Get the long description from the README file
 with open(os.path.join(this_path, 'README.md'), encoding='utf-8') as f:
