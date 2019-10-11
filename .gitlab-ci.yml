@@ -7,20 +7,6 @@ before_script:
    - pip install twine
    - python setup.py sdist bdist_wheel
 
-# Upload to Test PyPi
-# Test PyPi may delete our user account without warning.
-# This is brittle, and we may want to remove the stage
-# deployment and replace it with true CI validation.
-deploy_staging:
-  stage: deploy
-  variables:
-    TWINE_USERNAME: $STAGING_USERNAME
-    TWINE_PASSWORD: $STAGING_PASSWORD
-  script:
-    - twine upload --repository-url $STAGING_REPO_URL dist/*
-  except:
-    - tags
-
 deploy_production:
   stage: deploy
   variables:
