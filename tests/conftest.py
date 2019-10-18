@@ -2,14 +2,13 @@ import os
 import pytest
 
 from kount import config
+from setting import TEST_API_KEY, TEST_API_URL, TEST_MERCHANT_ID
 
-TEST_API_URL = 'https://risk.beta.kount.net'
+TEST_API_URL = TEST_API_URL
 
-TEST_API_KEY = 'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiI5OTk2N' \
-               'jYiLCJhdWQiOiJLb3VudC4xIiwiaWF0IjoxNDk0NTM0Nzk5LCJzY3A' \
-               'iOnsia2EiOm51bGwsImtjIjpudWxsLCJhcGkiOmZhbHNlLCJyaXMiO' \
-               'nRydWV9fQ.eMmumYFpIF-d1up_mfxA5_VXBI41NSrNVe9CyhBUGck'
-TEST_MERCHANT = '999666'
+TEST_API_KEY = TEST_API_KEY
+
+TEST_MERCHANT = TEST_MERCHANT_ID
 
 
 def pytest_addoption(parser):

@@ -21,7 +21,14 @@ class SDKConfig:
     _XML_FILENAME = os.path.join(resources.__path__[0], 'validate.xml')
 
     SDK_VERSION = "0700"
+    
+    SDK_AUTHOR = __author__
 
+    SDK_MAINTAINER = __maintainer__
+
+    MAINTAINER_EMAIL = __email__
+
+    STATUS = __status__
     # default behaviour for request failures
     _RAISE_ERRORS = True
 

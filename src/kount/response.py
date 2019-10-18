@@ -7,12 +7,13 @@ import logging
 from collections import namedtuple
 
 from .version import VERSION
+from .config import SDKConfig
 
-__author__ = "Kount SDK"
+__author__ = SDKConfig.SDK_AUTHOR
 __version__ = VERSION
-__maintainer__ = "Kount SDK"
-__email__ = "sdkadmin@kount.com"
-__status__ = "Development"
+__maintainer__ = SDKConfig.SDK_MAINTAINER
+__email__ = SDKConfig.MAINTAINER_EMAIL
+__status__ = SDKConfig.STATUS
 
 LOG = logging.getLogger('kount.response')
 

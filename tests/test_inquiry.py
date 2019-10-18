@@ -17,12 +17,13 @@ from kount.util.cartitem import CartItem
 from kount.util.address import Address
 from kount.config import SDKConfig
 from kount.version import VERSION
+from setting import TEST_API_KEY, TEST_API_URL, TEST_MERCHANT_ID
 
-__author__ = "Kount SDK"
+__author__ = SDKConfig.SDK_AUTHOR
 __version__ = VERSION
-__maintainer__ = "Kount SDK"
-__email__ = "sdkadmin@kount.com"
-__status__ = "Development"
+__maintainer__ = SDKConfig.SDK_MAINTAINER
+__email__ = SDKConfig.MAINTAINER_EMAIL
+__status__ = SDKConfig.STATUS
 
 EMAIL_CLIENT = "sdkTest@kountsdktestdomain.com"
 PTOK = "0007380568572514"
@@ -132,9 +133,10 @@ class TestInquiry(unittest.TestCase):
     """Inquiry class tests"""
     maxDiff = None
 
-    merchant_id = None
-    api_key = None
-    api_url = None
+    """ Need to set api_url, api_key and merchant id value in setting.py file. """
+    merchant_id = TEST_MERCHANT_ID
+    api_key = TEST_API_KEY
+    api_url = TEST_API_URL
 
     def setUp(self):
         self.session_id = str(generate_unique_id())

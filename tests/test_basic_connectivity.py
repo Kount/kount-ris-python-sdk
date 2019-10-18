@@ -16,13 +16,16 @@ from kount.client import Client
 from kount.util.payment import CardPayment
 from kount.version import VERSION
 
-from .test_inquiry import generate_unique_id, default_inquiry
+from test_inquiry import generate_unique_id, default_inquiry
 
-__author__ = "Kount SDK"
+from kount.config import SDKConfig
+from setting import TEST_API_KEY, TEST_API_URL, TEST_MERCHANT_ID
+
+__author__ = SDKConfig.SDK_AUTHOR
 __version__ = VERSION
-__maintainer__ = "Kount SDK"
-__email__ = "sdkadmin@kount.com"
-__status__ = "Development"
+__maintainer__ = SDKConfig.SDK_MAINTAINER
+__email__ = SDKConfig.MAINTAINER_EMAIL
+__status__ = SDKConfig.STATUS
 
 
 PTOK = "0007380568572514"
@@ -34,9 +37,12 @@ class TestBasicConnectivity(unittest.TestCase):
     """Test Basic Connectivity"""
     maxDiff = None
 
-    merchant_id = None
-    api_key = None
-    api_url = None
+    """
+    Need to set api_url, api_key and merchant id value in setting.py file.
+    """
+    merchant_id = TEST_MERCHANT_ID
+    api_key = TEST_API_KEY
+    api_url = TEST_API_URL
 
     def _client(self, **kwargs):
         kwargs['api_url'] = self.api_url

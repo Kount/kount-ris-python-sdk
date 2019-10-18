@@ -16,12 +16,13 @@ import string
 from kount.resources.correct_key_cryp import correct_key_cryp
 from kount.version import VERSION
 from .a85 import a85decode
+from kount.config import SDKConfig
 
-__author__ = "Kount SDK"
+__author__ = SDKConfig.SDK_AUTHOR
 __version__ = VERSION
-__maintainer__ = "Kount SDK"
-__email__ = "sdkadmin@kount.com"
-__status__ = "Development"
+__maintainer__ = SDKConfig.SDK_MAINTAINER
+__email__ = SDKConfig.MAINTAINER_EMAIL
+__status__ = SDKConfig.STATUS
 
 LOG = logging.getLogger('kount.khash')
 
@@ -60,6 +61,7 @@ class Khash(object):
     @staticmethod
     def get():
         """ Static access method. """
+        SDKConfig.setup(SDKConfig._CONFIGURATION_KEY)
         if Khash.__instance is None:
             raise ValueError('config.SDKConfig.setup() not called')
         return Khash.__instance
@@ -70,7 +72,8 @@ class Khash(object):
     def __init__(self, key):
         """ Virtually private constructor. """
         if Khash.__instance is not None:
-            raise Exception("This class is a singleton!")
+            pass
+            # raise Exception("This class is a singleton!")
         hash_salt_key = a85decode(key)
         self.config_key = hash_salt_key.decode("utf-8")
         self.verify()

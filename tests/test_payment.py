@@ -15,12 +15,13 @@ from kount.util.payment import (
     Payment, PaypalPayment)
 
 from kount.version import VERSION
+from kount.config import SDKConfig
 
-__author__ = "Kount SDK"
+__author__ = SDKConfig.SDK_AUTHOR
 __version__ = VERSION
-__maintainer__ = "Kount SDK"
-__email__ = "sdkadmin@kount.com"
-__status__ = "Development"
+__maintainer__ = SDKConfig.SDK_MAINTAINER
+__email__ = SDKConfig.MAINTAINER_EMAIL
+__status__ = SDKConfig.STATUS
 
 
 @pytest.mark.usefixtures("conf_key")
