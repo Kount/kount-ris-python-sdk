@@ -37,7 +37,7 @@ How to run integration tests in root directory?
 
 ### How to use the SDK
 For more information read the official docs:
-http://kount-ris-sdk.readthedocs.io/en/latest/
+https://kount.github.io
 
 ### Setting up IDE projects
 * Komodo IDE/Edit, Scite, Visual Studio - have automatic python integration
