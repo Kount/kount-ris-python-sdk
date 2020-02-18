@@ -4,7 +4,7 @@ stages:
   - deploy
 
 before_script:
-   - apk update && apk add gcc python3-dev musl-dev
+   - apk update && apk add gcc python3-dev musl-dev libffi-dev
    - pip install twine
    - python setup.py sdist bdist_wheel
 
