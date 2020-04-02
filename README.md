@@ -10,8 +10,8 @@ Kount's SDK helps integrate Kount's fraud fighting solution into your python app
 http://www.kount.com/fraud-detection-software
 
     Contains sources, tests, and resources for the Kount Python SDK
-    SDK version: 3.0.2
-    Python 2.7.13 and 3.5, 3.6.1 
+    SDK version: 3.2.0
+    Python 3.5, 3.6.1 
 
 How do I get set up?  
 
