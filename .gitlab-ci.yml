@@ -1,0 +1,39 @@
+# This file is a template, and needs editing before it works on your project.
+# More information can be found here: https://confluence.kount.com/display/PAAS/GitLab
+stages:
+  - test
+  - build
+  - deploy
+
+default:
+  image:
+    name: 894779965274.dkr.ecr.us-west-2.amazonaws.com/kount/terraform:0.12.9-0d8ee080
+    entrypoint: [""]
+
+variables:
+  # Add any variables requiered by pipeline
+  REPO_NAME: https://gitlab.gs.kount.com/Elijah.Roberts/testing
+
+test:
+  stage: test
+  tags:
+    - shared-infra
+  script:
+    - echo "run your test steps here"
+
+compile:
+  stage: build
+  tags:
+    - shared-infra
+  script:
+    - echo "here you can can build a package"
+  artifacts:
+    paths:
+      - pathtomybinary
+
+apply:
+  stage: deploy
+  tags:
+    - shared-infra
+  script:
+    - echo "deploy commands here"
