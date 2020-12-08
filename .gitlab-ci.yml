@@ -40,6 +40,6 @@ apply:
   tags:
     - shared-infra
   only:
-    - master
+    - branches
   script:
     - echo "deploy commands here"
