@@ -2,7 +2,7 @@ import os
 import pytest
 
 from kount import config
-from setting import TEST_API_KEY, TEST_API_URL, TEST_MERCHANT_ID
+from kount.settings import TEST_API_KEY, TEST_API_URL, TEST_MERCHANT_ID
 
 TEST_API_URL = TEST_API_URL
 

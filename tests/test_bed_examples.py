@@ -21,7 +21,7 @@ from kount.util.address import Address
 from kount.version import VERSION
 
 from test_inquiry import generate_unique_id
-from setting import TEST_API_KEY, TEST_API_URL, TEST_MERCHANT_ID
+from kount.settings import TEST_API_KEY, TEST_API_URL, TEST_MERCHANT_ID
 
 __author__ = SDKConfig.SDK_AUTHOR
 __version__ = VERSION
@@ -151,7 +151,7 @@ class TestBed(unittest.TestCase):
         """common method for both tests"""
         res = Client(self.api_url, self.api_key).process(self.inq)
         self.assertIsNotNone(res)
-        self.assertNotIn('ERRO', res.params)
+        self.assertNotIn('ERRO', res)
         actual = self.inq.params.copy()
         remove = ['SDK_VERSION', 'SESS', 'UNIQ', 'ORDR']
         for k in remove:
