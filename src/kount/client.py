@@ -14,7 +14,6 @@ import requests
 from . import config
 from . import request
 from . import response
-from .ris_validator import RisValidator, RisValidationException
 from .version import VERSION
 from .config import SDKConfig
 
@@ -49,7 +48,10 @@ class Client:
         LOG.debug("url - %s, len_key - %s", self.api_url, len(self.api_key))
 
     def process(self, req):
-    
+
+        if not isinstance(req, request.Request):
+            raise ValueError("invalid request, %s" % type(request))
+        
         res = self._execute(req.params)
         if res:
             return response.Response(res)
@@ -67,7 +69,7 @@ class Client:
     
         headers_api = {'X-Kount-Api-Key': self.api_key}
 
-        if self.api_key == "Placeholder":
+        if self.api_key == "API_KEY":
             raise Exception('Please configure the API Key in settings.py file')
 
         params['FRMT'] = 'JSON'
@@ -79,8 +81,24 @@ class Client:
                             data=params,
                             timeout=self.timeout)
         
-        resp = req.json()
-        return resp
+        try:
+            resp = req.json()
+        except ValueError as jde:
+            LOG.error("ValueError - %s", jde)
+            try:
+                text_to_json = parse_k_v(req.text)
+                LOG.debug("process text: %s", text_to_json)
+                return text_to_json
+            except ValueError:
+                error = "Neither JSON nor String %s" % req.text
+                LOG.debug(error)
+                raise ValueError(error)
+        else:
+            LOG.debug("MERC = %s, SESS = %s, SDK ELAPSED = %s ms.",
+                      params.get('MERC', None),
+                      params.get("SESS", None),
+                      req.elapsed.total_seconds())
+            return resp
 
 
 def parse_k_v(text):

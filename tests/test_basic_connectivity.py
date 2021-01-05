@@ -56,9 +56,6 @@ class TestBasicConnectivity(unittest.TestCase):
         self.session_id = generate_unique_id()[:32]
         self.email_client = EMAIL
         payment = CardPayment(PTOK, khashed=False)
-        # payment = Payment(payment_type="CARD",
-        #                   payment_token=PTOK,
-        #                   khashed=False)
         self.inq = default_inquiry(self.merchant_id,
                                    self.session_id,
                                    self.email_client,
@@ -94,9 +91,6 @@ class TestBasicConnectivity(unittest.TestCase):
         bad = u'Сирма :ы№'
         self.inq.params["S2NM"] = bad
         self.inq.params["EMAL"] = bad
-        # self.assertRaises(
-        #     RisValidationException,
-        #     lambda: self._process(self.inq, raise_errors=True))
         res = self._process(self.inq, raise_errors=False)
         self.assertIsNotNone(res)
         actual = u"321 BAD_EMAL Cause: [[%s is an invalid email address]"\
@@ -127,9 +121,6 @@ class TestBasicConnectivity(unittest.TestCase):
         inq = self.inq
         for bad in bad_list:
             inq.params["S2NM"] = bad
-            # self.assertRaises(
-            #     RisValidationException,
-            #     lambda: self._process(inq, raise_errors=True))
             try:
                 self._process(inq, raise_errors=False)
             except ValueError as vale:
