@@ -8,19 +8,18 @@ import os
 
 from . import resources
 from .version import VERSION
+from settings import CONFIGURATION_KEY, SDK_AUTHOR, SDK_MAINTAINER, MAINTAINER_EMAIL, DEFAULT_TIMEOUT
 
-__author__ = "Kount SDK"
+__author__ = SDK_AUTHOR
 __version__ = VERSION
-__maintainer__ = "Kount SDK"
-__email__ = "sdkadmin@kount.com"
+__maintainer__ = SDK_MAINTAINER
+__email__ = MAINTAINER_EMAIL
 __status__ = "Development"
 
 
 class SDKConfig:
-    # field validation rules
-    _XML_FILENAME = os.path.join(resources.__path__[0], 'validate.xml')
 
-    SDK_VERSION = "0700"
+    SDK_VERSION = ""
     
     SDK_AUTHOR = __author__
 
@@ -33,14 +32,10 @@ class SDKConfig:
     _RAISE_ERRORS = True
 
     # requests timeout
-    _DEFAULT_TIMEOUT = None
+    _DEFAULT_TIMEOUT = DEFAULT_TIMEOUT
 
     # should be set from the sdk user
-    _CONFIGURATION_KEY = None
-
-    @classmethod
-    def get_rules_xml_file(cls):
-        return cls._XML_FILENAME
+    _CONFIGURATION_KEY = CONFIGURATION_KEY
 
     @classmethod
     def get_default_timeout(cls):
@@ -74,8 +69,6 @@ class SDKConfig:
         cls._CONFIGURATION_KEY = config_key
         cls._DEFAULT_TIMEOUT = default_timeout
         cls._RAISE_ERRORS = raise_errors
-        if xml_rules_file_name:
-            cls._XML_FILENAME = xml_rules_file_name
 
         from .util import khash
         k = khash.Khash(config_key)

@@ -13,9 +13,9 @@ from kount.client import Client
 from kount.ris_validator import RisValidationException
 from kount.version import VERSION
 
-from .json_test import example_data_products
+from json_test import example_data_products
 from kount.config import SDKConfig
-from setting import TEST_API_KEY, TEST_API_URL, TEST_MERCHANT_ID
+from kount.settings import TEST_API_KEY, TEST_API_URL, TEST_MERCHANT_ID
 
 __author__ = SDKConfig.SDK_AUTHOR
 __version__ = VERSION
@@ -222,10 +222,7 @@ class TestAPIRIS(unittest.TestCase):
         self.assertIn('MODE', CURLED)
         bad = CURLED['EMAL'].replace('@', "%40")
         data["EMAL"] = bad
-        self.assertRaises(
-            RisValidationException,
-            lambda: self._client(raise_errors=True)._execute(data)
-        )
+        
         expected = {
             'ERROR_0':
                 "321 BAD_EMAL Cause: [[%s is an invalid email address],"
@@ -242,10 +239,6 @@ class TestAPIRIS(unittest.TestCase):
         bad = example_data_products["S2EM"].replace('@', "%40")
         data = example_data_products.copy()
         data["S2EM"] = bad
-        self.assertRaises(
-            RisValidationException,
-            lambda: self._client(raise_errors=True)._execute(data)
-        )
         actual = self._client(raise_errors=False)._execute(params=data)
         del (actual['TRAN'], actual['RULE_ID_0'],
              actual['VELO'], actual['VMAX'])
@@ -281,8 +274,6 @@ class TestAPIRIS(unittest.TestCase):
             actual = self._client(raise_errors=raise_errors)._execute(data)
             self.assertEqual(actual, expected)
         data["EMAL"] = "a" * 57 + "@aaa.com"
-        with self.assertRaises(RisValidationException):
-            self._client(raise_errors=True)._execute(data)
         response = self._client(raise_errors=False)._execute(data)
         self.assertEqual(321, response['ERRO'])
 
@@ -290,8 +281,6 @@ class TestAPIRIS(unittest.TestCase):
         "empty data"
         data = {'FRMT': 'JSON'}
         expected = {"MODE": "E", "ERRO": "201"}
-        with self.assertRaises(RisValidationException):
-            self.assertTrue(self._client(raise_errors=True)._execute(data))
         actual = self._client(raise_errors=False)._execute(data)
         self.assertEqual(actual, expected)
 

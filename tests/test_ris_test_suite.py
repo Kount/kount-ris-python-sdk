@@ -21,7 +21,7 @@ from kount.version import VERSION
 from test_basic_connectivity import generate_unique_id, default_inquiry
 
 from kount.config import SDKConfig
-from setting import TEST_API_KEY, TEST_API_URL, TEST_MERCHANT_ID
+from kount.settings import TEST_API_KEY, TEST_API_URL, TEST_MERCHANT_ID
 
 __author__ = SDKConfig.SDK_AUTHOR
 __version__ = VERSION

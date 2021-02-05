@@ -19,7 +19,7 @@ from kount.version import VERSION
 from test_inquiry import generate_unique_id, default_inquiry
 
 from kount.config import SDKConfig
-from setting import TEST_API_KEY, TEST_API_URL, TEST_MERCHANT_ID
+from kount.settings import TEST_API_KEY, TEST_API_URL, TEST_MERCHANT_ID
 
 __author__ = SDKConfig.SDK_AUTHOR
 __version__ = VERSION
@@ -56,9 +56,6 @@ class TestBasicConnectivity(unittest.TestCase):
         self.session_id = generate_unique_id()[:32]
         self.email_client = EMAIL
         payment = CardPayment(PTOK, khashed=False)
-        # payment = Payment(payment_type="CARD",
-        #                   payment_token=PTOK,
-        #                   khashed=False)
         self.inq = default_inquiry(self.merchant_id,
                                    self.session_id,
                                    self.email_client,
@@ -69,14 +66,14 @@ class TestBasicConnectivity(unittest.TestCase):
         self.inq.params["UDF[~K!_SCOR]"] = '42'
         res = self._process(self.inq)
         self.assertIsNotNone(res)
-        self.assertEqual("42", res.params['SCOR'])
+        self.assertEqual("42", res['SCOR'])
 
     def test_13_expected_decision(self):
         """test_13_expected_decision"""
         self.inq.params["UDF[~K!_AUTO]"] = 'R'
         res = self._process(self.inq)
         self.assertIsNotNone(res)
-        self.assertEqual("R", res.params["AUTO"])
+        self.assertEqual("R", res["AUTO"])
 
     def test_16_expected_geox(self):
         """test_16_expected_geox"""
@@ -85,18 +82,15 @@ class TestBasicConnectivity(unittest.TestCase):
         self.inq.params["UDF[~K!_GEOX]"] = 'NG'
         res = self._process(self.inq)
         self.assertIsNotNone(res)
-        self.assertEqual("D", res.params["AUTO"])
-        self.assertEqual("NG", res.params["GEOX"])
-        self.assertEqual("42", res.params['SCOR'])
+        self.assertEqual("D", res["AUTO"])
+        self.assertEqual("NG", res["GEOX"])
+        self.assertEqual("42", res['SCOR'])
 
     def test_cyrillic(self):
         """test_cyrillic"""
         bad = u'Сирма :ы№'
         self.inq.params["S2NM"] = bad
         self.inq.params["EMAL"] = bad
-        self.assertRaises(
-            RisValidationException,
-            lambda: self._process(self.inq, raise_errors=True))
         res = self._process(self.inq, raise_errors=False)
         self.assertIsNotNone(res)
         actual = u"321 BAD_EMAL Cause: [[%s is an invalid email address]"\
@@ -104,7 +98,7 @@ class TestBasicConnectivity(unittest.TestCase):
         self.assertEqual({
             u'ERRO': 321,
             u'ERROR_0': actual,
-            u'ERROR_COUNT': 1, u'MODE': u'E', u'WARNING_COUNT': 0}, res.params)
+            u'ERROR_COUNT': 1, u'MODE': u'E', u'WARNING_COUNT': 0}, res)
 
     def test_long(self):
         """test_long request"""
@@ -126,10 +120,7 @@ class TestBasicConnectivity(unittest.TestCase):
             "ERRO=201"
         inq = self.inq
         for bad in bad_list:
-            inq.params["S2NM"] = bad * 999
-            self.assertRaises(
-                RisValidationException,
-                lambda: self._process(inq, raise_errors=True))
+            inq.params["S2NM"] = bad
             try:
                 self._process(inq, raise_errors=False)
             except ValueError as vale:

@@ -59,20 +59,18 @@ class Inquiry(Request):
             Arg: cash - int, cash amount of any feasible goods"""
         self.set_param("CASH", cash)
 
-    def set_date_of_birth(self, dob=datetime.today()):
+    def set_date_of_birth(self, dob):
         """Set the date of birth in the format YYYY-MM-DD.
          Arg: dob - Date of birth
          """
-        self.set_param("DOB", dob.strftime('%Y-%m-%d'))
+        self.set_param("DOB", dob)
 
     def set_gender(self, gender):
         """Set the gender. Either M(ale) of F(emale).
             Acceptable values: GENDER
             Arg: - gender"""
-        if Gender.is_valid(gender):
-            self.set_param("GENDER", gender)
-        else:
-            raise ValueError('INVALID GENDER = %s' % gender)
+    
+        self.set_param("GENDER", gender)
 
     def set_user_defined_field(self, label, value):
         """Set a user defined field.
@@ -86,10 +84,8 @@ class Inquiry(Request):
             Acceptable values are: InquiryMode
             Arg: mode - Mode of the request
         """
-        if InquiryMode.is_valid(mode):
-            self.set_param("MODE", mode)
-        else:
-            raise ValueError('INVALID INQUIRY MODE = %s' % mode)
+        self.set_param("MODE", mode)
+    
 
     def set_currency(self, currency):
         """Set the three character ISO-4217 currency code.
@@ -211,10 +207,8 @@ class Inquiry(Request):
         """Set shipment type
             Arg: shipment -  type ShippingType
         """
-        if ShippingType.is_valid(shipment):
-            self.set_param("SHTP", shipment)
-        else:
-            raise ValueError("INVALID SHIPMENT TYPE = %s" % shipment)
+
+        self.set_param("SHTP", shipment)
 
     def set_anid(self, anid_order):
         """Set the anid
@@ -244,8 +238,8 @@ class Inquiry(Request):
         """
         for index, item in enumerate(cart):
             if not isinstance(item, CartItem):
-                raise ValueError('invalid CartItem: %s' % item)
-            LOG.debug("PROD_TYPE[%i] = %s, PROD_ITEM[%i] = %s, "
+                raise ValueError('Invalid cart item: %s', % item)
+                LOG.debug("PROD_TYPE[%i] = %s, PROD_ITEM[%i] = %s, "
                       "PROD_DESC[%i] = %s, PROD_QUANT[%i] = %s, "
                       "PROD_PRICE[%i] = %s",
                       index, item.product_type,
@@ -253,6 +247,7 @@ class Inquiry(Request):
                       index, item.description,
                       index, item.quantity,
                       index, item.price)
+
             self.params["PROD_TYPE[%i]" % index] = item.product_type
             self.params["PROD_ITEM[%i]" % index] = item.item_name
             self.params["PROD_DESC[%i]" % index] = item.description

@@ -17,7 +17,7 @@ from kount.util.cartitem import CartItem
 from kount.util.address import Address
 from kount.config import SDKConfig
 from kount.version import VERSION
-from setting import TEST_API_KEY, TEST_API_URL, TEST_MERCHANT_ID
+from kount.settings import TEST_API_KEY, TEST_API_URL, TEST_MERCHANT_ID
 
 __author__ = SDKConfig.SDK_AUTHOR
 __version__ = VERSION
