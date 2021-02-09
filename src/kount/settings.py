@@ -1,11 +1,4 @@
 from kount.version import VERSION
-from kount.config import SDKConfig
-
-__author__ = SDKConfig.SDK_AUTHOR
-__version__ = VERSION
-__maintainer__ = SDKConfig.SDK_MAINTAINER
-__email__ = SDKConfig.MAINTAINER_EMAIL
-__status__ = SDKConfig.STATUS
 
 
 CONFIGURATION_KEY = None

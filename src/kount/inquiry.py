@@ -238,7 +238,7 @@ class Inquiry(Request):
         """
         for index, item in enumerate(cart):
             if not isinstance(item, CartItem):
-                raise ValueError('Invalid cart item: %s', % item)
+                raise ValueError('Invalid cart item: %s', item)
                 LOG.debug("PROD_TYPE[%i] = %s, PROD_ITEM[%i] = %s, "
                       "PROD_DESC[%i] = %s, PROD_QUANT[%i] = %s, "
                       "PROD_PRICE[%i] = %s",

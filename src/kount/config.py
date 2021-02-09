@@ -8,7 +8,7 @@ import os
 
 from . import resources
 from .version import VERSION
-from settings import CONFIGURATION_KEY, SDK_AUTHOR, SDK_MAINTAINER, MAINTAINER_EMAIL, DEFAULT_TIMEOUT
+from .settings import CONFIGURATION_KEY, SDK_AUTHOR, SDK_MAINTAINER, MAINTAINER_EMAIL, DEFAULT_TIMEOUT
 
 __author__ = SDK_AUTHOR
 __version__ = VERSION
