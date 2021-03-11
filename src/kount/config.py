@@ -19,7 +19,7 @@ __status__ = "Development"
 
 class SDKConfig:
 
-    SDK_VERSION = ""
+    SDK_VERSION = "0710"
     
     SDK_AUTHOR = __author__
 
