@@ -116,6 +116,8 @@ class Response(object):
         "WARNING_COUNT" - Get the number of warnings associated
                             with the response.
         "ERROR_COUNT" - Get the number of errors associated with the response.
+        "PREVIOUSLY_WHITELISTED" - whitelisted repsonse
+        "3D_SECURE_MERCHANT_RESPONSE" - secured merchant response
         """
         self.params = params
         LOG.debug("RIS response init = %s", params)
@@ -565,3 +567,11 @@ class Response(object):
         :return Merchant ID
         """
         return self.params.get("MERC")
+
+    def get_previous_whitelisted(self):
+        """ Get the whitelisted. """
+        return self.params.get('PREVIOUSLY_WHITELISTED')
+
+    def get_secure_merchant_response(self):
+        """ Get secured merchant response """
+        return self.params.get('3D_SECURE_MERCHANT_RESPONSE')
