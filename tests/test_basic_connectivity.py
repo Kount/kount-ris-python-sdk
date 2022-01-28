@@ -11,15 +11,13 @@ Test Basic Connectivity
 import unittest
 import pytest
 
-from kount.ris_validator import RisValidationException
 from kount.client import Client
 from kount.util.payment import CardPayment
 from kount.version import VERSION
 
-from test_inquiry import generate_unique_id, default_inquiry
+from .test_inquiry import generate_unique_id, default_inquiry
 
 from kount.config import SDKConfig
-from kount.settings import TEST_API_KEY, TEST_API_URL, TEST_MERCHANT_ID
 
 __author__ = SDKConfig.SDK_AUTHOR
 __version__ = VERSION
@@ -36,13 +34,6 @@ EMAIL = 'predictive@kount.com'
 class TestBasicConnectivity(unittest.TestCase):
     """Test Basic Connectivity"""
     maxDiff = None
-
-    """
-    Need to set api_url, api_key and merchant id value in setting.py file.
-    """
-    merchant_id = TEST_MERCHANT_ID
-    api_key = TEST_API_KEY
-    api_url = TEST_API_URL
 
     def _client(self, **kwargs):
         kwargs['api_url'] = self.api_url

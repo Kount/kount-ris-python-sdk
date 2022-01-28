@@ -13,7 +13,13 @@ before_script:
    - pip install pytest
    - python setup.py sdist bdist_wheel
     
-    
+test:
+  stage: test
+  script:
+    - pip install .
+    - pip install .[tests]
+    - pytest tests  --merchant-id=${RIS_SDK_SANDBOX_MERCHANT_ID} --api-key=${RIS_SDK_SANDBOX_API_KEY} --conf-key=$(echo ${RIS_CONFIG_KEY_BASE64} | openssl base64 -d) 
+
 
 deploy_production:
   stage: deploy

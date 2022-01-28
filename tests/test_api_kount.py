@@ -10,12 +10,10 @@ import unittest
 import pytest
 
 from kount.client import Client
-from kount.ris_validator import RisValidationException
 from kount.version import VERSION
 
-from json_test import example_data_products
+from .json_test import example_data_products
 from kount.config import SDKConfig
-from kount.settings import TEST_API_KEY, TEST_API_URL, TEST_MERCHANT_ID
 
 __author__ = SDKConfig.SDK_AUTHOR
 __version__ = VERSION
@@ -150,13 +148,6 @@ class TestAPIRIS(unittest.TestCase):
     """
     maxDiff = None
 
-    """
-    Need to set api_url, api_key and merchant id value in setting.py file.
-
-    """
-    api_url = TEST_API_URL
-    api_key = TEST_API_KEY
-    merchant_id = TEST_MERCHANT_ID
     timeout = 5
 
     def _expected_response(self):

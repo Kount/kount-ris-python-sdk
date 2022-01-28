@@ -20,8 +20,7 @@ from kount.util.cartitem import CartItem
 from kount.util.address import Address
 from kount.version import VERSION
 
-from test_inquiry import generate_unique_id
-from kount.settings import TEST_API_KEY, TEST_API_URL, TEST_MERCHANT_ID
+from .test_inquiry import generate_unique_id
 
 __author__ = SDKConfig.SDK_AUTHOR
 __version__ = VERSION
@@ -112,12 +111,6 @@ expected = {
 class TestBed(unittest.TestCase):
     """Test Bed for use-cases, with & without Khash"""
     maxDiff = None
-
-    """ Need to set api_url, api_key and merchant id value in setting.py file. """
-
-    merchant_id = TEST_MERCHANT_ID
-    api_key = TEST_API_KEY
-    api_url = TEST_API_URL
 
     def setUp(self):
         self.session_id = generate_unique_id()[:32]
