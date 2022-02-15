@@ -104,7 +104,7 @@ expected = {
     'SITE': 'DEFAULT',
     'TOTL': 3500,
     # 'UNIQ': '4F7132C2FE8547928CD9',
-    'VERS': '0700'}
+    'VERS': '0710'}
 
 
 @pytest.mark.usefixtures("api_url", "api_key", "merchant_id")
@@ -144,7 +144,7 @@ class TestBed(unittest.TestCase):
         """common method for both tests"""
         res = Client(self.api_url, self.api_key).process(self.inq)
         self.assertIsNotNone(res)
-        self.assertNotIn('ERRO', res)
+        self.assertNotIn('ERRO', repr(res))
         actual = self.inq.params.copy()
         remove = ['SDK_VERSION', 'SESS', 'UNIQ', 'ORDR']
         for k in remove:

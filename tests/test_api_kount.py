@@ -27,7 +27,7 @@ expected1 = {
     'AUTO': 'R',
     'BRND': None,
     'BROWSER': None,
-    'CARDS': '5',
+    'CARDS': '1',
     'COOKIES': None,
     'COUNTERS_TRIGGERED': 0,
     'COUNTRY': None,
@@ -35,7 +35,7 @@ expected1 = {
     'DEVICES': '1',
     'DEVICE_LAYERS': '....',
     'DSR': None,
-    'EMAILS': '21',
+    'EMAILS': '1',
     'FINGERPRINT': None,
     'FLASH': None,
     'GEOX': 'US',
@@ -73,7 +73,8 @@ expected1 = {
     'REGN': None,
     'RULES_TRIGGERED': 1,
     'RULE_DESCRIPTION_0': 'Review if order total > $1000 USD',
-    'SCOR': '99',
+    'SCOR': '34',
+    'OMNISCORE':61.2,
     'SESS': 'F8E874A38B7B4B6DBB71492A584A969D',
     'SITE': 'DEFAULT',
     'TIMEZONE': None,
@@ -184,17 +185,18 @@ class TestAPIRIS(unittest.TestCase):
             "IP_IPAD": None,
             "IP_LAT": None, "IP_LON": None, "IP_COUNTRY": None,
             "IP_REGION": None,
-            "IP_CITY": None, "IP_ORG": None, "WARNING_COUNT": 0}
+            "IP_CITY": None, "IP_ORG": None, "WARNING_COUNT": 0,"OMNISCORE":None}
         for raise_errors in [True, False]:
             actual = self._client(raise_errors=raise_errors)._execute(data)
             added, removed, modified, _ = dict_compare(actual, expected)
             self.assertEqual(added, set())
             self.assertEqual(removed, set())
-            modified_exp = {'CARDS': ('196', '1'),
-                            'RULE_ID_0': ('6822', '1024842'),
-                            'TRAN': ('P04S03M57HSP', 'PTPN0Z04P8Y6'),
-                            'SCOR': ('99', '29'),
-                            'EMAILS': ('20', '1')}
+            modified_exp = {
+                'REGN': (actual['REGN'], expected['REGN']),
+                'TRAN': (actual['TRAN'], expected['TRAN']),
+                'SCOR': (actual['SCOR'], expected['SCOR']),
+                'OMNISCORE': (actual['OMNISCORE'],  expected['OMNISCORE'])
+                }
             self.assertEqual(sorted(modified), sorted(modified_exp))
 
     def test_api_kount_2_items(self):
