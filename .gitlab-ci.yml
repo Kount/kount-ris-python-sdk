@@ -1,8 +1,14 @@
+include:
+  - project: kount/third_party/tpa-ci-shared
+    file: base/sq-scan.yml
+    ref: 2.4.0
+
 # image: python:3.6-alpine - Remove dependecies
 image: python:3.8-slim-buster
   
 stages:
   - test
+  - sonarqube scan
   - deploy
 
 
@@ -13,7 +19,12 @@ before_script:
    - pip install pytest
    - python setup.py sdist bdist_wheel
     
-    
+sonarqube scan:
+  extends: .sq-scan
+  stage: sonarqube scan
+  allow_failure: true
+  variables:
+    SRC_EXCLUSIONS: "**/.eggs/**,**/.git/**,**/.pytest_cache/**,**/build/**,**/DS_Store/**,**/__pycache__/**,**/idea/**,**/*LICENSE,**/*.gitignore,**/*.yml"
 
 deploy_production:
   stage: deploy
