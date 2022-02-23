@@ -2,21 +2,17 @@ import os
 import pytest
 
 from kount import config
-from kount.settings import TEST_API_KEY, TEST_API_URL, TEST_MERCHANT_ID
-
-TEST_API_URL = TEST_API_URL
-
-TEST_API_KEY = TEST_API_KEY
-
-TEST_MERCHANT = TEST_MERCHANT_ID
 
 
 def pytest_addoption(parser):
     parser.addoption('--conf-key', action='store',
                      default=os.environ.get('CONF_KEY', ''))
-    parser.addoption('--api-key', action='store', default=TEST_API_KEY)
-    parser.addoption('--merchant-id', action='store', default=TEST_MERCHANT)
-    parser.addoption('--api-url', action='store', default=TEST_API_URL)
+    parser.addoption('--api-key', action='store',
+                     default=os.environ.get('RIS_SDK_SANDBOX_API_KEY', ''))
+    parser.addoption('--merchant-id', action='store', 
+                     default=os.environ.get('RIS_SDK_SANDBOX_MERCHANT_ID', ''))
+    parser.addoption('--api-url', action='store', 
+                     default=os.environ.get('RIS_SDK_SANDBOX_URL', 'https://risk.test.kount.net'))
 
 
 @pytest.fixture(scope='session', autouse=True)

@@ -17,7 +17,6 @@ from kount.util.cartitem import CartItem
 from kount.util.address import Address
 from kount.config import SDKConfig
 from kount.version import VERSION
-from kount.settings import TEST_API_KEY, TEST_API_URL, TEST_MERCHANT_ID
 
 __author__ = SDKConfig.SDK_AUTHOR
 __version__ = VERSION
@@ -132,11 +131,6 @@ def default_inquiry(merchant_id, session_id, email_client, payment):
 class TestInquiry(unittest.TestCase):
     """Inquiry class tests"""
     maxDiff = None
-
-    """ Need to set api_url, api_key and merchant id value in setting.py file. """
-    merchant_id = TEST_MERCHANT_ID
-    api_key = TEST_API_KEY
-    api_url = TEST_API_URL
 
     def setUp(self):
         self.session_id = str(generate_unique_id())

@@ -14,14 +14,12 @@ from kount.request import Update, UpdateMode
 from kount.util.khash import Khash
 from kount.client import Client
 from kount.util.cartitem import CartItem
-from kount.ris_validator import RisValidationException
 from kount.util.payment import CardPayment
 from kount.version import VERSION
 
-from test_basic_connectivity import generate_unique_id, default_inquiry
+from .test_basic_connectivity import generate_unique_id, default_inquiry
 
 from kount.config import SDKConfig
-from kount.settings import TEST_API_KEY, TEST_API_URL, TEST_MERCHANT_ID
 
 __author__ = SDKConfig.SDK_AUTHOR
 __version__ = VERSION
@@ -44,11 +42,6 @@ class TestRisTestSuite(unittest.TestCase):
         Client(url=URL_API, key=KOUNT_API_KEY,
                timeout=TIMEOUT, RAISE_ERRORS=True)
     """
-
-    """Need to set api_url, api_key and merchant id value in setting.py file."""
-    merchant_id = TEST_MERCHANT_ID
-    api_key = TEST_API_KEY
-    api_url = TEST_API_URL
 
     maxDiff = None
 
@@ -227,9 +220,6 @@ class TestRisTestSuite(unittest.TestCase):
             kc_events = res.get_kc_events()
             self.assertEqual(1, len(kc_events), )
             self.assertEqual(kc_events[0].code, "orderTotalDecline")
-        else:
-            self.assertRaises(RisValidationException,
-                              self.client.process, inq)
 
     def test_9_mode_u_after_mode_q(self):
         """test_9_mode_u_after_mode_q"""

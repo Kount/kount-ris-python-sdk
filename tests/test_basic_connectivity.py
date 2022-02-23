@@ -11,15 +11,13 @@ Test Basic Connectivity
 import unittest
 import pytest
 
-from kount.ris_validator import RisValidationException
 from kount.client import Client
 from kount.util.payment import CardPayment
 from kount.version import VERSION
 
-from test_inquiry import generate_unique_id, default_inquiry
+from .test_inquiry import generate_unique_id, default_inquiry
 
 from kount.config import SDKConfig
-from kount.settings import TEST_API_KEY, TEST_API_URL, TEST_MERCHANT_ID
 
 __author__ = SDKConfig.SDK_AUTHOR
 __version__ = VERSION
@@ -36,13 +34,6 @@ EMAIL = 'predictive@kount.com'
 class TestBasicConnectivity(unittest.TestCase):
     """Test Basic Connectivity"""
     maxDiff = None
-
-    """
-    Need to set api_url, api_key and merchant id value in setting.py file.
-    """
-    merchant_id = TEST_MERCHANT_ID
-    api_key = TEST_API_KEY
-    api_url = TEST_API_URL
 
     def _client(self, **kwargs):
         kwargs['api_url'] = self.api_url
@@ -66,14 +57,14 @@ class TestBasicConnectivity(unittest.TestCase):
         self.inq.params["UDF[~K!_SCOR]"] = '42'
         res = self._process(self.inq)
         self.assertIsNotNone(res)
-        self.assertEqual("42", res['SCOR'])
+        self.assertEqual('42', res.get_score())
 
     def test_13_expected_decision(self):
         """test_13_expected_decision"""
         self.inq.params["UDF[~K!_AUTO]"] = 'R'
         res = self._process(self.inq)
         self.assertIsNotNone(res)
-        self.assertEqual("R", res["AUTO"])
+        self.assertEqual("R", res.get_auto())
 
     def test_16_expected_geox(self):
         """test_16_expected_geox"""
@@ -82,9 +73,9 @@ class TestBasicConnectivity(unittest.TestCase):
         self.inq.params["UDF[~K!_GEOX]"] = 'NG'
         res = self._process(self.inq)
         self.assertIsNotNone(res)
-        self.assertEqual("D", res["AUTO"])
-        self.assertEqual("NG", res["GEOX"])
-        self.assertEqual("42", res['SCOR'])
+        self.assertEqual("D", res.get_auto())
+        self.assertEqual("NG", res.get_geox())
+        self.assertEqual("42", res.get_score())
 
     def test_cyrillic(self):
         """test_cyrillic"""
@@ -98,7 +89,12 @@ class TestBasicConnectivity(unittest.TestCase):
         self.assertEqual({
             u'ERRO': 321,
             u'ERROR_0': actual,
-            u'ERROR_COUNT': 1, u'MODE': u'E', u'WARNING_COUNT': 0}, res)
+            u'ERROR_COUNT': 1, u'MODE': u'E', u'WARNING_COUNT': 0},
+            {u'ERRO':res.get_error_code(),
+            u'ERROR_0': res.get_errors()[0],
+            u'ERROR_COUNT': len(res.get_errors()),
+            u'MODE': res.get_mode(),
+            u'WARNING_COUNT': len(res.get_warnings())})
 
     def test_long(self):
         """test_long request"""
