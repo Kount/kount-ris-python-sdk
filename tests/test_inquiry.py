@@ -75,13 +75,13 @@ expected = {
     'S2PC': '99762',
     'S2PN': '555-777-1212',
     'S2ST': 'AK',
-    'SDK': 'CUST',
-    'SDK_VERSION': 'Sdk-Ris-Python-%s' % SDKConfig.SDK_VERSION,
+    'SDK': 'PYTH',
+    'SDK_VERSION': 'Sdk-Ris-%s-%s' % (SDKConfig.LANG, SDKConfig.SDK_VERSION),
     'SITE': 'DEFAULT',
     'SPREMISE': '',
     'SSTREET': '',
     'TOTL': '123456',
-    'VERS': SDKConfig.SDK_VERSION,
+    'VERS': SDKConfig.VERS,
 }
 
 
@@ -113,7 +113,7 @@ def default_inquiry(merchant_id, session_id, email_client, payment):
                                '2', '68990'))
     inq.set_shopping_cart(cart_items)
     inq.version()
-    inq.set_version(SDKConfig.SDK_VERSION)  # 0695
+    inq.set_version(SDKConfig.VERS)  # 0695
     inq.set_merchant(merchant_id)
     inq.set_payment(payment)  # PTOK
     inq.set_session_id(session_id)  # SESS

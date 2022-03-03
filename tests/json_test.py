@@ -59,7 +59,7 @@ example_data = {
             'AppleWebKit%2F537.36+%28KHTML%2C+like+Gecko%29+'\
             'Chrome%2F37.0.2062.124+Safari%2F537.36',
     'UNIQ': '088E9F4961354D4F9004',
-    'VERS': '0700'
+    'VERS': '0710'
 }
 
 example_data_products = {
@@ -111,6 +111,6 @@ example_data_products = {
             'AppleWebKit%2F537.36+%28KHTML%2C+like+Gecko%29+'\
             'Chrome%2F37.0.2062.124+Safari%2F537.36',
     'UNIQ': 'F8E874A38B7B4B6DBB71',
-    'SDK': 'CUST',
-    'VERS': '0700'
+    'SDK': 'PYTH',
+    'VERS': '0710'
     }

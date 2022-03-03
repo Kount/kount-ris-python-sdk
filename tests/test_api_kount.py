@@ -67,6 +67,7 @@ expected1 = {
     'PIP_LON': None,
     'PIP_ORG': None,
     'PIP_REGION': None,
+    'PREVIOUSLY_WHITELISTED': 'N',
     'PROXY': None,
     'REASON_CODE': None,
     'REGION': None,
@@ -77,9 +78,10 @@ expected1 = {
     'OMNISCORE':61.2,
     'SESS': 'F8E874A38B7B4B6DBB71492A584A969D',
     'SITE': 'DEFAULT',
+    'THREE_DS_MERCHANT_RESPONSE': None,
     'TIMEZONE': None,
     'UAS': None,
-    'VERS': '0700',
+    'VERS': '0710',
     'VOICE_DEVICE': None,
     'WARNING_COUNT': 0}
 
@@ -139,7 +141,7 @@ CURLED = {
     'SITE': 'DEFAULT',
     'TOTL': '123456',
     'UNIQ': '088E9F4961354D4F9004',
-    'VERS': '0700'}
+    'VERS': '0710'}
 
 
 @pytest.mark.usefixtures("api_url", "api_key", "merchant_id")
@@ -161,7 +163,7 @@ class TestAPIRIS(unittest.TestCase):
         data = CURLED
         self.assertIn('MODE', CURLED)
         expected = {
-            "VERS": "0700", "MODE": "Q", "TRAN": "PTPN0Z04P8Y6",
+            "VERS": "0710", "MODE": "Q", "TRAN": "PTPN0Z04P8Y6",
             "MERC": "999666", "SESS": "088E9F4961354D4F90041988B8D5C66B",
             "ORDR": "088E9F496135", "AUTO": "R", "SCOR": "29", "GEOX": "US",
             "BRND": None, "REGN": None, "NETW": "N", "KAPT": "N", "CARDS": "1",
@@ -185,7 +187,7 @@ class TestAPIRIS(unittest.TestCase):
             "IP_IPAD": None,
             "IP_LAT": None, "IP_LON": None, "IP_COUNTRY": None,
             "IP_REGION": None,
-            "IP_CITY": None, "IP_ORG": None, "WARNING_COUNT": 0,"OMNISCORE":None}
+            "IP_CITY": None, "IP_ORG": None, "WARNING_COUNT": 0,"OMNISCORE":None, "PREVIOUSLY_WHITELISTED": "N", "THREE_DS_MERCHANT_RESPONSE":None}
         for raise_errors in [True, False]:
             actual = self._client(raise_errors=raise_errors)._execute(data)
             added, removed, modified, _ = dict_compare(actual, expected)

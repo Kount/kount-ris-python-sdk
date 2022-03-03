@@ -378,7 +378,7 @@ class Update(Request):
     def __init__(self):
         super(Update, self).__init__()
         self.set_mode(UpdateMode.NO_RESPONSE)
-        self.params['VERS'] = SDKConfig.SDK_VERSION
+        self.params['VERS'] = SDKConfig.VERS
         # self.params["SDK"] = "python"
         self.set_khash_payment_encoding(True)
 
