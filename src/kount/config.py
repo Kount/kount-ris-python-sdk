@@ -19,7 +19,13 @@ __status__ = "Development"
 
 class SDKConfig:
 
-    SDK_VERSION = "0710"
+    VERS = "0710"
+
+    SDK = "PYTH"
+
+    LANG = "Python"
+
+    SDK_VERSION = "0.0.0"
     
     SDK_AUTHOR = __author__
 

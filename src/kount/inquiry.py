@@ -23,7 +23,6 @@ __maintainer__ = SDKConfig.SDK_MAINTAINER
 __email__ = SDKConfig.MAINTAINER_EMAIL
 __status__ = SDKConfig.STATUS
 
-
 # common logger for inquiry and request
 LOG = logging.getLogger('kount.request')
 
@@ -39,10 +38,10 @@ class Inquiry(Request):
     def __init__(self):
         super(Inquiry, self).__init__()
         self.version()
-        self.params["SDK"] = "CUST"
+        self.params["SDK"] = SDKConfig.SDK
         self.params["ANID"] = ""
         self.params["FRMT"] = "JSON"
-        self.params["VERS"] = SDKConfig.SDK_VERSION
+        self.params["VERS"] = SDKConfig.VERS
         self.inquiry_mode = InquiryMode.DEFAULT
         self.currency_type = CurrencyType.USD
         LOG.debug('Inquiry: %s', self.params)
@@ -50,8 +49,8 @@ class Inquiry(Request):
     def version(self):
         """SDK_Type-RIS_VERSION-SDK_BUILD_DATETIMESTAMP"""
         datestr = datetime.now().strftime('%Y%m%d%H%M')
-        vers = "Sdk-Ris-Python-%s-%s" % (SDKConfig.SDK_VERSION, datestr)
-        assert len(vers) == 32
+        vers = "Sdk-Ris-%s-%s" % (SDKConfig.LANG, SDKConfig.SDK_VERSION)
+        assert len(vers) <= 32
         self.set_param("SDK_VERSION", vers)
 
     def set_cash(self, cash):
