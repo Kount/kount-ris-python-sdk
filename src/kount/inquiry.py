@@ -238,14 +238,14 @@ class Inquiry(Request):
         for index, item in enumerate(cart):
             if not isinstance(item, CartItem):
                 raise ValueError('Invalid cart item: %s', item)
-                LOG.debug("PROD_TYPE[%i] = %s, PROD_ITEM[%i] = %s, "
-                      "PROD_DESC[%i] = %s, PROD_QUANT[%i] = %s, "
-                      "PROD_PRICE[%i] = %s",
-                      index, item.product_type,
-                      index, item.item_name,
-                      index, item.description,
-                      index, item.quantity,
-                      index, item.price)
+            LOG.debug("PROD_TYPE[%i] = %s, PROD_ITEM[%i] = %s, "
+                    "PROD_DESC[%i] = %s, PROD_QUANT[%i] = %s, "
+                    "PROD_PRICE[%i] = %s",
+                    index, item.product_type,
+                    index, item.item_name,
+                    index, item.description,
+                    index, item.quantity,
+                    index, item.price)
 
             self.params["PROD_TYPE[%i]" % index] = item.product_type
             self.params["PROD_ITEM[%i]" % index] = item.item_name
