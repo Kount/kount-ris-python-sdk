@@ -19,7 +19,7 @@ __status__ = "Development"
 
 class SDKConfig:
 
-    VERS = "0710"
+    VERS = "0720"
 
     SDK = "PYTH"
 

@@ -159,6 +159,12 @@ class Request(object):
         """
         self.set_param("VERS", version)
 
+    def set_lbin(self, lbin):
+        """Set the  Long Bank Identification Number.
+        Arg: lbin - string
+        """
+        self.set_param("LBIN", lbin)
+
     def set_session_id(self, session_id):
         """Set the session id. Must be unique over a 30-day span
         Args: session_id -  Id of the current session
