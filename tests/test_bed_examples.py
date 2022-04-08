@@ -104,7 +104,7 @@ expected = {
     'SITE': 'DEFAULT',
     'TOTL': 3500,
     # 'UNIQ': '4F7132C2FE8547928CD9',
-    'VERS': '0710'}
+    'VERS': '0720'}
 
 
 @pytest.mark.usefixtures("api_url", "api_key", "merchant_id")

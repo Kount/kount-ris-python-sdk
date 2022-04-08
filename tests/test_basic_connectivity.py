@@ -59,6 +59,18 @@ class TestBasicConnectivity(unittest.TestCase):
         self.assertIsNotNone(res)
         self.assertEqual('42', res.get_score())
 
+    def request_with_Lbin(self):
+        "test_Lbin_set_in_requst"
+        self.inq.params["LBIN"] = '1234567'
+        self.assertEqual('1234567', self.inq.params.get("LBIN"))
+        res = self._process(self.inq)
+        self.assertEqual(0, len(res.get_errors))
+
+    def request_without_Lbin(self):
+        "test_Lbin_not_set_in_requst"
+        res = self._process(self.inq)
+        self.assertEqual(0, len(res.get_errors))
+
     def test_13_expected_decision(self):
         """test_13_expected_decision"""
         self.inq.params["UDF[~K!_AUTO]"] = 'R'
