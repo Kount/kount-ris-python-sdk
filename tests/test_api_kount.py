@@ -75,7 +75,7 @@ expected1 = {
     'RULES_TRIGGERED': 1,
     'RULE_DESCRIPTION_0': 'Review if order total > $1000 USD',
     'SCOR': '34',
-    'OMNISCORE':61.2,
+    'OMNISCORE':29.9,
     'SESS': 'F8E874A38B7B4B6DBB71492A584A969D',
     'SITE': 'DEFAULT',
     'THREE_DS_MERCHANT_RESPONSE': None,

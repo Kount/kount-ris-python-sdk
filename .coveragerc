@@ -1,0 +1,8 @@
+[run]
+omit=
+    /tests/*
+
+[paths]
+source =
+    src/kount
+    /usr/local/lib/python3.8/site-packages/kount

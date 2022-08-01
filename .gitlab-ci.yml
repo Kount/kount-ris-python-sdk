@@ -3,7 +3,7 @@ include:
     file:
       - base/sq-scan.yml
       - core/rules.yml
-    ref: 2.5.2
+    ref: 2.7.1
   
 stages:
   - version
@@ -34,17 +34,24 @@ test:
     - !reference [.rule-on-mr]
     - !reference [.rule-on-tag]
   script:
-    - pip install pytest
-    - pip install .
+    - pip install pytest pytest-cov
     - pip install .[tests]
+    - pytest --cov-config=.coveragerc --cov=kount --merchant-id=${RIS_SDK_SANDBOX_MERCHANT_ID} --api-key=${RIS_SDK_SANDBOX_API_KEY} --conf-key=$(echo ${RIS_CONFIG_KEY_BASE64} | openssl base64 -d)
     - pytest tests  --merchant-id=${RIS_SDK_SANDBOX_MERCHANT_ID} --api-key=${RIS_SDK_SANDBOX_API_KEY} --conf-key=$(echo ${RIS_CONFIG_KEY_BASE64} | openssl base64 -d)
-
+    - coverage report 
+    - coverage xml
+  coverage: '/TOTAL.*\s([.\d]+)%/'
+  artifacts:
+    paths:
+      - ${CI_PROJECT_DIR}/coverage.xml
+          
 sonarqube scan:
   extends: .sq-scan
   stage: sonarqube scan
   allow_failure: true
   variables:
-    SRC_EXCLUSIONS: "**/.eggs/**,**/.git/**,**/.pytest_cache/**,**/build/**,**/DS_Store/**,**/__pycache__/**,**/idea/**,**/*LICENSE,**/*.gitignore,**/*.yml"
+    SRC_EXCLUSIONS: "**/.eggs/**,**/.git/**,**/.pytest_cache/**,**/build/**,**/DS_Store/**,**/__pycache__/**,**/idea/**,**/*LICENSE,**/*.gitignore,**/*.yml,**/tests/**"
+    PYTHON_TEST_COVERAGE_REPORT_PATHS: "${CI_PROJECT_DIR}/coverage.xml"
 
 deploy_production:
   stage: deploy
