@@ -72,11 +72,15 @@ class ShippingType(_RisType):
     "ND". Next day shipping type.
     "2D". Second day shipping type.
     "ST". Standard shipping type.
+    "DE". Delivery shipping type.
+    "PU". Pick-up shipping type
     """
     SAME_DAY = 'SD'
     NEXT_DAY = 'ND'
     SECOND_DAY = '2D'
-    STANDARD = "ST"
+    STANDARD = 'ST'
+    DELIVERY = 'DE'
+    PICK_UP = 'PU'
 
 
 class RefundChargebackStatus(_RisType):
