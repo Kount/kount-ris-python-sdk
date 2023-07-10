@@ -48,6 +48,7 @@ class TestPaymentType(unittest.TestCase):
             "BLML": BillMeLaterPayment(self.test, khashed=False),
             "CARD": CardPayment(self.test, khashed=False),
             "CHEK": CheckPayment(self.test, khashed=False),
+            "CHECK": CheckPayment(self.test, khashed=False), # backwards compatibility
             "GIFT": GiftCardPayment(self.test, khashed=False),
             "GOOG": GooglePayment(self.test, khashed=False),
             "GDMP": GreenDotMoneyPakPayment(self.test, khashed=False),
@@ -63,7 +64,10 @@ class TestPaymentType(unittest.TestCase):
             else:
                 self.assertEqual(curp.last4, str(self.test)[-4:])
                 self.assertEqual(curp.payment_token, str(self.test))
-            self.assertEqual(curp._payment_type, current)
+            if current == "CHECK":
+                self.assertEqual(curp._payment_type, "CHEK")
+            else:
+                self.assertEqual(curp._payment_type, current)
             ptypes.append(payment_dict[current])
             self.assertIsInstance(payment_dict[current], plist)
             if curp.payment_token is not None:
