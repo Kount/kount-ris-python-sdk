@@ -75,7 +75,7 @@ expected1 = {
     'RULES_TRIGGERED': 1,
     'RULE_DESCRIPTION_0': 'Review if order total > $1000 USD',
     'SCOR': '34',
-    'OMNISCORE':60.8,
+    'OMNISCORE':36.3,
     'SESS': 'F8E874A38B7B4B6DBB71492A584A969D',
     'SITE': 'DEFAULT',
     'THREE_DS_MERCHANT_RESPONSE': None,
@@ -219,9 +219,9 @@ class TestAPIRIS(unittest.TestCase):
         data["EMAL"] = bad
         
         expected = {
-            'ERROR_0':
-                "321 BAD_EMAL Cause: [[%s is an invalid email address],"
-                " Field: [EMAL], Value: [%s]" % (bad, bad),
+            'ERROR_0': 
+                "321 BAD_EMAL Cause: [Invalid email address], Field: [EMAL],"
+                " Value: [%s]" % (bad),
             'ERRO': 321,
             'ERROR_COUNT': 1,
             'WARNING_COUNT': 0,

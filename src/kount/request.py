@@ -319,9 +319,10 @@ class Request(object):
         ptok - The payment token
         """
         cls = {
-            "BLML": payments.BillMeLaterPayment,
+            'BLML': payments.BillMeLaterPayment,
             'CARD': payments.CardPayment,
-            'CHECK': payments.CheckPayment,
+            'CHECK': payments.CheckPayment, # backwards compatibility
+            'CHEK': payments.CheckPayment,
             'GIFT': payments.GiftCardPayment,
             'GOOG': payments.GooglePayment,
             'GDMP': payments.GreenDotMoneyPakPayment,

@@ -96,11 +96,10 @@ class TestBasicConnectivity(unittest.TestCase):
         self.inq.params["EMAL"] = bad
         res = self._process(self.inq, raise_errors=False)
         self.assertIsNotNone(res)
-        actual = u"321 BAD_EMAL Cause: [[%s is an invalid email address]"\
-                 ", Field: [EMAL], Value: [%s]" % (bad, bad)
         self.assertEqual({
             u'ERRO': 321,
-            u'ERROR_0': actual,
+            u'ERROR_0': u"321 BAD_EMAL Cause: [Invalid email address]"\
+                 ", Field: [EMAL], Value: [%s]" % (bad),
             u'ERROR_COUNT': 1, u'MODE': u'E', u'WARNING_COUNT': 0},
             {u'ERRO':res.get_error_code(),
             u'ERROR_0': res.get_errors()[0],
