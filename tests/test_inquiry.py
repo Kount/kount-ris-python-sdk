@@ -126,7 +126,6 @@ def default_inquiry(merchant_id, session_id, email_client, payment):
     inq.set_cash('4444')
     return inq
 
-
 @pytest.mark.usefixtures("api_url", "api_key", "merchant_id")
 class TestInquiry(unittest.TestCase):
     """Inquiry class tests"""
@@ -219,6 +218,58 @@ class TestInquiry(unittest.TestCase):
              actual['ORDR'])
         self.assertEqual(actual, _expected)
 
+    def test_inquiry_with_masked_payment(self):
+        """test inquiry with masked payment"""
+        session_id = self.session_id
+        merchant_id = "999666"
+        email_client = EMAIL_CLIENT
+
+        inq = Inquiry()
+        inq.set_request_mode(InquiryMode.DEFAULT)
+        inq.set_shipping_address(SHIPPING_ADDRESS)
+        inq.set_shipping_name("SdkShipToFN SdkShipToLN")  # S2NM
+        inq.set_billing_address(BILLING_ADDRESS)
+        inq.set_currency(CurrencyType.USD)  # CURR
+        inq.set_total('123456')  # TOTL
+        inq.set_billing_phone_number("555-867-5309")  # B2PN
+        inq.set_shipping_phone_number("555-777-1212")  # S2PN
+        inq.set_email_client(email_client)
+        inq.set_customer_name("SdkTestFirstName SdkTestLastName")
+        inq.set_unique_customer_id(session_id[:20])  # UNIQ
+        inq.set_website("DEFAULT")  # SITE
+        inq.set_email_shipping("sdkTestShipToEmail@kountsdktestdomain.com")
+        inq.set_ip_address("4.127.51.215")  # IPAD
+        cart_items = list()
+        cart_items.append(CartItem("SPORTING_GOODS", "SG999999",
+                                "3000 CANDLEPOWER PLASMA FLASHLIGHT",
+                                '2', '68990'))
+        inq.set_shopping_cart(cart_items)
+        inq.version()
+        inq.set_version(SDKConfig.VERS)  # 0695
+        inq.set_merchant(merchant_id)
+        inq.set_session_id(session_id)  # SESS
+        inq.set_order_number(session_id[:10])  # ORDR
+        inq.set_authorization_status(AuthStatus.APPROVE)  # AUTH
+        inq.set_avs_zip_reply(BankcardReply.MATCH)
+        inq.set_avs_address_reply(BankcardReply.MATCH)
+        inq.set_avs_cvv_reply(BankcardReply.MATCH)
+        inq.set_merchant_acknowledgment(MerchantAcknowledgment.TRUE)  # "MACK"
+        inq.set_cash('4444')
+
+        payment = CardPayment(PTOK, khashed=False)
+        inq.set_masked_payment(payment)
+
+        _expected = expected.copy()
+        _expected["PTOK"] = "000738XXXXXX2514"
+        _expected["PENC"] = "MASK"
+        _expected["PTYP"] = "CARD"
+
+        actual = inq.params
+        del (actual['UNIQ'],
+             actual['IPAD'],
+             actual['SESS'],
+             actual['ORDR'])
+        self.assertEqual(actual, _expected)
 
 if __name__ == "__main__":
     unittest.main()

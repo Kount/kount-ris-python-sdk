@@ -305,8 +305,8 @@ class Request(object):
         """
         encoded = token[0:6]
         for _ in range(6, len(token) - 4, 1):
-            encoded.append('X')
-        encoded.append(token[-4:])
+            encoded = encoded + 'X'
+        encoded = encoded + token[-4:]
         LOG.debug("mask_token = %s", token)
         return encoded
 
@@ -345,7 +345,7 @@ class Request(object):
         Args: payment - card payment
         """
         token = payment.payment_token
-        if isinstance(self.payment, payment.CardPayment) and \
+        if isinstance(payment, payments.CardPayment) and \
                 not payment.khashed:
             token = self._mask_token(token)
             self.set_param("PTOK", token)
