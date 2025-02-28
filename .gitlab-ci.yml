@@ -37,7 +37,7 @@ test:
     - pip install pytest pytest-cov
     - pip install .[tests]
     - pytest --cov-config=.coveragerc --cov=kount --merchant-id=${RIS_SDK_SANDBOX_MERCHANT_ID} --api-key=${RIS_SDK_SANDBOX_API_KEY} --conf-key=$(echo ${RIS_CONFIG_KEY_BASE64} | openssl base64 -d)
-    - pytest tests  --merchant-id=${RIS_SDK_SANDBOX_MERCHANT_ID} --api-key=${RIS_SDK_SANDBOX_API_KEY} --conf-key=$(echo ${RIS_CONFIG_KEY_BASE64} | openssl base64 -d)
+    - pytest tests  --merchant-id=${RIS_SDK_SANDBOX_MERCHANT_ID} --api-key=${RIS_SDK_SANDBOX_API_KEY} --conf-key=$(echo ${RIS_CONFIG_KEY_BASE64} | openssl base64 -d) --migration-mode-enabled=${MIGRATION_MODE_ENABLED} --pf-client-id=${PF_CLIENT_ID} --pf-auth-endpoint=${PF_AUTH_ENDPOINT} --pf-api-endpoint=${PF_API_ENDPOINT} --pf-api-key=${PF_API_KEY}
     - coverage report 
     - coverage xml
   coverage: '/TOTAL.*\s([.\d]+)%/'

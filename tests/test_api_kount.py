@@ -3,7 +3,7 @@
 # -*- coding: utf-8 -*-
 # This file is part of the Kount python sdk project
 # https://github.com/Kount/kount-ris-python-sdk
-# Copyright (C) 2017 Kount Inc. All Rights Reserved.
+# Copyright (C) 2025 Kount an Equifax Company All Rights Reserved.
 import logging
 import unittest
 
@@ -209,7 +209,12 @@ class TestAPIRIS(unittest.TestCase):
             actual = self._client(raise_errors=raise_errors)._execute(data)
             del (actual['TRAN'], actual['RULE_ID_0'],
                  actual['VELO'], actual['VMAX'])
-            self.assertEqual(actual, self._expected_response())
+
+            expected = self._expected_response()
+            # this is going to change over time. So I'm removing it from the test.
+            del expected['OMNISCORE']
+            del actual['OMNISCORE']
+            self.assertDictEqual(actual, expected)
 
     def test_last_2_items_bad_email(self):
         "last_2_items_bad_email"
@@ -237,7 +242,13 @@ class TestAPIRIS(unittest.TestCase):
         actual = self._client(raise_errors=False)._execute(params=data)
         del (actual['TRAN'], actual['RULE_ID_0'],
              actual['VELO'], actual['VMAX'])
-        self.assertEqual(actual, self._expected_response())
+        expected = self._expected_response()
+
+        # this is going to change over time. So I'm removing it from the test.
+        del expected['OMNISCORE']
+        del actual['OMNISCORE']
+
+        self.assertDictEqual(actual, expected)
 
     def test_two_items_none_email(self):
         "email = None"

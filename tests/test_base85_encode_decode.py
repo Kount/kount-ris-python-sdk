@@ -2,7 +2,7 @@
 # -*- coding: utf-8 -*-
 # This file is part of the Kount python sdk project
 # https://github.com/Kount/kount-ris-python-sdk/)
-# Copyright (C) 2017 Kount Inc. All Rights Reserved.
+# Copyright (C) 2025 Kount an Equifax Company All Rights Reserved.
 import unittest
 
 import sys
