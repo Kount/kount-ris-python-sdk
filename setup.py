@@ -3,10 +3,8 @@
 """
 # This file is part of the Kount python sdk project
 # https://github.com/Kount/kount-ris-python-sdk/)
-# Copyright (C) 2017 Kount Inc. All Rights Reserved.
+# Copyright (C) 2025 Kount an Equifax Company All Rights Reserved.
 """
-from __future__ import absolute_import
-
 import os
 from codecs import open
 from setuptools import setup, find_packages
@@ -39,27 +37,25 @@ with open(os.path.join(this_path, 'README.md'), encoding='utf-8') as f:
     LONG_DESC = f.read()
 
 REQUIRES = (
-    'requests>=2.11.1',
-    'mom>=0.1.3;python_version<"3.0"',
-    'py2-ipaddress>=3.4.1;python_version<"3.0"'
+    'requests>=2.32.3',
 )
 
 EXTRAS = {
     'test': (
-        'pytest >= 2.8.4',
-        'pytest-cov >= 2.4.0',
-        'pytest-profiling >= 1.1.1',
-        'pytest-html >= 1.14.2',
-        'pytest-metadata >= 1.5.0',
+        'pytest >= 8.3.4',
+        'pytest-cov >= 6.0.0',
+        'pytest-profiling >= 1.8.1',
+        'pytest-html >= 4.1.1',
+        'pytest-metadata >= 3.1.1',
     ),
     'dev': (
         'flake8 >= 2.5.0',
-        'pytest >= 2.8.4',
-        'pytest-cov >= 2.4.0',
-        'pytest-profiling >= 1.1.1',
-        'pylint >= 1.7.2',
-        'pytest-html >= 1.14.2',
-        'pytest-metadata >= 1.5.0',
+        'pytest >= 8.3.4',
+        'pytest-cov >= 6.0.0',
+        'pytest-profiling >= 1.8.1',
+        'pylint >= 3.3.4',
+        'pytest-html >= 4.1.1',
+        'pytest-metadata >= 3.1.1',
     ),
 }
 
@@ -71,9 +67,6 @@ CLASSIFIERS = [
     "Topic :: Internet :: WWW/HTTP",
     "Topic :: Software Development :: Libraries :: Python Modules",
     'License :: Other/Proprietary License',
-    'Programming Language :: Python :: 2.7',
-    'Programming Language :: Python :: 3.5',
-    'Programming Language :: Python :: 3.6',
 ]
 
 if __name__ == '__main__':
