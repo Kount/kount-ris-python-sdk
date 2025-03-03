@@ -59,8 +59,8 @@ deploy_production:
   rules:
     - !reference [.rule-on-tag]
   variables:
-    TWINE_USERNAME: $PYPI_USERNAME
-    TWINE_PASSWORD: $PYPI_PASSWORD
+    TWINE_USERNAME: __token__
+    TWINE_PASSWORD: $PYPI_ACCESS_TOKEN
   script:
     - pip install twine
     - twine upload dist/*
