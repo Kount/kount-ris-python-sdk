@@ -8,7 +8,6 @@
 import logging
 import requests
 
-from tests.conftest import api_url
 from . import config
 from . import request
 from . import response
